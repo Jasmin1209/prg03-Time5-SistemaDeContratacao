@@ -49,7 +49,7 @@ A aplicação permite que candidatos criem perfis profissionais, enviem candidat
 ## 🗃 Diagrama de Classes UML
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Jasmin1209/prg03-Time5-SistemaDeContratacao/main/SistemaDeContratacao.drawio.png" width="600">
+  <img src="https://raw.githubusercontent.com/Jasmin1209/prg03-Time5-SistemaDeContratacao/main/SistemaDeContratacao.drawio (8).png" width="600">
 </p>
 
 
