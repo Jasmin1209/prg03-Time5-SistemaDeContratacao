@@ -4,11 +4,14 @@
  */
 package br.com.ifba.perfil.entity;
 
+import br.com.ifba.usuario.entity.Usuario;
 //Anotações JPA
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 //Tipos Java
@@ -40,10 +43,20 @@ public class PerfilCandidato extends Perfil{
         * maapedBy: indica o "dono" do relacionamento através do atributo, onde fica a chave estrangeira
         * orphanRemoval = true: se o atributo for removida da coleção, será removida do banco 
         * OneToMany: Relação UM para MUITOS
+        * OneToOne: Relação UM para UM
         * nullable = true: Indica que o campo não é obrigatório
         * BigDecimal: usado para valores monetários
         * LinkedHashSet: usada para evitar 
+        * JoinColumn: Estabele a chave estrangeira
     */
+    
+    @OneToOne
+    @JoinColumn(
+            name = "usuario_id",
+            nullable = false,
+            unique = true
+    )
+    private Usuario usuarioPerfil;
     
     @OneToMany( 
             mappedBy = "perfil_candidato_formacao",

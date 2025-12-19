@@ -1,1 +1,7 @@
 /target/
+
+# Maven
+target/
+
+# Compiled files
+*.class
