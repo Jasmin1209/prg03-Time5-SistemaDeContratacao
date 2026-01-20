@@ -4,7 +4,7 @@
  */
 package br.com.ifba.perfil.entity;
 
-import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.entity.UsuarioCandidato;
 //Anotações JPA
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -56,31 +56,31 @@ public class PerfilCandidato extends Perfil{
             nullable = false,
             unique = true
     )
-    private Usuario usuarioPerfil;
+    private UsuarioCandidato usuarioPerfil;
     
     @OneToMany( 
-            mappedBy = "perfil_candidato_formacao",
+            mappedBy = "perfilCandidato",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private Set<Formacao> formacaoAcademica = new LinkedHashSet<>();
     
     @OneToMany(
-            mappedBy = "perfil_candidato_experiencia",
+            mappedBy = "perfilCandidato",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private Set<Experiencia> experiencias = new LinkedHashSet<>();
     
     @OneToMany(
-        mappedBy = "perfil_candidato_competencia",
+        mappedBy = "perfilCandidato",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
     private Set<Competencia> competencias = new LinkedHashSet<>();
 
     @OneToMany(
-            mappedBy = "perfil_candidato_idioma",
+            mappedBy = "perfilCandidato",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
