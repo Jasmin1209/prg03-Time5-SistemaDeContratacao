@@ -42,7 +42,6 @@ public class Competencia extends PersistenceEntity implements Serializable{
     @Column(
             name = "titulo", 
             nullable = false, //o campo não pode ser nulo nem vazio (para o BANCO DE DADOS)
-            unique = true, //impede duplicidade
             length = 50 //tamanho máximo 
     )
     private String titulo;
