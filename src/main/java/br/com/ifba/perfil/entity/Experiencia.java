@@ -22,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
 //Tipos Java
 import java.io.Serializable;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 
 //Lombok
 import lombok.Getter;
@@ -40,14 +41,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Experiencia extends PersistenceEntity implements Serializable{
     
+    @NotBlank
+    @Column(name = "cargo", nullable = false)
+    private String cargo;
     
     @NotBlank //Não pode ser nulo para String
     @Column(name = "empresa", nullable = false)
     private String empresa;
-    
-    @NotBlank
-    @Column(name = "cargo", nullable = false)
-    private String cargo;
     
     @NotNull //Não pode ser nulo para Números
     @Column(name = "data_inicial", nullable = false)
@@ -59,5 +59,7 @@ public class Experiencia extends PersistenceEntity implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY) // Várias experiências podem pertencer a um mesmo perfil
     @JoinColumn(name = "perfil_candidato_id", nullable = false) //define a chave estrangeira
     private PerfilCandidato perfilCandidato;
+
+    
     
 }

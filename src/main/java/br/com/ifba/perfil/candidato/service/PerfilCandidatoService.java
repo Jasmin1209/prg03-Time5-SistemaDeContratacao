@@ -4,12 +4,15 @@
  */
 package br.com.ifba.perfil.candidato.service;
 
-import br.com.ifba.perfil.entity.Perfil;
+import br.com.ifba.perfil.Enum.TipoFormacao;
+import br.com.ifba.perfil.entity.Experiencia;
+import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
-import br.com.ifba.perfil.repository.PerfilRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.com.ifba.perfil.repository.PerfilCandidatoRepository;
+import java.time.LocalDate;
 
 /**
  *
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PerfilCandidatoService implements PerfilCandidatoIService {
 
-    private final PerfilRepository perfilCandidatoRepository;
+    private final PerfilCandidatoRepository perfilCandidatoRepository;
 
     /**
      * Atualiza um perfil de candidato.
@@ -69,17 +72,89 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
-    public void atualizarSobreMim(Long idPerfil, String novoSobreMim) {
-
-    Perfil perfil = perfilCandidatoRepository.findById(idPerfil)
+    public void updateAboutMe(Long idPerfil, String novoSobreMim) {
+        
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
         .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
 
+    if(novoSobreMim == null || novoSobreMim.trim().isEmpty()){
+        throw new IllegalArgumentException("O campo não pode ser vazio");
+    }
+    
+   
     perfil.setSobre(novoSobreMim);
+    perfilCandidatoRepository.save(perfil);
 
-    // save não é obrigatório com @Transactional,
-    // mas pode deixar se quiser
+    }
+    
+    @Override
+    public void adicionarExperiencia(Long idPerfil, String titulo, String empresa, LocalDate dataInicial, LocalDate dataFinal) {
+
+    if (titulo == null || titulo.trim().isEmpty()) {
+        throw new IllegalArgumentException("Título é obrigatório.");
+    }
+
+    if (empresa == null || empresa.trim().isEmpty()) {
+        throw new IllegalArgumentException("Empresa é obrigatória.");
+    }
+
+    if (dataInicial == null) {
+        throw new IllegalArgumentException("Data inicial é obrigatória.");
+    }
+
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
+        .orElseThrow(() ->
+            new NoSuchElementException("Perfil de candidato não encontrado")
+        );
+
+    Experiencia experiencia = new Experiencia();
+    experiencia.setCargo(titulo);
+    experiencia.setEmpresa(empresa);
+    experiencia.setDataInicial(dataInicial);
+    experiencia.setDataFinal(dataFinal);
+    experiencia.setPerfilCandidato(perfil);
+
+    perfil.getExperiencias().add(experiencia);
+
     perfilCandidatoRepository.save(perfil);
     }
+    
+    @Override
+    public void adicionarFormacao(Long idPerfil, String instituicao, TipoFormacao tipo, String nomeCurso, LocalDate dataInicial, LocalDate dataFinal){
+         if (instituicao == null || instituicao.trim().isEmpty()) {
+        throw new IllegalArgumentException("Instituição é obrigatória.");
+    }
+
+    if (tipo == null) {
+        throw new IllegalArgumentException("Tipo de formação é obrigatório.");
+    }
+
+    if (nomeCurso == null || nomeCurso.trim().isEmpty()) {
+        throw new IllegalArgumentException("Nome do curso é obrigatório.");
+    }
+
+    if (dataInicial == null) {
+        throw new IllegalArgumentException("Data inicial é obrigatória.");
+    }
+
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
+        .orElseThrow(() ->
+            new NoSuchElementException("Perfil não encontrado")
+        );
+
+    Formacao formacao = new Formacao();
+    formacao.setInstituicao(instituicao);
+    formacao.setTipo(tipo);
+    formacao.setNomeDocurso(nomeCurso);
+    formacao.setDataInicial(dataInicial);
+    formacao.setDataFinal(dataFinal);
+    formacao.setPerfilCandidato(perfil);
+
+    perfil.getFormacaoAcademica().add(formacao);
+
+    perfilCandidatoRepository.save(perfil);
+    }
+
 }
 
 

@@ -4,8 +4,10 @@
  */
 package br.com.ifba.perfil.candidato.controller;
 
+import br.com.ifba.perfil.Enum.TipoFormacao;
 import br.com.ifba.perfil.candidato.service.PerfilCandidatoIService;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -36,6 +38,16 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     
     @Override
     public void atualizarSobreMim(Long idPerfil, String novoSobreMim){
-        perfilcandidatoservice.atualizarSobreMim(idPerfil, novoSobreMim);
+        perfilcandidatoservice.updateAboutMe(idPerfil, novoSobreMim);
+    }
+    
+    @Override
+    public void adicionarExperiencia(Long idPerfil, String titulo, String empresa, LocalDate dataInicial, LocalDate dataFinal) {
+        perfilcandidatoservice.adicionarExperiencia(idPerfil, titulo, empresa, dataInicial, dataFinal);
+    }
+
+    @Override
+    public void adicionarFormacao(Long idPerfil, String instituicao, TipoFormacao tipo, String nomeCurso, LocalDate dataInicial, LocalDate dataFinal){
+        perfilcandidatoservice.adicionarFormacao(idPerfil, instituicao, tipo, nomeCurso, dataInicial, dataFinal);
     }
 }

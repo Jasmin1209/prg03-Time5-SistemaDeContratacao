@@ -4,7 +4,9 @@
  */
 package br.com.ifba.perfil.candidato.controller;
 
+import br.com.ifba.perfil.Enum.TipoFormacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.time.LocalDate;
 
 /**
  *
@@ -19,4 +21,8 @@ public interface PerfilCandidatoIController {
     public PerfilCandidato findByUsuarioPerfil_Nome (String nome);
     
     void atualizarSobreMim(Long idPerfil, String novoSobreMim);
+    
+    void adicionarExperiencia(Long idPerfil, String titulo, String empresa, LocalDate dataInicial, LocalDate dataFinal);
+
+    void adicionarFormacao(Long idPerfil, String instituicao, TipoFormacao tipo, String nomeCurso, LocalDate dataInicial, LocalDate dataFinal);
 }
