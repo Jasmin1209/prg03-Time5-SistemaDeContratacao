@@ -1,6 +1,7 @@
 package br.com.ifba.springapplication;
 
 import br.com.ifba.perfil.candidato.view.TelaApresentacao;
+import br.com.ifba.usuario.view.LoginCandidatoView;
 import java.awt.EventQueue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,8 +21,8 @@ public class Prg03time5Application {
         ConfigurableApplicationContext context = spring.run(args);
 
         EventQueue.invokeLater(() -> {
-            TelaApresentacao tela =
-                    context.getBean(TelaApresentacao.class);
+            LoginCandidatoView tela =
+                    context.getBean(LoginCandidatoView.class);
             tela.setVisible(true);
         });
     }
