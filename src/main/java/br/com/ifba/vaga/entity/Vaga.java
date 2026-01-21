@@ -75,7 +75,7 @@ public class Vaga extends PersistenceEntity implements Serializable{
     private Endereco localizacao;
     
     // Descrição da vaga
-    @Column(name = "descrição", length = 1000)
+    @Column(name = "descricao", length = 1000)
     private String descricao;
     
     @OneToMany(mappedBy = "vaga", cascade = CascadeType.ALL, orphanRemoval = true)
