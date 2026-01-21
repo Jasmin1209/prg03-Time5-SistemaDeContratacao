@@ -10,9 +10,6 @@ import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.service.VagaService;
-
-import java.awt.Color;
-import java.awt.Font;
 import javax.swing.JOptionPane;
 /**
  *
