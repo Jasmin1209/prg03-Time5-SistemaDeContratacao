@@ -4,7 +4,7 @@
  */
 package br.com.ifba.perfil.candidato.service;
 
-import br.com.ifba.perfil.Enum.TipoFormacao;
+import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
@@ -72,7 +72,7 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
-    public void updateAboutMe(Long idPerfil, String novoSobreMim) {
+    public void updateSobreMim(Long idPerfil, String novoSobreMim) {
         
     PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
         .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
@@ -88,68 +88,56 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
-    public void adicionarExperiencia(Long idPerfil, String titulo, String empresa, LocalDate dataInicial, LocalDate dataFinal) {
-
-    if (titulo == null || titulo.trim().isEmpty()) {
+    public void addExperiencia (Long id, Experiencia experiencia){
+        
+    if (experiencia.getCargo() == null || experiencia.getCargo().trim().isEmpty()) {
         throw new IllegalArgumentException("Título é obrigatório.");
     }
 
-    if (empresa == null || empresa.trim().isEmpty()) {
+    if (experiencia.getEmpresa() == null || experiencia.getEmpresa().trim().isEmpty()) {
         throw new IllegalArgumentException("Empresa é obrigatória.");
     }
 
-    if (dataInicial == null) {
+    if (experiencia.getDataInicial() == null) {
         throw new IllegalArgumentException("Data inicial é obrigatória.");
     }
 
-    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(id)
         .orElseThrow(() ->
             new NoSuchElementException("Perfil de candidato não encontrado")
         );
 
-    Experiencia experiencia = new Experiencia();
-    experiencia.setCargo(titulo);
-    experiencia.setEmpresa(empresa);
-    experiencia.setDataInicial(dataInicial);
-    experiencia.setDataFinal(dataFinal);
     experiencia.setPerfilCandidato(perfil);
-
     perfil.getExperiencias().add(experiencia);
 
     perfilCandidatoRepository.save(perfil);
     }
     
     @Override
-    public void adicionarFormacao(Long idPerfil, String instituicao, TipoFormacao tipo, String nomeCurso, LocalDate dataInicial, LocalDate dataFinal){
-         if (instituicao == null || instituicao.trim().isEmpty()) {
+    public void addFormacao (Long id, Formacao formacao){
+         if (formacao.getInstituicao() == null || formacao.getInstituicao().trim().isEmpty()) {
         throw new IllegalArgumentException("Instituição é obrigatória.");
     }
 
-    if (tipo == null) {
+    if (formacao.getTipo() == null) {
         throw new IllegalArgumentException("Tipo de formação é obrigatório.");
     }
 
-    if (nomeCurso == null || nomeCurso.trim().isEmpty()) {
+    if (formacao.getNomeDocurso() == null || formacao.getNomeDocurso().trim().isEmpty()) {
         throw new IllegalArgumentException("Nome do curso é obrigatório.");
     }
 
-    if (dataInicial == null) {
+    if (formacao.getDataInicial() == null) {
         throw new IllegalArgumentException("Data inicial é obrigatória.");
     }
 
-    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(id)
         .orElseThrow(() ->
             new NoSuchElementException("Perfil não encontrado")
         );
 
-    Formacao formacao = new Formacao();
-    formacao.setInstituicao(instituicao);
-    formacao.setTipo(tipo);
-    formacao.setNomeDocurso(nomeCurso);
-    formacao.setDataInicial(dataInicial);
-    formacao.setDataFinal(dataFinal);
+    
     formacao.setPerfilCandidato(perfil);
-
     perfil.getFormacaoAcademica().add(formacao);
 
     perfilCandidatoRepository.save(perfil);

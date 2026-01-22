@@ -4,8 +4,10 @@
  */
 package br.com.ifba.perfil.candidato.controller;
 
-import br.com.ifba.perfil.Enum.TipoFormacao;
+import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.candidato.service.PerfilCandidatoIService;
+import br.com.ifba.perfil.entity.Experiencia;
+import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +39,17 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     }
     
     @Override
-    public void atualizarSobreMim(Long idPerfil, String novoSobreMim){
-        perfilcandidatoservice.updateAboutMe(idPerfil, novoSobreMim);
+    public void updateSobreMim(Long idPerfil, String novoSobreMim){
+        perfilcandidatoservice.updateSobreMim(idPerfil, novoSobreMim);
     }
     
     @Override
-    public void adicionarExperiencia(Long idPerfil, String titulo, String empresa, LocalDate dataInicial, LocalDate dataFinal) {
-        perfilcandidatoservice.adicionarExperiencia(idPerfil, titulo, empresa, dataInicial, dataFinal);
+    public void addExperiencia (Long id, Experiencia experiencia) {
+        perfilcandidatoservice.addExperiencia(id, experiencia);
     }
 
     @Override
-    public void adicionarFormacao(Long idPerfil, String instituicao, TipoFormacao tipo, String nomeCurso, LocalDate dataInicial, LocalDate dataFinal){
-        perfilcandidatoservice.adicionarFormacao(idPerfil, instituicao, tipo, nomeCurso, dataInicial, dataFinal);
+    public void addFormacao (Long id, Formacao formacao){ 
+        perfilcandidatoservice.addFormacao(id, formacao);
     }
 }

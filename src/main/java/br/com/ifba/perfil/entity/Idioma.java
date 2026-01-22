@@ -8,7 +8,7 @@ package br.com.ifba.perfil.entity;
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
 
 //Classe ENUM
-import br.com.ifba.perfil.Enum.Nivel;
+import br.com.ifba.perfil.enums.Nivel;
 
 //Anotações JPA
 import jakarta.persistence.Column;

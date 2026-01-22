@@ -5,7 +5,7 @@
 package br.com.ifba.vaga.view;
 
 
-import br.com.ifba.Candidatura.view.CandidaturaInscricao;
+import br.com.ifba.candidaturas.view.CandidaturaInscricao;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import br.com.ifba.vaga.entity.Vaga;

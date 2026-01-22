@@ -5,6 +5,7 @@
 package br.com.ifba.perfil.candidato.view;
 
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
+import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
     
     @Autowired
     private PerfilCandidatoIController perfilcandidatocontroller;
-   
+    private Experiencia experiencia;
     private Long idPerfil;
     private TelaApresentacao telaapresentacao;
     
@@ -71,7 +72,7 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         jSpinner5 = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         jSpinner6 = new javax.swing.JSpinner();
-        jButton1 = new javax.swing.JButton();
+        btnsalvarexperiencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -98,10 +99,10 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
 
         jLabel9.setText("Ano");
 
-        jButton1.setText("SALVAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnsalvarexperiencia.setText("SALVAR");
+        btnsalvarexperiencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnsalvarexperienciaActionPerformed(evt);
             }
         });
 
@@ -116,7 +117,7 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(24, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(btnsalvarexperiencia)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel7)
@@ -184,18 +185,18 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnsalvarexperiencia)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnsalvarexperienciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarexperienciaActionPerformed
         // TODO add your handling code here:
 
-    String titulo = txttitulo.getText();
-    String empresa = txtempresa.getText();
+    experiencia.setCargo(txttitulo.getText());
+    experiencia.setEmpresa(txtempresa.getText());
 
     //transforma as informações colocadas no spinner em datas válidas
     LocalDate dataInicio = LocalDate.of(
@@ -204,6 +205,7 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         (int) jSpinner1.getValue()
     );
 
+    experiencia.setDataInicial(dataInicio);
     
     LocalDate dataFim = null; //se for nulo fica considerado como trabalho atual
     if ((int) jSpinner6.getValue() > 0) {
@@ -214,20 +216,19 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         );
     }
 
-    perfilcandidatocontroller.adicionarExperiencia(
-        idPerfil, titulo, empresa, dataInicio, dataFim
-    );
+    experiencia.setDataFinal(dataFim);
+    perfilcandidatocontroller.addExperiencia(idPerfil, experiencia);
 
     telaapresentacao.setVisible(true);
     this.dispose();
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnsalvarexperienciaActionPerformed
 
  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnsalvarexperiencia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

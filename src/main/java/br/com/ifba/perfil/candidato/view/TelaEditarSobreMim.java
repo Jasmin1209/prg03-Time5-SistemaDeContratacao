@@ -114,7 +114,7 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
         String novotexto = txtsobremim.getText().trim(); //.trim() remove espaços extras
         
         //atualiza o campo no banco de dado
-        perfilcandidatocontroller.atualizarSobreMim(idPerfil, novotexto);
+        perfilcandidatocontroller.updateSobreMim(idPerfil, novotexto);
         JOptionPane.showMessageDialog(this, "Campo 'sobre mim' atualizado com sucesso");
         
         //atualiza a tela de apresentação
