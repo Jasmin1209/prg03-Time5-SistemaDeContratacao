@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.com.ifba.candidatura.entity;
+package br.com.ifba.candidaturas.entity;
 
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import br.com.ifba.perfil.entity.PerfilCandidato;
