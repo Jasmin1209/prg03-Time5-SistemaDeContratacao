@@ -10,7 +10,7 @@ import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
 import br.com.ifba.vaga.enums.TipoContratacao;
-import br.com.ifba.vaga.service.VagaService;
+import br.com.ifba.vaga.controller.VagaController;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -24,7 +24,7 @@ public class VagaEditar extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaEditar.class.getName());
 
     private Usuario usuarioLogado;
-    private VagaService vagaService;
+    private VagaController vagaController;
     private Vaga vaga;
     private ButtonGroup  grupoStatus;
     
@@ -32,9 +32,9 @@ public class VagaEditar extends javax.swing.JFrame {
     /**
      * Creates new form VagaEditar
      */
-    public VagaEditar(Usuario usuarioLogado, VagaService vagaService, Vaga vaga) {
+    public VagaEditar(Usuario usuarioLogado, VagaController vagaController, Vaga vaga) {
         this.usuarioLogado = usuarioLogado;
-        this.vagaService = vagaService;
+        this.vagaController = vagaController;
         this.vaga = vaga;
 
         initComponents();
@@ -424,7 +424,7 @@ public class VagaEditar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new VagaDetalhes(usuarioLogado, vagaService, vaga).setVisible(true);
+        new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -435,10 +435,10 @@ public class VagaEditar extends javax.swing.JFrame {
         }
 
         preencherVaga();
-        vagaService.update(vaga);
+        vagaController.update(vaga);
 
         JOptionPane.showMessageDialog(this, "Vaga atualizada com sucesso!");
-        new VagaDetalhes(usuarioLogado, vagaService, vaga).setVisible(true);
+        new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
         dispose();
 
     } catch (Exception e) {
@@ -469,9 +469,9 @@ public class VagaEditar extends javax.swing.JFrame {
        if(opcao == JOptionPane.YES_OPTION) {
            try {
                // Passando o objeto Vaga inteiro como o seu Service exige
-               vagaService.delete(vaga);
+               vagaController.delete(vaga);
                JOptionPane.showMessageDialog(this, "Vaga excluída!");
-               new VagaListar(usuarioLogado, vagaService).setVisible(true);
+               new VagaListar(usuarioLogado, vagaController).setVisible(true);
                this.dispose();
            } catch (Exception e) {
                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage());

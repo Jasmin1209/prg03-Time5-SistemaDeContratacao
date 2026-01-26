@@ -12,7 +12,6 @@ import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
 import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.TipoContratacao;
-import br.com.ifba.vaga.service.VagaService;
 import java.awt.BorderLayout;
 
 
@@ -29,6 +28,7 @@ import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 
 
 /**
@@ -48,14 +48,24 @@ public class VagaListar extends javax.swing.JFrame {
     private static final Color ROXO = new Color(110, 86, 207);
 
     private Usuario usuarioLogado;
-    private VagaService vagaService;
+    private VagaController vagaController;
 
     
-    public VagaListar(Usuario usuarioLogado, VagaService vagaService) {
+    public VagaListar(Usuario usuarioLogado, VagaController vagaController) {
         this.usuarioLogado = usuarioLogado;
-        this.vagaService = vagaService;
-        
+        this.vagaController = vagaController;
+
         initComponents();
+        setLocationRelativeTo(null);
+
+        btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);
+
+        // Se o banco estiver vazio, adiciona cursos de exemplo
+        if (vagaController.findAll().isEmpty()) {
+                for (Vaga c : gerarVagasTeste()) {
+                    vagaController.save(c);
+                }
+        }
         
         // Customização do painel onde as vagas serão "empilhadas"
         pnListarVagas.setBackground(new Color(245, 246, 250));
@@ -71,7 +81,7 @@ public class VagaListar extends javax.swing.JFrame {
         btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);
 
         carregarFiltros(); // Preenche os ComboBoxes de busca             
-        carregarVagas(vagaService.findAll());// Busca e exibe todas as vagas do banco
+        carregarVagas(vagaController.findAll());// Busca e exibe todas as vagas do banco
 
     }
 
@@ -192,7 +202,7 @@ public class VagaListar extends javax.swing.JFrame {
 
         btnDetalhes.addActionListener(e -> {
             // Ao clicar, abre a tela de detalhes passando a vaga específica deste card
-            VagaDetalhes tela = new VagaDetalhes(usuarioLogado, vagaService, vaga);
+            VagaDetalhes tela = new VagaDetalhes(usuarioLogado, vagaController, vaga);
             tela.setVisible(true);
             this.dispose();
         });
@@ -212,6 +222,11 @@ public class VagaListar extends javax.swing.JFrame {
 
         return card;
     }
+    
+    private void carregarExemplos() {
+    List<Vaga> exemplos = gerarVagasTeste();
+    carregarVagas(exemplos);
+}
 
     /**
      * Limpa o painel e adiciona os cards das vagas fornecidas
@@ -422,7 +437,7 @@ public class VagaListar extends javax.swing.JFrame {
         String tipoSelecionado = (String) cboxTipo.getSelectedItem();
         String modeloSelecionado = (String) cBoxModelo.getSelectedItem();
         
-        List<Vaga> todasVagas = vagaService.findAll();
+        List<Vaga> todasVagas = vagaController.findAll();
         List<Vaga> vagasFiltradas = new ArrayList<>();
         
         for(Vaga vaga : todasVagas) {
@@ -448,14 +463,10 @@ public class VagaListar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-      VagaCadastrar telaCadastro = new VagaCadastrar(usuarioLogado, vagaService);
+      VagaCadastrar telaCadastro = new VagaCadastrar(usuarioLogado, vagaController);
         telaCadastro.setVisible(true);
         this.dispose(); // fecha a tela de listagem
     }//GEN-LAST:event_btnCadastrarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
