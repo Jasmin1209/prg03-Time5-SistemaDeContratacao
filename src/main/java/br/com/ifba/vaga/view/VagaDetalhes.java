@@ -8,8 +8,8 @@ package br.com.ifba.vaga.view;
 import br.com.ifba.Candidatura.view.CandidaturaInscricao;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
+import br.com.ifba.vaga.controller.VagaController;
 import br.com.ifba.vaga.entity.Vaga;
-import br.com.ifba.vaga.service.VagaService;
 import javax.swing.JOptionPane;
 /**
  *
@@ -20,16 +20,17 @@ public class VagaDetalhes extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaDetalhes.class.getName());
 
     // Atributos que armazenam os dados necessários para a tela funcionar
-    private VagaService vagaService;
+    private VagaController vagaController;
     private Usuario usuarioLogado;
     private Vaga  vaga; // Objeto da vaga específica que será exibida
     /**
      * Creates new form VagaDetalhes
      */
-    public VagaDetalhes(Usuario usuarioLogado, VagaService vagaService, Vaga vaga) {
+    public VagaDetalhes(Usuario usuarioLogado, VagaController vagaController, Vaga vaga) {
         this.usuarioLogado = usuarioLogado;
-        this.vagaService = vagaService;
+        this.vagaController = vagaController;
         this.vaga = vaga;
+
         
         initComponents();
         setLocationRelativeTo(null); // Centraliza a janela
@@ -195,28 +196,20 @@ public class VagaDetalhes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        new VagaListar(usuarioLogado, vagaService).setVisible(true);
+        new VagaListar(usuarioLogado, vagaController).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
         if (usuarioLogado instanceof UsuarioEmpresa) {
-            // Se for empresa, abre tela de edição
-            // new VagaEditar(usuarioLogado, vagaService, vaga).setVisible(true);
-            // this.dispose();
-            JOptionPane.showMessageDialog(this, "Abrindo edição da vaga...");
-        } else {
-            // Se for candidato, abre tela de inscrição
-            //new CandidaturaInscricao(usuarioLogado, vaga).setVisible(true);
+            new VagaEditar(usuarioLogado, vagaController, vaga).setVisible(true);
             this.dispose();
+        } else {
+            //new CandidaturaInscricao(usuarioLogado, vaga).setVisible(true);
+            //this.dispose();
         }
     }//GEN-LAST:event_btnAcaoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-                                              
-
+                                       
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAcao;
     private javax.swing.JButton btnVoltar;

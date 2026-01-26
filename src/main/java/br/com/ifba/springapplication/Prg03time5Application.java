@@ -1,6 +1,7 @@
 package br.com.ifba.springapplication;
 
 import br.com.ifba.perfil.candidato.view.TelaApresentacao;
+import br.com.ifba.telaPrincipal.view.TelaPrincipal;
 import br.com.ifba.usuario.view.LoginCandidatoView;
 import java.awt.EventQueue;
 import org.springframework.boot.SpringApplication;
@@ -15,14 +16,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class Prg03time5Application {
 
     public static void main(String[] args) {
-        SpringApplication spring = new SpringApplication(Prg03time5Application.class);
-        
+        SpringApplication spring =
+            new SpringApplication(Prg03time5Application.class);
+
         spring.setHeadless(false);
         ConfigurableApplicationContext context = spring.run(args);
 
         EventQueue.invokeLater(() -> {
-            LoginCandidatoView tela =
-                    context.getBean(LoginCandidatoView.class);
+            TelaPrincipal tela =
+                context.getBean(TelaPrincipal.class);
             tela.setVisible(true);
         });
     }
