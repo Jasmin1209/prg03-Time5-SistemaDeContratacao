@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Repositório responsável pelo acesso
- * aos dados do usuário empresa.
+ * Repositório responsável pelo acesso aos dados
+ * persistidos do usuário do tipo empresa.
+ * Utiliza Spring Data JPA.
  * @author luiza
  */
+
 @Repository
 public interface UsuarioEmpresaRepository
         extends JpaRepository<UsuarioEmpresa, Long> {

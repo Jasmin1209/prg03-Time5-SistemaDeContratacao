@@ -4,12 +4,12 @@
  */
 package br.com.ifba.usuario.view;
 import javax.swing.JOptionPane;
-import br.com.ifba.usuario.entity.UsuarioCandidato;
 import java.util.regex.Pattern;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-@Component
+import java.awt.Color;
 
 /**
  * Tela responsável pela solicitação de redefinição de senha.
@@ -18,16 +18,20 @@ import org.springframework.stereotype.Component;
  * @author luiza
  */
 
+@Component
 public class EsqueciSenhaView extends javax.swing.JFrame {
-    
-   private final UsuarioCandidatoController controller =
-            new UsuarioCandidatoController(
-                new br.com.ifba.usuario.service.UsuarioCandidatoService()
-            );
-    /**
-     * Creates new form EsqueciSenhaView
-     */
-    public EsqueciSenhaView() {
+
+    private final UsuarioCandidatoController controller;
+    private final ApplicationContext context;
+
+    @Autowired
+    public EsqueciSenhaView(
+            UsuarioCandidatoController controller,
+            ApplicationContext context) {
+
+        this.controller = controller;
+        this.context = context;
+
         initComponents();
         configurarTela();
     }
@@ -166,71 +170,105 @@ public class EsqueciSenhaView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void configurarTela() {
+    
+    // ================== PADRÃO VISUAL DO PROJETO ==================
+
+// 🎨 Paleta
+private static final Color AZUL_CLARO = new Color(71, 178, 240);   // #47b2f0
+private static final Color AZUL_MEDIO = new Color(54, 150, 209);   // #3696d1
+private static final Color AZUL_BASE  = new Color(36, 121, 178);   // #2479b2
+private static final Color AZUL_FORTE = new Color(18, 92, 146);    // #125c92
+private static final Color AZUL_FUNDO = new Color(0, 63, 115);     // #003f73
+
+private static final Color TEXTO_PADRAO = new Color(90, 90, 90);
+private static final Color BORDA_CAMPO  = new Color(200, 200, 200);
+
+// ================== CONFIGURAÇÃO GERAL ==================
+private void configurarTela() {
     configurarCores();
     configurarFontes();
-    configurarCampoEmail();
+    configurarCampos();
     configurarBotao();
-    setLocationRelativeTo(null); // Centraliza a tela
-}
-    private void configurarCores() {
-    // Fundo principal
-    jPanel4.setBackground(new java.awt.Color(0, 51, 51));
 
-    // Painéis tipo "card"
-    jPanel2.setBackground(java.awt.Color.WHITE);
-    jPanel5.setBackground(new java.awt.Color(239, 238, 238));
-
-    // Labels
-    lblLogin.setForeground(new java.awt.Color(80, 80, 80));
-    lblEmail.setForeground(new java.awt.Color(100, 100, 100));
+    setSize(677, 567);
+    setResizable(false);
+    setLocationRelativeTo(null);
 }
-    private void configurarFontes() {
+
+// ================== CORES ==================
+private void configurarCores() {
+
+    // Fundo geral
+    jPanel4.setBackground(AZUL_FUNDO);
+
+    // Cabeçalho
+    jPanel5.setBackground(AZUL_BASE);
+
+    // Card
+    jPanel2.setBackground(Color.WHITE);
+    jPanel2.setBorder(null);
+
+    // Título
+    lblLogin.setForeground(Color.WHITE);
+
+    // Label
+    lblEmail.setForeground(TEXTO_PADRAO);
+
+    // Campo
+    txtEmail.setForeground(TEXTO_PADRAO);
+}
+
+// ================== FONTES ==================
+private void configurarFontes() {
+
     lblLogin.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 30));
+
     lblEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
-
     txtEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
-}
-    private void configurarCampoEmail() {
-    txtEmail.setText("");
-    txtEmail.setForeground(new java.awt.Color(60, 60, 60));
 
-    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(
-        new java.awt.Color(200, 200, 200)
-    ));
-}
-    private void configurarBotao() {
-    btnEnviar.setBackground(new java.awt.Color(0, 102, 102));
-    btnEnviar.setForeground(java.awt.Color.WHITE);
-    btnEnviar.setFocusPainted(false);
     btnEnviar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
 }
 
+// ================== CAMPOS ==================
+private void configurarCampos() {
+
+    txtEmail.setText("");
+    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+}
+
+// ================== BOTÃO ==================
+private void configurarBotao() {
+
+    btnEnviar.setBackground(AZUL_MEDIO);
+    btnEnviar.setForeground(Color.WHITE);
+    btnEnviar.setFocusPainted(false);
+}
+
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // Simula solicitação de redefinição de senha
-        String email = txtEmail.getText();
 
-    if (campoVazio(email)) {
-        JOptionPane.showMessageDialog(this, "Informe o e-mail.");
-        return;
-    }
+    String email = txtEmail.getText();
 
-    if (!emailValido(email)) {
-        JOptionPane.showMessageDialog(this, "E-mail inválido.");
-        return;
-    }
+        if (campoVazio(email)) {
+            JOptionPane.showMessageDialog(this, "Informe o e-mail.");
+            return;
+        }
 
-        UsuarioCandidato usuario = new UsuarioCandidato();
-    usuario.setEmail(email);
+        try {
+            controller.verificarEmail(email);
 
-    controller.cadastrar(usuario); // valida o email
+            JOptionPane.showMessageDialog(this,
+                    "Solicitação enviada para o e-mail informado.");
 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "E-mail não cadastrado no sistema.");
+        }
 
-    JOptionPane.showMessageDialog(this,
-        "Solicitação enviada para o e-mail informado.");
+        LoginCandidatoView login =
+                context.getBean(LoginCandidatoView.class);
+        login.setVisible(true);
+        this.dispose();
 
-    new LoginCandidatoView().setVisible(true);
-    this.dispose();
     }//GEN-LAST:event_btnEnviarActionPerformed
     private boolean campoVazio(String valor) {
     return valor == null || valor.trim().isEmpty();
@@ -239,6 +277,7 @@ public class EsqueciSenhaView extends javax.swing.JFrame {
 private boolean emailValido(String email) {
     return Pattern.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email);
 }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
     private javax.swing.JPanel jPanel2;

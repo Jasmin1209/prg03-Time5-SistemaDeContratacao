@@ -3,44 +3,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.service;
-
-/**
- * Camada de serviço responsável pelas regras de negócio
- * do usuário candidato, incluindo validações e
- * processamento de cadastro e login.
- * @author luiza
- */
-
-
 import br.com.ifba.usuario.entity.UsuarioCandidato;
+import br.com.ifba.usuario.repository.UsuarioCandidatoRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.Set;
 
+/**
+ * Camada de serviço responsável pelas
+ * regras de negócio do usuário candidato.
+ * Realiza validações, cadastro e autenticação
+ * utilizando persistência via JPA.
+ * @author luiza
+ */
 @Service
-public class UsuarioCandidatoService {
+public class UsuarioCandidatoService
+        implements UsuarioCandidatoServiceInterface {
 
+    private final UsuarioCandidatoRepository repository;
     private final Validator validator;
 
-    public UsuarioCandidatoService() {
+    public UsuarioCandidatoService(UsuarioCandidatoRepository repository) {
+        this.repository = repository;
+
         ValidatorFactory factory =
                 Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }
 
+    @Override
     public void cadastrar(UsuarioCandidato candidato) {
         validar(candidato);
-        // futuramente: repository.save(candidato);
+
+        if (repository.findByEmail(candidato.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("E-mail já cadastrado.");
+        }
+
+        repository.save(candidato);
     }
 
+    @Override
     public boolean login(String email, String senha) {
-        // simulação
-        return email.equals("teste@email.com")
-            && senha.equals("12345678a");
+        UsuarioCandidato usuario = repository.findByEmail(email)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("E-mail não cadastrado."));
+
+        if (!usuario.getSenha().equals(senha)) {
+            throw new IllegalArgumentException("Senha inválida.");
+        }
+
+        return true;
     }
 
     private void validar(UsuarioCandidato candidato) {
@@ -50,7 +65,7 @@ public class UsuarioCandidatoService {
         if (!erros.isEmpty()) {
             StringBuilder msg = new StringBuilder();
             erros.forEach(e ->
-                msg.append(e.getMessage()).append("\n")
+                    msg.append(e.getMessage()).append("\n")
             );
             throw new IllegalArgumentException(msg.toString());
         }
