@@ -4,9 +4,11 @@
  */
 package br.com.ifba.perfil.candidato.service;
 
+import br.com.ifba.perfil.entity.Competencia;
 import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -65,8 +67,8 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
      * Busca um perfil pelo nome.
      */
     @Override
-    public PerfilCandidato findByUsuarioPerfil_Nome(String nome) {
-        return perfilCandidatoRepository.findByUsuarioPerfil_Nome(nome)
+    public PerfilCandidato findByUsuarioPerfilNome(String nome) {
+        return perfilCandidatoRepository.findByUsuarioPerfilNome(nome)
                 .orElseThrow(() -> new NoSuchElementException(
                         "Perfil de candidato não encontrado com nome: " + nome));
     }
@@ -88,7 +90,7 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
-    public void addExperiencia (Long id, Experiencia experiencia){
+    public Experiencia addExperiencia (Long id, Experiencia experiencia){
         
     if (experiencia.getCargo() == null || experiencia.getCargo().trim().isEmpty()) {
         throw new IllegalArgumentException("Título é obrigatório.");
@@ -108,13 +110,16 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
         );
 
     experiencia.setPerfilCandidato(perfil);
+    
     perfil.getExperiencias().add(experiencia);
 
     perfilCandidatoRepository.save(perfil);
+    
+    return experiencia;
     }
     
     @Override
-    public void addFormacao (Long id, Formacao formacao){
+    public Formacao addFormacao (Long id, Formacao formacao){
          if (formacao.getInstituicao() == null || formacao.getInstituicao().trim().isEmpty()) {
         throw new IllegalArgumentException("Instituição é obrigatória.");
     }
@@ -141,8 +146,51 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     perfil.getFormacaoAcademica().add(formacao);
 
     perfilCandidatoRepository.save(perfil);
+    
+    return formacao;
     }
 
+    @Override 
+    public Competencia addCompetencia (Long id, Competencia competencia){
+        if(competencia.getTitulo() == null){
+            throw new IllegalArgumentException("Título da competência é obrigatório");
+        }
+        
+        PerfilCandidato perfil = perfilCandidatoRepository.findById(id).
+                orElseThrow(() -> 
+                        new NoSuchElementException("Perfil não encontrado")
+                );
+        
+        competencia.setPerfilCandidato(perfil);
+        perfil.getCompetencias().add(competencia);
+        
+        perfilCandidatoRepository.save(perfil);
+        
+        return competencia;
+    }
+    
+    @Override
+    public Idioma addIdioma (Long id, Idioma idioma){
+        if(idioma.getIdioma() == null){
+            throw new IllegalArgumentException("O idioma é obrigatório");
+        }
+        
+        if(idioma.getNivel() == null){
+            throw new IllegalArgumentException("O nível é obrigatório");
+        }
+        
+        PerfilCandidato perfil = perfilCandidatoRepository.findById(id).
+                orElseThrow(() -> 
+                        new NoSuchElementException("Perfil não encontrado")
+                );
+        
+        idioma.setPerfilCandidato(perfil);
+        perfil.getIdiomas().add(idioma);
+        
+        perfilCandidatoRepository.save(perfil);
+        
+        return idioma;
+    }
 }
 
 

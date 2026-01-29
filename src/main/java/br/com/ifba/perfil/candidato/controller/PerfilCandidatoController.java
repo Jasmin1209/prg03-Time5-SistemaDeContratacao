@@ -4,12 +4,12 @@
  */
 package br.com.ifba.perfil.candidato.controller;
 
-import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.candidato.service.PerfilCandidatoIService;
+import br.com.ifba.perfil.entity.Competencia;
 import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -34,8 +34,8 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     }
 
     @Override
-    public PerfilCandidato findByUsuarioPerfil_Nome(String nome) {
-        return perfilcandidatoservice.findByUsuarioPerfil_Nome(nome);
+    public PerfilCandidato findByUsuarioPerfilNome(String nome) {
+        return perfilcandidatoservice.findByUsuarioPerfilNome(nome);
     }
     
     @Override
@@ -44,12 +44,22 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     }
     
     @Override
-    public void addExperiencia (Long id, Experiencia experiencia) {
-        perfilcandidatoservice.addExperiencia(id, experiencia);
+    public Experiencia addExperiencia (Long id, Experiencia experiencia) {
+       return perfilcandidatoservice.addExperiencia(id, experiencia);
     }
 
     @Override
-    public void addFormacao (Long id, Formacao formacao){ 
-        perfilcandidatoservice.addFormacao(id, formacao);
+    public Formacao addFormacao (Long id, Formacao formacao){ 
+       return perfilcandidatoservice.addFormacao(id, formacao);
+    }
+    
+    @Override
+    public Competencia addCompetencia (Long id, Competencia competencia){
+       return perfilcandidatoservice.addCompetencia(id, competencia);
+    }
+    
+    @Override
+    public Idioma addIdioma (Long id, Idioma idioma){
+       return perfilcandidatoservice.addIdioma(id, idioma);
     }
 }

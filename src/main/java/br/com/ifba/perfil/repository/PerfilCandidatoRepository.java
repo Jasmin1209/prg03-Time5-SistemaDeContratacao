@@ -4,8 +4,6 @@
  */
 package br.com.ifba.perfil.repository;
 
-import br.com.ifba.perfil.entity.Experiencia;
-import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato, Long>{
-        Optional<PerfilCandidato> findByUsuarioPerfil_Nome(String nome);
-        void updateSobreMim (Long id, String novoTexto);
-        Optional<Experiencia> addExperiencia (Long id, Experiencia experiencia);
-        Optional<Formacao> addFormacao (Long id, Formacao formacao);
+        Optional<PerfilCandidato> findByUsuarioPerfilNome(String nome);
+        
 }

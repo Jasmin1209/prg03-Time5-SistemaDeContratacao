@@ -6,8 +6,8 @@ package br.com.ifba.perfil.candidato.view;
 
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
 import br.com.ifba.perfil.entity.Experiencia;
-import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.time.LocalDate;
+import javax.swing.SpinnerNumberModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,16 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         this.idPerfil = idPerfil;
     }
 
+    private void configurarSpinners() {
+        spnDiaInicial.setModel(new SpinnerNumberModel(1, 1, 31, 1));    // dia início
+        spnMesInicial.setModel(new SpinnerNumberModel(1, 1, 12, 1));    // mês início
+        spnAnoInicial.setModel(new SpinnerNumberModel(2024, 1900, 2100, 1)); // ano início
+
+        spnDiaFinal.setModel(new SpinnerNumberModel(0, 0, 31, 1));    // dia fim (0 = atual)
+        spnMesFinal.setModel(new SpinnerNumberModel(0, 0, 12, 1));    // mês fim
+        spnAnoFinal.setModel(new SpinnerNumberModel(0, 0, 2100, 1));  // ano fim
+    }
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarExperiencia.class.getName());
 
     /**
@@ -42,6 +52,8 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
      */
     public TelaEditarExperiencia() {
         initComponents();
+        this.experiencia = new Experiencia();
+        configurarSpinners();
     }
 
     /**
@@ -60,18 +72,18 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         txtempresa = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        spnDiaInicial = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        spnMesInicial = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner();
+        spnAnoInicial = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jSpinner4 = new javax.swing.JSpinner();
+        spnDiaFinal = new javax.swing.JSpinner();
         jLabel8 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
+        spnMesFinal = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
-        jSpinner6 = new javax.swing.JSpinner();
+        spnAnoFinal = new javax.swing.JSpinner();
         btnsalvarexperiencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -122,15 +134,15 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel7)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnDiaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jLabel8)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnMesFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jLabel9)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spnAnoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jLabel6)
                         .addComponent(jLabel2)
                         .addComponent(lblempresa)
@@ -140,15 +152,15 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel3)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnDiaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jLabel4)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnMesInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jLabel5)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(spnAnoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -169,21 +181,21 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnDiaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnMesInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnAnoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnDiaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnMesFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
-                    .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnAnoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btnsalvarexperiencia)
                 .addContainerGap())
@@ -200,19 +212,21 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
 
     //transforma as informações colocadas no spinner em datas válidas
     LocalDate dataInicio = LocalDate.of(
-        (int) jSpinner3.getValue(),
-        (int) jSpinner2.getValue(),
-        (int) jSpinner1.getValue()
+            (int) spnAnoInicial.getValue(),
+            (int) spnMesInicial.getValue(),
+            (int) spnDiaInicial.getValue() 
+   
     );
 
     experiencia.setDataInicial(dataInicio);
     
     LocalDate dataFim = null; //se for nulo fica considerado como trabalho atual
-    if ((int) jSpinner6.getValue() > 0) {
+    if ((int) spnAnoFinal.getValue() > 0) {
         dataFim = LocalDate.of(
-            (int) jSpinner6.getValue(),
-            (int) jSpinner5.getValue(),
-            (int) jSpinner4.getValue()
+                (int) spnAnoFinal.getValue(),
+                (int) spnMesFinal.getValue(),
+                (int) spnDiaFinal.getValue()
+               
         );
     }
 
@@ -238,14 +252,14 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
-    private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JSpinner jSpinner6;
     private javax.swing.JLabel lblempresa;
     private javax.swing.JLabel lblexperience;
+    private javax.swing.JSpinner spnAnoFinal;
+    private javax.swing.JSpinner spnAnoInicial;
+    private javax.swing.JSpinner spnDiaFinal;
+    private javax.swing.JSpinner spnDiaInicial;
+    private javax.swing.JSpinner spnMesFinal;
+    private javax.swing.JSpinner spnMesInicial;
     private javax.swing.JTextField txtempresa;
     private javax.swing.JTextField txttitulo;
     // End of variables declaration//GEN-END:variables
