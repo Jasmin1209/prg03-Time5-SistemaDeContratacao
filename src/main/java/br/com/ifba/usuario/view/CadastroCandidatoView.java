@@ -7,10 +7,11 @@ import javax.swing.JOptionPane;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
 import java.util.regex.Pattern;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
-import br.com.ifba.usuario.service.UsuarioCandidatoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import java.awt.Color;
 
-@Component
 
 /**
  * Tela de cadastro do usuário candidato.
@@ -19,17 +20,20 @@ import org.springframework.stereotype.Component;
  * @author luiza
  */
 
+    @Component
 public class CadastroCandidatoView extends javax.swing.JFrame {
-    
-    private final UsuarioCandidatoController controller =
-        new UsuarioCandidatoController(
-            new UsuarioCandidatoService()
-        );
 
-    /**
-     * Creates new form CadastroCandidatoView
-     */
-    public CadastroCandidatoView() {
+    private final UsuarioCandidatoController controller;
+    private final ApplicationContext context;
+
+    @Autowired
+    public CadastroCandidatoView(
+            UsuarioCandidatoController controller,
+            ApplicationContext context) {
+
+        this.controller = controller;
+        this.context = context;
+
         initComponents();
         configurarTela();
     }
@@ -70,7 +74,7 @@ public class CadastroCandidatoView extends javax.swing.JFrame {
 
         lblCadastro.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lblCadastro.setForeground(new java.awt.Color(102, 102, 102));
-        lblCadastro.setText("Cadastro Usuário");
+        lblCadastro.setText("Cadastro Candidato");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -78,8 +82,8 @@ public class CadastroCandidatoView extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(247, Short.MAX_VALUE))
+                .addComponent(lblCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,16 +115,6 @@ public class CadastroCandidatoView extends javax.swing.JFrame {
                 btnCadastrarActionPerformed(evt);
             }
         });
-
-        txtNome.setText("jTextField1");
-
-        txtCpf.setText("jTextField2");
-
-        txtTelefone.setText("jTextField3");
-
-        txtEmail.setText("jTextField4");
-
-        txtSenha.setText("jTextField5");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -205,26 +199,56 @@ public class CadastroCandidatoView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void configurarTela() {
+    // ================== PADRÃO VISUAL DO PROJETO ==================
+
+// 🎨 Paleta de Cores
+private static final Color AZUL_CLARO = new Color(71, 178, 240);  // #47b2f0
+private static final Color AZUL_MEDIO = new Color(54, 150, 209);  // #3696d1
+private static final Color AZUL_BASE  = new Color(36, 121, 178);  // #2479b2
+private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
+private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
+
+private static final Color TEXTO_PADRAO = new Color(90, 90, 90);
+private static final Color BORDA_CAMPO  = new Color(200, 200, 200);
+
+// ================== CONFIGURAÇÃO GERAL DA TELA ==================
+private void configurarTela() {
     configurarCores();
     configurarFontes();
     configurarCampos();
     configurarBotao();
+
+    setSize(677, 567);
+    setResizable(false);
     setLocationRelativeTo(null);
 }
-    private void configurarCores() {
-    jPanel3.setBackground(new java.awt.Color(0, 51, 51));
-    jPanel2.setBackground(new java.awt.Color(239, 238, 238));
-    jPanel4.setBackground(java.awt.Color.WHITE);
 
-    lblCadastro.setForeground(new java.awt.Color(80, 80, 80));
-    lblNome.setForeground(new java.awt.Color(100, 100, 100));
-    lblCpf.setForeground(new java.awt.Color(100, 100, 100));
-    lblTelefone.setForeground(new java.awt.Color(100, 100, 100));
-    lblEmail.setForeground(new java.awt.Color(100, 100, 100));
-    lblSenha.setForeground(new java.awt.Color(100, 100, 100));
+// ================== CORES ==================
+private void configurarCores() {
+
+    // Fundo principal
+    jPanel3.setBackground(AZUL_FUNDO);
+
+    // Cabeçalho
+    jPanel2.setBackground(AZUL_BASE);
+
+    // Card / formulário
+    jPanel4.setBackground(Color.WHITE);
+
+    // Título
+    lblCadastro.setForeground(Color.WHITE);
+
+    // Labels
+    lblNome.setForeground(TEXTO_PADRAO);
+    lblCpf.setForeground(TEXTO_PADRAO);
+    lblTelefone.setForeground(TEXTO_PADRAO);
+    lblEmail.setForeground(TEXTO_PADRAO);
+    lblSenha.setForeground(TEXTO_PADRAO);
 }
-    private void configurarFontes() {
+
+// ================== FONTES ==================
+private void configurarFontes() {
+
     lblCadastro.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 30));
 
     lblNome.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
@@ -239,87 +263,69 @@ public class CadastroCandidatoView extends javax.swing.JFrame {
     txtEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
     txtSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
 }
-    private void configurarCampos() {
+
+// ================== CAMPOS ==================
+private void configurarCampos() {
+
     txtNome.setText("");
     txtCpf.setText("");
     txtTelefone.setText("");
     txtEmail.setText("");
     txtSenha.setText("");
 
-    java.awt.Color borda = new java.awt.Color(200, 200, 200);
-
-    txtNome.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtCpf.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtTelefone.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
+    txtNome.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtCpf.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtTelefone.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
 }
-    private void configurarBotao() {
-    btnCadastrar.setBackground(new java.awt.Color(0, 102, 102));
-    btnCadastrar.setForeground(java.awt.Color.WHITE);
+
+// ================== BOTÃO ==================
+private void configurarBotao() {
+
+    btnCadastrar.setBackground(AZUL_MEDIO);
+    btnCadastrar.setForeground(Color.WHITE);
     btnCadastrar.setFocusPainted(false);
     btnCadastrar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
 }
 
+
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
                                            
     String nome = txtNome.getText();
-    String cpf = txtCpf.getText();
-    String telefone = txtTelefone.getText();
-    String email = txtEmail.getText();
-    String senha = txtSenha.getText();
+        String cpf = txtCpf.getText();
+        String telefone = txtTelefone.getText();
+        String email = txtEmail.getText();
+        String senha = txtSenha.getText();
 
-    if (campoVazio(nome) || campoVazio(cpf) || campoVazio(telefone)
-            || campoVazio(email) || campoVazio(senha)) {
-        JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-        return;
-    }
+        if (campoVazio(nome) || campoVazio(cpf) ||
+            campoVazio(telefone) || campoVazio(email) || campoVazio(senha)) {
 
-    if (nome.length() < 3) {
-        JOptionPane.showMessageDialog(this, "Nome muito curto.");
-        return;
-    }
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
 
-    if (!cpfValido(cpf)) {
-        JOptionPane.showMessageDialog(this, "CPF inválido (11 números).");
-        return;
-    }
+        UsuarioCandidato candidato = new UsuarioCandidato();
+        candidato.setNome(nome);
+        candidato.setCpf(cpf);
+        candidato.setTelefone(telefone);
+        candidato.setEmail(email);
+        candidato.setSenha(senha);
 
-    if (!telefoneValido(telefone)) {
-        JOptionPane.showMessageDialog(this, "Telefone inválido.");
-        return;
-    }
+        try {
+            controller.cadastrar(candidato);
 
-    if (!emailValido(email)) {
-        JOptionPane.showMessageDialog(this, "E-mail inválido.");
-        return;
-    }
+            JOptionPane.showMessageDialog(this,
+                    "Cadastro realizado com sucesso!");
 
-    if (!senhaForte(senha)) {
-        JOptionPane.showMessageDialog(this,
-            "Senha fraca! Use no mínimo 8 caracteres, letras e números.");
-        return;
-    }
+            LoginCandidatoView login =
+                    context.getBean(LoginCandidatoView.class);
+            login.setVisible(true);
+            this.dispose();
 
-    UsuarioCandidato candidato = new UsuarioCandidato();
-    candidato.setNome(nome);
-    candidato.setCpf(cpf);
-    candidato.setTelefone(telefone);
-    candidato.setEmail(email);
-    candidato.setSenha(senha);
-
-    try {
-        controller.cadastrar(candidato);
-
-        JOptionPane.showMessageDialog(this,
-                "Cadastro realizado com sucesso!");
-
-        new LoginCandidatoView().setVisible(true);
-        this.dispose();
-
-    } catch (IllegalArgumentException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage());
-    }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
     private boolean campoVazio(String valor) {
     return valor == null || valor.trim().isEmpty();
