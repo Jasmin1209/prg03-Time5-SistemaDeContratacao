@@ -4,6 +4,10 @@
  */
 package br.com.ifba.perfil.candidato.controller;
 
+import br.com.ifba.perfil.entity.Competencia;
+import br.com.ifba.perfil.entity.Experiencia;
+import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 
 /**
@@ -16,7 +20,15 @@ public interface PerfilCandidatoIController {
     
     public void delete (PerfilCandidato perfilCandidato);
     
-    public PerfilCandidato findByUsuarioPerfil_Nome (String nome);
+    public PerfilCandidato findByUsuarioPerfilNome (String nome);
     
-    void atualizarSobreMim(Long idPerfil, String novoSobreMim);
+    void updateSobreMim(Long idPerfil, String novoSobreMim);
+    
+    Experiencia addExperiencia (Long id, Experiencia experiencia);
+
+    Formacao addFormacao (Long id, Formacao formacao);
+    
+    Competencia addCompetencia (Long id, Competencia competencia);
+    
+    Idioma addIdioma (Long id, Idioma idioma);
 }
