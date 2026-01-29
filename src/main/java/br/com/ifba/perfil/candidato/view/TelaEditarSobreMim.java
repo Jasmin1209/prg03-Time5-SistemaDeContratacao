@@ -118,7 +118,7 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Campo 'sobre mim' atualizado com sucesso");
         
         //atualiza a tela de apresentação
-        telaapresentacao.atualizarSobreMim(novotexto);
+        telaapresentacao.recarregarPerfil();
         telaapresentacao.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnsaveActionPerformed
