@@ -5,7 +5,6 @@
 package br.com.ifba.perfil.candidato.view;
 
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
-import br.com.ifba.perfil.entity.PerfilCandidato;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -24,17 +23,14 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
     private PerfilCandidatoIController perfilcandidatocontroller;
     
     private TelaApresentacao telaapresentacao;
-    private PerfilCandidato perfilcandidato;
     private Long idPerfil;
     
     public void setTelaApresentacao(TelaApresentacao telaapresentacao){
         this.telaapresentacao = telaapresentacao;
     }
     
-    public void setPerfilCandidato(PerfilCandidato perfilcandidato){
-        this.perfilcandidato = perfilcandidato;   
-    }
     
+    //Recebe os dados iniciai do perfil
     public void setDados(Long idPerfil, String textoAtual) {
         this.idPerfil = idPerfil;
         txtsobremim.setText(textoAtual);
@@ -59,11 +55,12 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtsobremim = new javax.swing.JTextField();
         lblsobremim = new javax.swing.JLabel();
         btnsave = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtsobremim = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblsobremim.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblsobremim.setText("SOBRE MIM");
@@ -75,6 +72,10 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
             }
         });
 
+        txtsobremim.setColumns(20);
+        txtsobremim.setRows(5);
+        jScrollPane1.setViewportView(txtsobremim);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,10 +84,14 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnsave)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtsobremim, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblsobremim, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblsobremim, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(305, 305, 305)))
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,8 +99,8 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addComponent(lblsobremim)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtsobremim, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnsave)
                 .addContainerGap(43, Short.MAX_VALUE))
         );
@@ -105,22 +110,25 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
 
     private void btnsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaveActionPerformed
         // TODO add your handling code here:
-        String novotexto = txtsobremim.getText();
+     
+        String novotexto = txtsobremim.getText().trim(); //.trim() remove espaços extras
         
-        perfilcandidatocontroller.atualizarSobreMim(idPerfil, novotexto);
+        //atualiza o campo no banco de dado
+        perfilcandidatocontroller.updateSobreMim(idPerfil, novotexto);
         JOptionPane.showMessageDialog(this, "Campo 'sobre mim' atualizado com sucesso");
         
-        telaapresentacao.atualizarSobreMim(novotexto);
+        //atualiza a tela de apresentação
+        telaapresentacao.recarregarPerfil();
         telaapresentacao.setVisible(true);
         this.dispose();
-    
     }//GEN-LAST:event_btnsaveActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnsave;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblsobremim;
-    private javax.swing.JTextField txtsobremim;
+    private javax.swing.JTextArea txtsobremim;
     // End of variables declaration//GEN-END:variables
 }

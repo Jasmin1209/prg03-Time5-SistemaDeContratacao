@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 import java.awt.Color;
+import br.com.ifba.telaPrincipal.view.TelaPrincipal;
+
 
 /**
  * Tela responsável pelo login do usuário candidato.
@@ -19,18 +21,29 @@ public class LoginCandidatoView extends javax.swing.JFrame {
     private final UsuarioCandidatoController controller;
     private final CadastroCandidatoView cadastroCandidatoView;
     private final EsqueciSenhaView esqueciSenhaView;
+    private final TelaPrincipal telaPrincipal;
 
     public LoginCandidatoView(
             UsuarioCandidatoController controller,
             CadastroCandidatoView cadastroCandidatoView,
-            EsqueciSenhaView esqueciSenhaView
+            EsqueciSenhaView esqueciSenhaView,
+            TelaPrincipal telaPrincipal
     ) {
         this.controller = controller;
         this.cadastroCandidatoView = cadastroCandidatoView;
         this.esqueciSenhaView = esqueciSenhaView;
+        this.telaPrincipal = telaPrincipal;
         initComponents();
         configurarTela();
-    }
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            voltarParaTelaPrincipal();
+        }
+    });
+}
 
 
     /**
@@ -200,6 +213,11 @@ private static final java.awt.Color AZUL_FUNDO = new java.awt.Color(0, 63, 115);
 private static final java.awt.Color TEXTO_PADRAO = new java.awt.Color(90, 90, 90);
 private static final java.awt.Color BORDA_CAMPO  = new java.awt.Color(200, 200, 200);
 
+private void voltarParaTelaPrincipal() {
+    telaPrincipal.setVisible(true);
+    this.dispose();
+}
+
 // ================== CONFIGURAÇÃO GERAL ==================
 private void configurarTela() {
     configurarCores();
@@ -282,29 +300,24 @@ private void configurarBotoes() {
         String senha = txtSenha.getText();
 
         if (campoVazio(email) || campoVazio(senha)) {
-            JOptionPane.showMessageDialog(this,
-                    "Informe e-mail e senha.");
+            JOptionPane.showMessageDialog(this, "Informe e-mail e senha.");
             return;
         }
 
         if (!emailValido(email)) {
-            JOptionPane.showMessageDialog(this,
-                    "E-mail inválido.");
+            JOptionPane.showMessageDialog(this, "E-mail inválido.");
             return;
         }
 
         try {
             controller.login(email, senha);
 
-            JOptionPane.showMessageDialog(this,
-                    "Login realizado com sucesso!");
-           
+            JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
+            telaPrincipal.setVisible(true); // ✅ VOLTA PRA PRINCIPAL
+            this.dispose();
 
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Erro inesperado ao realizar login.");
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnEntrarActionPerformed
 

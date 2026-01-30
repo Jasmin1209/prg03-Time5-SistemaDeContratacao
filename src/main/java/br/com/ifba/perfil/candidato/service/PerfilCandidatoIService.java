@@ -4,7 +4,13 @@
  */
 package br.com.ifba.perfil.candidato.service;
 
+import br.com.ifba.perfil.entity.Competencia;
+import br.com.ifba.perfil.entity.Experiencia;
+import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.Idioma;
+import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.time.LocalDate;
 
 /**
  *
@@ -33,7 +39,15 @@ public interface PerfilCandidatoIService {
      * @param nome nome do candidato
      * @return perfil encontrado ou {@code null} caso não exista
      */
-    PerfilCandidato findByUsuarioPerfil_Nome(String nome);
+    PerfilCandidato findByUsuarioPerfilNome(String nome);
     
-    void atualizarSobreMim(Long idPerfil, String novoSobreMim);
+    void updateSobreMim(Long idPerfil, String novoSobreMim);
+    
+    Experiencia addExperiencia (Long id, Experiencia experiencia);
+    
+    Formacao addFormacao (Long id, Formacao formacao);
+
+    Competencia addCompetencia (Long id, Competencia competencia);
+    
+    Idioma addIdioma (Long id, Idioma idioma);
 }

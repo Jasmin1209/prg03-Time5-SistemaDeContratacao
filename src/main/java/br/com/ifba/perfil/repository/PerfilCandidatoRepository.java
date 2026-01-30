@@ -4,7 +4,6 @@
  */
 package br.com.ifba.perfil.repository;
 
-import br.com.ifba.perfil.entity.Perfil;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface PerfilRepository extends JpaRepository<Perfil, Long>{
-        Optional<PerfilCandidato> findByUsuarioPerfil_Nome(String nome);
+public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato, Long>{
+        Optional<PerfilCandidato> findByUsuarioPerfilNome(String nome);
         
 }

@@ -6,7 +6,7 @@ package br.com.ifba.vaga.entity;
 
 
 
-import br.com.ifba.candidatura.entity.Candidatura;
+import br.com.ifba.candidaturas.entity.Candidatura;
 import br.com.ifba.endereco.Endereco;
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import br.com.ifba.vaga.enums.TipoContratacao;
@@ -75,7 +75,7 @@ public class Vaga extends PersistenceEntity implements Serializable{
     private Endereco localizacao;
     
     // Descrição da vaga
-    @Column(name = "descrição", length = 1000)
+    @Column(name = "descricao", length = 1000)
     private String descricao;
     
     @OneToMany(mappedBy = "vaga", cascade = CascadeType.ALL, orphanRemoval = true)
