@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 import java.awt.Color;
-import br.com.ifba.telaPrincipal.view.TelaPrincipal;
-
 
 @Component
 public class LoginEmpresaView extends javax.swing.JFrame {
@@ -17,18 +15,16 @@ public class LoginEmpresaView extends javax.swing.JFrame {
     private final UsuarioEmpresaController controller;
     private final CadastroEmpresaView cadastroEmpresaView;
     private final EsqueciSenhaView esqueciSenhaView;
-    private final TelaPrincipal telaPrincipal;
-    
+
+    // Injeção correta pelo construtor (Spring)
     public LoginEmpresaView(
             UsuarioEmpresaController controller,
             CadastroEmpresaView cadastroEmpresaView,
-            EsqueciSenhaView esqueciSenhaView,
-            TelaPrincipal telaPrincipal
+            EsqueciSenhaView esqueciSenhaView
     ) {
         this.controller = controller;
         this.cadastroEmpresaView = cadastroEmpresaView;
         this.esqueciSenhaView = esqueciSenhaView;
-        this.telaPrincipal = telaPrincipal;
         initComponents();
         configurarTela();
         
@@ -238,11 +234,6 @@ private static final java.awt.Color AZUL_FUNDO = new java.awt.Color(0, 63, 115);
 private static final java.awt.Color TEXTO_PADRAO = new java.awt.Color(90, 90, 90);
 private static final java.awt.Color BORDA_CAMPO  = new java.awt.Color(200, 200, 200);
 
-private void voltarParaTelaPrincipal() {
-    telaPrincipal.setVisible(true);
-    this.dispose();
-}
-
 // ================== CONFIGURAÇÃO GERAL ==================
 private void configurarTela() {
     configurarCores();
@@ -324,24 +315,29 @@ private void configurarBotoes() {
         String senha = txtSenha.getText();
 
         if (campoVazio(email) || campoVazio(senha)) {
-            JOptionPane.showMessageDialog(this, "Informe e-mail e senha.");
+            JOptionPane.showMessageDialog(this,
+                    "Informe e-mail e senha.");
             return;
         }
 
         if (!emailValido(email)) {
-            JOptionPane.showMessageDialog(this, "E-mail inválido.");
+            JOptionPane.showMessageDialog(this,
+                    "E-mail inválido.");
             return;
         }
 
         try {
             controller.login(email, senha);
 
-            JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
-            telaPrincipal.setVisible(true); // ✅ VOLTA PRA PRINCIPAL
-            this.dispose();
+            JOptionPane.showMessageDialog(this,
+                    "Login realizado com sucesso!");
+            // futuramente: abrir dashboard
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro inesperado ao realizar login.");
         }
     }//GEN-LAST:event_btnEntrarActionPerformed
 
