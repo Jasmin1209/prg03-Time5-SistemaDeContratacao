@@ -27,7 +27,16 @@ public class LoginEmpresaView extends javax.swing.JFrame {
         this.esqueciSenhaView = esqueciSenhaView;
         initComponents();
         configurarTela();
-    }
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            voltarParaTelaPrincipal();
+        }
+    });
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
