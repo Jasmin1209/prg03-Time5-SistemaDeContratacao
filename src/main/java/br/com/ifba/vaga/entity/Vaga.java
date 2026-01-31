@@ -15,10 +15,13 @@ import br.com.ifba.vaga.enums.ModeloContratacao;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+
+//Lombok
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 /**
  *
  * @author Taila
@@ -26,7 +29,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Vagas")
 @NoArgsConstructor //gera construtor vazio
-@Data //gera getters, setters
+@Getter
+@Setter
 @AllArgsConstructor //gera construtor com tudo
 @EqualsAndHashCode(callSuper = false)
 public class Vaga extends PersistenceEntity implements Serializable{

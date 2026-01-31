@@ -4,6 +4,9 @@
  */
 package br.com.ifba.candidaturas.view;
 
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.vaga.entity.Vaga;
+
 /**
  *
  * @author Taila
@@ -12,10 +15,15 @@ public class CandidaturaInscricao extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CandidaturaInscricao.class.getName());
 
+    
+    private Usuario usuarioLogado;
+    private Vaga  vaga;
     /**
      * Creates new form CandidaturaInscricao
      */
-    public CandidaturaInscricao() {
+    public CandidaturaInscricao(Vaga vaga, Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+        this.vaga = vaga;
         initComponents();
     }
 

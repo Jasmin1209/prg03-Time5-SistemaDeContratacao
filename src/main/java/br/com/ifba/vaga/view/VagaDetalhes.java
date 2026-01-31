@@ -10,6 +10,7 @@ import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import br.com.ifba.vaga.controller.VagaController;
 import br.com.ifba.vaga.entity.Vaga;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 /**
  *
@@ -19,6 +20,13 @@ public class VagaDetalhes extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaDetalhes.class.getName());
 
+    // 🎨 Paleta de Cores: Azul Profissional
+    private static final Color AZUL_CLARO = new Color(71, 178, 240);  // #47b2f0
+    private static final Color AZUL_MEDIO = new Color(54, 150, 209);  // #3696d1
+    private static final Color AZUL_BASE  = new Color(36, 121, 178);  // #2479b2
+    private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
+    private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
+    
     // Atributos que armazenam os dados necessários para a tela funcionar
     private VagaController vagaController;
     private Usuario usuarioLogado;
@@ -34,6 +42,7 @@ public class VagaDetalhes extends javax.swing.JFrame {
         
         initComponents();
         setLocationRelativeTo(null); // Centraliza a janela
+        this.setSize(677, 567);
         
         // Configura o JTextArea para quebrar o texto automaticamente quando chegar ao fim da largura
         txtDescricao.setLineWrap(true);
@@ -41,7 +50,7 @@ public class VagaDetalhes extends javax.swing.JFrame {
         
         carregarDados(); //preenche os campos com a s informações da vaga
         configurarBotao(); //define se o botão dirá "editar" ou "candidatar-se"
-
+        estilizarTela();
     }
     
     private void carregarDados() {
@@ -50,19 +59,36 @@ public class VagaDetalhes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao carregar dados da vaga.");
             return;
         }
+        
+        //Atualiza o Título dinâmico no topo da tela
+        lblTituloVaga.setText(vaga.getTitulo());
+        
         // StringBuilder é usado para concatenar textos de forma mais eficiente que String comum
         StringBuilder sb = new StringBuilder();
         
         sb.append("📝 DESCRIÇÃO DA VAGA\n\n");
         sb.append("Estamos em busca de um(a) ").append(vaga.getTitulo()).append("\n\n");
         
+        // --- STATUS DA VAGA ---
+        String statusTexto = (vaga.getStatus() != null && vaga.getStatus()) ? "✅ ATIVA" : "🚫 ENCERRADA";
+        sb.append("📊 Status: ").append(statusTexto).append("\n");
+        
         // Pega os dados do objeto 'vaga' e adiciona ao texto
         sb.append("📌 Quantidade de vagas: ").append(vaga.getQuantidade()).append("\n");
         sb.append("💼 Modelo de contratação: ").append(vaga.getModelo()).append("\n");
         sb.append("🏢 Tipo de contratação: ").append(vaga.getTipo()).append("\n");
         sb.append("⏰ Período de contratação: ").append(vaga.getPeriodo()).append("\n");
-        sb.append("📍 Localização: ").append(vaga.getLocalizacao().getCidade()).append("\n");
-        sb.append("💰 Faixa salarial: ").append(vaga.getFaixaSalarial()).append("\n\n");
+        
+        // Localização segura
+        String cidade = (vaga.getLocalizacao() != null) ? vaga.getLocalizacao().getCidade() : "Não informada";
+        sb.append("📍 Localização: ").append(cidade).append("\n");
+
+        // Salário seguro
+        if (vaga.getFaixaSalarial() != null) {
+            sb.append("💰 Faixa salarial: R$ ").append(String.format("%,d", vaga.getFaixaSalarial())).append("\n\n");
+        } else {
+            sb.append("💰 Faixa salarial: A combinar\n\n");
+        }
         
         sb.append("🚀 RESPONSABILIDADES\n");
         sb.append(vaga.getDescricao()).append("\n\n");
@@ -80,6 +106,8 @@ public class VagaDetalhes extends javax.swing.JFrame {
         txtDescricao.setText(sb.toString());
         txtDescricao.setCaretPosition(0);// Garante que a barra de rolagem comece no topo
         txtDescricao.setEditable(false);//Impede o usuário de apagar ou mudar o texto da descrição
+        txtDescricao.setLineWrap(true); // o texto quebrar a linha automaticamente  
+        txtDescricao.setWrapStyleWord(true); //para não cortar pralavras no meio
     }
     
     /**
@@ -91,6 +119,31 @@ public class VagaDetalhes extends javax.swing.JFrame {
         }else {
             btnAcao.setText("Candidatar-se");
         }
+    }
+    
+    private void estilizarTela() {
+        // Título Principal
+        lblTitulo.setForeground(AZUL_FUNDO);
+    
+        // Título da Vaga (Destaque)
+        lblTituloVaga.setForeground(AZUL_BASE);
+    
+        // Área de Descrição
+        txtDescricao.setBackground(new Color(250, 250, 250)); // Branco levemente acinzentado
+        txtDescricao.setForeground(new Color(50, 50, 50));   // Texto quase preto para leitura
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(AZUL_CLARO));
+    
+        // Botão Voltar
+        btnVoltar.setBackground(AZUL_CLARO);
+        btnVoltar.setForeground(Color.WHITE);
+        btnVoltar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    
+        // Botão de Ação (Editar ou Candidatar)
+        btnAcao.setBackground(AZUL_BASE);
+        btnAcao.setForeground(Color.WHITE);
+        btnAcao.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+        btnAcao.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAcao.setFocusPainted(false);
     }
 
 
@@ -113,10 +166,10 @@ public class VagaDetalhes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblTitulo.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 18)); // NOI18N
+        lblTitulo.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 24)); // NOI18N
         lblTitulo.setText("Detalhes da Vaga");
 
-        lblDescricao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDescricao.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
         lblDescricao.setText("Descrição:");
 
         txtDescricao.setEditable(false);
@@ -137,7 +190,7 @@ public class VagaDetalhes extends javax.swing.JFrame {
             }
         });
 
-        lblTituloVaga.setFont(new java.awt.Font("Segoe UI Symbol", 0, 14)); // NOI18N
+        lblTituloVaga.setFont(new java.awt.Font("Segoe UI Variable", 3, 18)); // NOI18N
         lblTituloVaga.setText("Titulo da vaga");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -153,43 +206,41 @@ public class VagaDetalhes extends javax.swing.JFrame {
                                 .addGap(2, 2, 2)
                                 .addComponent(lblDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(67, 67, 67)
-                                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(105, 105, 105)
+                                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblTituloVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(223, 223, 223))
+                        .addGap(46, 46, 46)
+                        .addComponent(lblTituloVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(268, 268, 268)
+                        .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnVoltar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(lblTitulo)))
-                .addGap(18, 18, 18)
+                        .addComponent(btnVoltar)
+                        .addGap(44, 44, 44))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblTitulo)
+                        .addGap(18, 18, 18)))
                 .addComponent(lblTituloVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                        .addComponent(lblDescricao)
-                        .addContainerGap(294, Short.MAX_VALUE))
+                        .addGap(45, 45, 45)
+                        .addComponent(lblDescricao))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();

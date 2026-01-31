@@ -45,6 +45,7 @@ public class VagaCadastrar extends javax.swing.JFrame {
      * Configurações lógicas da interface gráfica
      */
     private void configurarTela() {
+        this.setSize(677, 567);
         setLocationRelativeTo(null);
 
         // Lógica dos RadioButtons: impede que "Ativa" e "Encerrada" fiquem marcados ao mesmo tempo
@@ -138,13 +139,14 @@ public class VagaCadastrar extends javax.swing.JFrame {
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jboxPeriodo = new javax.swing.JComboBox<>();
-        txtTitulo = new java.awt.TextField();
-        txtQuantidade = new java.awt.TextField();
-        txtEndereco = new java.awt.TextField();
         lblSalario = new javax.swing.JLabel();
-        txtSalario = new java.awt.TextField();
+        txtTitulo = new javax.swing.JTextField();
+        txtQuantidade = new javax.swing.JTextField();
+        txtEndereco = new javax.swing.JTextField();
+        txtSalario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(677, 567));
 
         lblTitulo.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 18)); // NOI18N
         lblTitulo.setText("Cadastro da Vaga");
@@ -221,38 +223,25 @@ public class VagaCadastrar extends javax.swing.JFrame {
 
         jboxPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(PeriodoContratacao.values()));
 
-        txtTitulo.setText("");
+        lblSalario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblSalario.setText("Faixa salarial:");
+
         txtTitulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTituloActionPerformed(evt);
             }
         });
 
-        txtQuantidade.setText("");
-        txtQuantidade.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtQuantidadeActionPerformed(evt);
-            }
-        });
+        txtEndereco.setText("jTextField1");
 
-        txtEndereco.setText("");
-        txtEndereco.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEnderecoActionPerformed(evt);
-            }
-        });
-
-        lblSalario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblSalario.setText("Faixa salarial:");
-
-        txtSalario.setText("");
+        txtSalario.setText("jTextField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -264,8 +253,8 @@ public class VagaCadastrar extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jboxModeloContratação, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(lblDescricao)
@@ -277,35 +266,30 @@ public class VagaCadastrar extends javax.swing.JFrame {
                             .addComponent(lblSalario)
                             .addComponent(lblPeriodo)
                             .addComponent(lblEndereco))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtEndereco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                            .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rdAtiva, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jrdEncerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnSalvar)
-                        .addGap(64, 64, 64)
-                        .addComponent(btnCancelar)
-                        .addGap(163, 163, 163))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(140, 140, 140))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnSalvar)
+                        .addGap(127, 127, 127)
+                        .addComponent(btnCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblStatus)
+                        .addGap(38, 38, 38)
+                        .addComponent(rdAtiva, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(66, 66, 66)
+                        .addComponent(jrdEncerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(163, 163, 163))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,10 +297,10 @@ public class VagaCadastrar extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lblTitulo)
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTituloVaga)
                     .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblQuantidade)
                     .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -333,26 +317,26 @@ public class VagaCadastrar extends javax.swing.JFrame {
                     .addComponent(lblPeriodo)
                     .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEndereco)
                     .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSalario)
                     .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(scrollDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addComponent(lblDescricao)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblStatus)
                     .addComponent(rdAtiva)
                     .addComponent(jrdEncerrar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
                     .addComponent(btnSalvar))
                 .addGap(5, 5, 5))
@@ -370,60 +354,53 @@ public class VagaCadastrar extends javax.swing.JFrame {
      * Ação principal: Coleta os dados da tela e salva no banco de dados
      */
         try {
-            if (txtTitulo.getText().isBlank()) {
+            // 1. Validações básicas de campos vazios
+            if (txtTitulo.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Informe o título da vaga.");
                 return;
             }
-            
-            if (txtQuantidade.getText().isBlank()) {
+        
+            if (txtQuantidade.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Informe a quantidade de vagas.");
                 return;
             }
 
-            // Validação e conversão numérica da quantidade
-            int quantidade = Integer.parseInt(txtQuantidade.getText());
-
-            // Criação da entidade Vaga e atribuição dos valores da tela
+            // 2. Criação da entidade Vaga e atribuição dos valores
             Vaga vaga = new Vaga();
             vaga.setTitulo(txtTitulo.getText());
-            vaga.setQuantidade(quantidade);
+            vaga.setQuantidade(Integer.parseInt(txtQuantidade.getText().trim()));
             vaga.setModelo((ModeloContratacao) jboxModeloContratação.getSelectedItem());
             vaga.setTipo((TipoContratacao) jboxTipo.getSelectedItem());
             vaga.setPeriodo((PeriodoContratacao) jboxPeriodo.getSelectedItem());
             vaga.setDescricao(txtDescricao.getText());
             vaga.setStatus(rdAtiva.isSelected());
-            
-            // Tratamento específico para o salário (deve ser numérico)
-            try {
-                long faixaSalarial = Long.parseLong(txtSalario.getText());
-                vaga.setFaixaSalarial(faixaSalarial);
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Faixa salarial deve ser numérica!");
-                return;
-            }
-            
-            // Criação do objeto de endereço associado à vaga
+        
+            // 3. Tratamento seguro do salário (remove pontos/vírgulas se houver)
+            String salarioStr = txtSalario.getText().replaceAll("[^0-9]", ""); 
+            vaga.setFaixaSalarial(salarioStr.isEmpty() ? 0L : Long.parseLong(salarioStr));
+        
+            // 4. Criação e associação do objeto de endereço
             Endereco endereco = new Endereco();
             endereco.setCidade(txtEndereco.getText());
             endereco.setEstado("Não informado");
             endereco.setPais("Brasil");
-
             vaga.setLocalizacao(endereco);
 
-
+            // 5. Persistência no banco de dados
             vagaController.save(vaga);
-            
-            // Fecha tela e volta para listagem
+        
+            JOptionPane.showMessageDialog(this, "Vaga cadastrada com sucesso!");
+        
+            // 6. Fecha tela atual e volta para a listagem
             new VagaListar(usuarioLogado, vagaController).setVisible(true);
             this.dispose();
 
-            JOptionPane.showMessageDialog(this, "Vaga cadastrada com sucesso!");
-            limparCampos();
-
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Quantidade deve ser numérica.");
+            JOptionPane.showMessageDialog(this, "Erro: Os campos 'Quantidade' e 'Salário' devem conter apenas números.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro inesperado ao salvar: " + e.getMessage());
         }
-       
+
     }
 
     private void limparCampos() {
@@ -451,16 +428,8 @@ public class VagaCadastrar extends javax.swing.JFrame {
          new VagaListar(usuarioLogado, vagaController).setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
-
-    }//GEN-LAST:event_txtQuantidadeActionPerformed
-
-    private void txtEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnderecoActionPerformed
-
-    }//GEN-LAST:event_txtEnderecoActionPerformed
-
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
-
+        // TODO add your handling code here:
     }//GEN-LAST:event_txtTituloActionPerformed
 
     /**
@@ -488,9 +457,9 @@ public class VagaCadastrar extends javax.swing.JFrame {
     private javax.swing.JRadioButton rdAtiva;
     private javax.swing.JScrollPane scrollDescricao;
     private javax.swing.JTextArea txtDescricao;
-    private java.awt.TextField txtEndereco;
-    private java.awt.TextField txtQuantidade;
-    private java.awt.TextField txtSalario;
-    private java.awt.TextField txtTitulo;
+    private javax.swing.JTextField txtEndereco;
+    private javax.swing.JTextField txtQuantidade;
+    private javax.swing.JTextField txtSalario;
+    private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
 }

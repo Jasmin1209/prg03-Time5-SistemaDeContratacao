@@ -42,6 +42,8 @@ public class VagaListar extends javax.swing.JFrame {
    // 🎨 Paleta de cores da tela
     private static final Color CARD = Color.WHITE;
     private static final Color TEXTO = new Color(33, 37, 41);
+    private static final Color AZUL_CLARO = new Color(71, 178, 240);
+    private static final Color AZUL_BASE  = new Color(36, 121, 178);
 
     private static final Color VERDE = new Color(46, 204, 113);
     private static final Color VERMELHO = new Color(231, 76, 60);
@@ -111,7 +113,10 @@ public class VagaListar extends javax.swing.JFrame {
      */
     private JPanel criarCardVaga(Vaga vaga) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(Color.WHITE);
+        
+        //MUDA A COR DO FUNDO: Se estiver encerrada, o card fica levemente cinza
+        card.setBackground(vaga.getStatus() ? Color.WHITE : new Color(240, 240, 240));
+    
         // Cria uma borda com espaçamento interno (Padding) e uma linha cinza clara
         card.setBorder(javax.swing.BorderFactory.createCompoundBorder(
             javax.swing.BorderFactory.createEmptyBorder(16, 16, 16, 16),
@@ -119,12 +124,14 @@ public class VagaListar extends javax.swing.JFrame {
         ));
         
         card.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, card.getPreferredSize().height));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180));
 
 
         // ===== TÍTULO =====
         JLabel lblTitulo = new JLabel(vaga.getTitulo());
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        // Se encerrada, o texto do título também fica cinza
+        if (!vaga.getStatus()) lblTitulo.setForeground(Color.GRAY);
 
         JSeparator separator = new JSeparator();
 
@@ -200,15 +207,20 @@ public class VagaListar extends javax.swing.JFrame {
         btnDetalhes.setPreferredSize(new Dimension(140, 36));
         btnDetalhes.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        // Lógica de cores
+        if (vaga.getStatus()) {
+            btnDetalhes.setBackground(AZUL_BASE); // Azul para ativas
+        } else {
+            btnDetalhes.setBackground(new Color(149, 165, 166)); // Cinza para encerradas
+        }
+
         btnDetalhes.addActionListener(e -> {
-            // Ao clicar, abre a tela de detalhes passando a vaga específica deste card
-            VagaDetalhes tela = new VagaDetalhes(usuarioLogado, vagaController, vaga);
-            tela.setVisible(true);
+            new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
             this.dispose();
         });
 
         JPanel pnBotao = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        pnBotao.setBackground(Color.WHITE);
+        pnBotao.setBackground(card.getBackground());
         pnBotao.add(btnDetalhes);
 
         // ===== MONTAGEM =====
@@ -226,27 +238,39 @@ public class VagaListar extends javax.swing.JFrame {
     private void carregarExemplos() {
     List<Vaga> exemplos = gerarVagasTeste();
     carregarVagas(exemplos);
-}
+    }
 
     /**
      * Limpa o painel e adiciona os cards das vagas fornecidas
      */
     private void carregarVagas(List<Vaga> vagas) {
+        //Limpa o painel antes de carregar novos resultados
         pnListarVagas.removeAll();
 
         if (vagas == null || vagas.isEmpty()) {
-            JLabel lblVazio = new JLabel("Nenhuma vaga encontrada.");
+            // Caso não existam vagas, exibe uma mensagem amigável
+            JLabel lblVazio = new JLabel("Nenhuma vaga encontrada para os filtros selecionados.");
             lblVazio.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+            lblVazio.setForeground(Color.GRAY);
             lblVazio.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        
+            pnListarVagas.add(Box.createVerticalGlue()); // Empurra para o centro
             pnListarVagas.add(lblVazio);
+            pnListarVagas.add(Box.createVerticalGlue()); // Empurra para o centro
         } else {
+            // Itera sobre a lista e adiciona os cards
             for (Vaga vaga : vagas) {
-                JPanel card = criarCardVaga(vaga);
-                pnListarVagas.add(card);
-                pnListarVagas.add(Box.createVerticalStrut(12));// Espaço entre cards
+                pnListarVagas.add(criarCardVaga(vaga));
+                pnListarVagas.add(Box.createVerticalStrut(12)); // Espaçamento entre as vagas
             }
         }
 
+        //Garante que o scroll volte para o topo ao realizar uma nova busca ou filtro
+        SwingUtilities.invokeLater(() -> {
+            scroolVagas.getVerticalScrollBar().setValue(0);
+        });
+
+        //Atualiza a interface gráfica para mostrar as mudanças
         pnListarVagas.revalidate();
         pnListarVagas.repaint();
     }
@@ -375,11 +399,11 @@ public class VagaListar extends javax.swing.JFrame {
                 .addComponent(cboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cBoxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(15, 15, 15)
                 .addComponent(btnBuscar)
                 .addGap(18, 18, 18)
                 .addComponent(btnCadastrar)
-                .addGap(44, 44, 44))
+                .addGap(35, 35, 35))
         );
         pnFiltrosLayout.setVerticalGroup(
             pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,10 +411,11 @@ public class VagaListar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cBoxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnBuscar)
-                        .addComponent(btnCadastrar)
-                        .addComponent(cBoxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnCadastrar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
@@ -463,7 +488,7 @@ public class VagaListar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-      VagaCadastrar telaCadastro = new VagaCadastrar(usuarioLogado, vagaController);
+        VagaCadastrar telaCadastro = new VagaCadastrar(usuarioLogado, vagaController);
         telaCadastro.setVisible(true);
         this.dispose(); // fecha a tela de listagem
     }//GEN-LAST:event_btnCadastrarActionPerformed
