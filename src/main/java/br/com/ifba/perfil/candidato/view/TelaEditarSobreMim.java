@@ -22,10 +22,10 @@ public class TelaEditarSobreMim extends javax.swing.JFrame {
     @Autowired
     private PerfilCandidatoIController perfilcandidatocontroller;
     
-    private TelaApresentacao telaapresentacao;
+    private TelaApresentacaoCandidato telaapresentacao;
     private Long idPerfil;
     
-    public void setTelaApresentacao(TelaApresentacao telaapresentacao){
+    public void setTelaApresentacao(TelaApresentacaoCandidato telaapresentacao){
         this.telaapresentacao = telaapresentacao;
     }
     

@@ -5,7 +5,6 @@
 package br.com.ifba.perfil.candidato.service;
 
 import br.com.ifba.perfil.entity.Competencia;
-import br.com.ifba.perfil.enums.TipoFormacao;
 import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
@@ -14,7 +13,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import br.com.ifba.perfil.repository.PerfilCandidatoRepository;
-import java.time.LocalDate;
+import java.util.Set;
 
 /**
  *
@@ -31,7 +30,8 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
      * Atualiza um perfil de candidato.
      * 
      * Valida se o perfil existe antes de persistir a atualização.
-   
+     * @param perfilCandidato   
+     * @return    
      */
     @Override
     public PerfilCandidato update(PerfilCandidato perfilCandidato) {
@@ -48,6 +48,7 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
 
     /**
      * Remove um perfil de candidato.
+     * @param perfilCandidato
      */
     @Override
     public void delete(PerfilCandidato perfilCandidato) {
@@ -65,6 +66,8 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
 
     /**
      * Busca um perfil pelo nome.
+     * @param nome
+     * @return 
      */
     @Override
     public PerfilCandidato findByUsuarioPerfilNome(String nome) {
@@ -190,6 +193,51 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
         perfilCandidatoRepository.save(perfil);
         
         return idioma;
+    }
+    
+    @Override
+    public PerfilCandidato findById(Long id){
+        return perfilCandidatoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado"));
+    }
+    
+    @Override
+    public Set<Experiencia> findAllExperiencia(Long id){
+        return perfilCandidatoRepository.findAllExperiencia(id);
+    }
+    
+    @Override 
+    public void deletedByIdExperiencia(Long idExperiencia){
+        perfilCandidatoRepository.deletedByIdExperiencia(idExperiencia);
+    }
+    
+    @Override
+    public Set<Formacao> findAllFormacao(Long id){
+        return perfilCandidatoRepository.findAllFormacao(id);
+    }
+    
+    @Override
+    public void deletedByIdFormacao(Long idFormacao){
+        perfilCandidatoRepository.deletedByIdFormacao(idFormacao);
+    }
+    
+    @Override
+    public Set<Competencia> findAllCompetencia(Long id){
+        return perfilCandidatoRepository.findAllCompetencia(id);
+    }
+    
+    @Override
+    public void deleteByIdCompetencia (Long idCompetencia){
+        perfilCandidatoRepository.deleteByIdCompetencia(idCompetencia);
+    }
+    
+    @Override
+    public Set<Idioma> findAllIdioma (Long id){
+        return perfilCandidatoRepository.findAllIdioma(id);
+    }
+    
+    @Override
+    public void deleteByIdIdioma (Long idIdioma){
+        perfilCandidatoRepository.deleteByIdIdioma(idIdioma);
     }
 }
 

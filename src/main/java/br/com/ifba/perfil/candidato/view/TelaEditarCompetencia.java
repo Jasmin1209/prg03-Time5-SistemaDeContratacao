@@ -29,7 +29,7 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
         initComponents();
     }
     
-     public void setDados(Long idPerfil, Competencia competencia) {
+     public void setDados(Long idPerfil) {
         this.idPerfil = idPerfil;
         this.competencia = competencia;
         txtTitulo.setText(competencia.getTitulo());

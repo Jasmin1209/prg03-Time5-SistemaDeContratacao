@@ -1,0 +1,527 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package br.com.ifba.perfil.candidato.view;
+
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
+import br.com.ifba.perfil.entity.Experiencia;
+import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.util.Collections;
+import java.util.Set;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author USER
+ */
+
+@Component
+@Scope("prototype")
+public class TelaApresentacaoCandidato extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaApresentacaoCandidato.class.getName());
+
+    @Autowired
+    private PerfilCandidatoIController perfilcandidatocontroller;
+    
+    private PerfilCandidato perfilcandidato;
+    
+    // COMPONENTES PRINCIPAIS
+    private JPanel pnlExperiencias;
+    private JPanel pnlFormacoes;
+    
+    public void setPerfilCandidato(PerfilCandidato perfil) {
+        this.perfilcandidato = perfil;
+        atualizarTela(); 
+    }
+    
+    private void atualizarTela() {
+        if (perfilcandidato == null) return;
+
+        lblcompletedname.setText(perfilcandidato.getUsuarioPerfil().getNome());
+        lbldescricionaboutme.setText(perfilcandidato.getSobre());
+
+        carregarExperiencias();
+        carregarFormacoes();
+    }
+    
+    // ======================
+    // Métodod Usado para carregar as experiências inseridas, para que a tela principal se mantenha atualizada    
+    // ======================
+    private void carregarExperiencias() {
+        pnlExperiencias.removeAll();
+
+        Set<Experiencia> experiencias =
+        perfilcandidato.getExperiencias() != null ? perfilcandidato.getExperiencias() : Collections.EMPTY_SET;
+
+        experiencias.forEach(exp -> pnlExperiencias.add(criarPainelExperiencia(exp)));
+
+        pnlExperiencias.revalidate();
+        pnlExperiencias.repaint();
+    }
+    
+    //Método usado para criar um novo painel toda vez que uma experiencia for adicionada
+    private JPanel criarPainelExperiencia(Experiencia exp) {
+        JPanel painel = new JPanel();
+        painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
+        painel.setBorder(BorderFactory.createEtchedBorder());
+
+        painel.add(new JLabel(exp.getCargo()));
+        painel.add(new JLabel(exp.getEmpresa()));
+        painel.add(new JLabel("Início: " + exp.getDataInicial()));
+        painel.add(new JLabel(
+        exp.getDataFinal() != null ? "Fim: " + exp.getDataFinal() : "Atual"
+        ));
+        
+        return painel;
+    }
+    
+    // ======================
+    // Métodod Usado para carregar as formações inseridas, para que a tela principal se mantenha atualizada    
+    // ======================
+    private void carregarFormacoes() {
+        pnlFormacoes.removeAll();
+
+        Set<Formacao> formacoes =
+        perfilcandidato.getFormacaoAcademica() != null ? perfilcandidato.getFormacaoAcademica() : Collections.EMPTY_SET;
+
+        formacoes.forEach(f -> pnlFormacoes.add(criarPainelFormacao(f)));
+
+        pnlFormacoes.revalidate();
+        pnlFormacoes.repaint();
+    }
+    
+    //Método usado para criar um novo painel toda vez que uma formação for adicionada
+    private JPanel criarPainelFormacao(Formacao f) {
+        JPanel painel = new JPanel();
+        painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
+        painel.setBorder(BorderFactory.createEtchedBorder());
+
+
+        painel.add(new JLabel(f.getInstituicao()));
+        painel.add(new JLabel(f.getTipo().name() + " - " + f.getNomeDocurso()));
+        painel.add(new JLabel("Início: " + f.getDataInicial()));
+        painel.add(new JLabel(
+        f.getDataFinal() != null ? "Fim: " + f.getDataFinal() : "Atual"
+        ));
+
+        return painel;
+    }
+    
+    // ======================
+        // RECARREGAR PERFIL
+    // ======================
+    public void recarregarPerfil() {
+        PerfilCandidato atualizado = perfilcandidatocontroller
+            .findByUsuarioPerfilNome(perfilcandidato.getUsuarioPerfil().getNome());
+        setPerfilCandidato(atualizado);
+        setVisible(true);
+    }
+    
+    public TelaApresentacaoCandidato() {
+        initComponents();
+    }
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jpnpainelcentral = new javax.swing.JPanel();
+        lblcompletedname = new javax.swing.JLabel();
+        lblaboutme = new javax.swing.JLabel();
+        lbldescricionaboutme = new javax.swing.JLabel();
+        btncontact = new javax.swing.JButton();
+        lblexpirence = new javax.swing.JLabel();
+        btneditaboutme = new javax.swing.JButton();
+        btninsert = new javax.swing.JButton();
+        lblformation = new javax.swing.JLabel();
+        lblcompetence = new javax.swing.JLabel();
+        pnlcompetencia = new javax.swing.JPanel();
+        lblNomeCompetencia = new javax.swing.JLabel();
+        btnadicionarformacao = new javax.swing.JButton();
+        lblIdioma = new javax.swing.JLabel();
+        pnlIdioma = new javax.swing.JPanel();
+        lblNomeIdioma = new javax.swing.JLabel();
+        lblNivel = new javax.swing.JLabel();
+        btninseriridioma = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        lblinstituicion = new javax.swing.JLabel();
+        lblkingformation = new javax.swing.JLabel();
+        lblcoursename = new javax.swing.JLabel();
+        lbldatestartformation = new javax.swing.JLabel();
+        lbldateendformation = new javax.swing.JLabel();
+        pnlexpirenceinterne = new javax.swing.JPanel();
+        lbltitulo = new javax.swing.JLabel();
+        lblempresa = new javax.swing.JLabel();
+        lbldatestart = new javax.swing.JLabel();
+        lbldateend = new javax.swing.JLabel();
+        pnlContato = new javax.swing.JPanel();
+        lblEmail = new javax.swing.JLabel();
+        lblTelefone = new javax.swing.JLabel();
+        lblSite = new javax.swing.JLabel();
+        btninserircompetencia = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        lblPais = new javax.swing.JLabel();
+        lblCidade = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
+        lblBairro = new javax.swing.JLabel();
+        lblNumero = new javax.swing.JLabel();
+        btnExcluirExperiencias = new javax.swing.JButton();
+        btnExcluirFormacao = new javax.swing.JButton();
+        btnExcluirCompetencia = new javax.swing.JButton();
+        btnExcluirIdioma = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+
+        jpnpainelcentral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblcompletedname.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jpnpainelcentral.add(lblcompletedname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 20));
+
+        lblaboutme.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblaboutme.setText("SOBRE MIM");
+        jpnpainelcentral.add(lblaboutme, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 70, 10));
+
+        lbldescricionaboutme.setBackground(new java.awt.Color(255, 255, 255));
+        lbldescricionaboutme.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lbldescricionaboutme.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                lbldescricionaboutmeComponentAdded(evt);
+            }
+        });
+        jpnpainelcentral.add(lbldescricionaboutme, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 420, 110));
+
+        btncontact.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btncontact.setText("INFORMAÇÕES DE CONTATO");
+        btncontact.setBorder(null);
+        btncontact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncontactActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btncontact, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, -1, -1));
+
+        lblexpirence.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblexpirence.setText("EXPERIÊNCIAS");
+        jpnpainelcentral.add(lblexpirence, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, -1, -1));
+
+        btneditaboutme.setBackground(new java.awt.Color(242, 242, 242));
+        btneditaboutme.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        btneditaboutme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneditaboutmeActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btneditaboutme, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 30, 20));
+
+        btninsert.setBackground(new java.awt.Color(242, 242, 242));
+        btninsert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cadastrar.png"))); // NOI18N
+        btninsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btninsertActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btninsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 420, 30, 20));
+
+        lblformation.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblformation.setText("FORMAÇÕES ");
+        jpnpainelcentral.add(lblformation, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, -1, -1));
+
+        lblcompetence.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblcompetence.setText("COMPETÊNCIAS");
+        jpnpainelcentral.add(lblcompetence, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 690, -1, -1));
+
+        pnlcompetencia.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlcompetencia.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblNomeCompetencia.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlcompetencia.add(lblNomeCompetencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 390, 20));
+
+        jpnpainelcentral.add(pnlcompetencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 710, 420, 110));
+
+        btnadicionarformacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cadastrar.png"))); // NOI18N
+        btnadicionarformacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnadicionarformacaoActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btnadicionarformacao, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 550, -1, 20));
+
+        lblIdioma.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblIdioma.setText("IDIOMA");
+        jpnpainelcentral.add(lblIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 830, -1, -1));
+
+        pnlIdioma.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlIdioma.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblNomeIdioma.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlIdioma.add(lblNomeIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 20));
+
+        lblNivel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlIdioma.add(lblNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 190, 20));
+
+        jpnpainelcentral.add(pnlIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 850, 420, 90));
+
+        btninseriridioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cadastrar.png"))); // NOI18N
+        jpnpainelcentral.add(btninseriridioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 830, -1, 20));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblinstituicion.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(lblinstituicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 380, 20));
+
+        lblkingformation.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(lblkingformation, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 120, 20));
+
+        lblcoursename.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(lblcoursename, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 250, 20));
+
+        lbldatestartformation.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(lbldatestartformation, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 120, 20));
+
+        lbldateendformation.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.add(lbldateendformation, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 120, 20));
+
+        jpnpainelcentral.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 570, 416, 106));
+
+        pnlexpirenceinterne.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlexpirenceinterne.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbltitulo.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlexpirenceinterne.add(lbltitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 5, 380, 20));
+
+        lblempresa.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlexpirenceinterne.add(lblempresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 280, 20));
+
+        lbldatestart.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlexpirenceinterne.add(lbldatestart, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 140, 20));
+
+        lbldateend.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlexpirenceinterne.add(lbldateend, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 130, 20));
+
+        jpnpainelcentral.add(pnlexpirenceinterne, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 416, 106));
+
+        pnlContato.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlContato.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblEmail.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlContato.add(lblEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 20));
+
+        lblTelefone.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlContato.add(lblTelefone, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 250, 20));
+
+        lblSite.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlContato.add(lblSite, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 400, 20));
+
+        jpnpainelcentral.add(pnlContato, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 420, 100));
+
+        btninserircompetencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cadastrar.png"))); // NOI18N
+        btninserircompetencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btninserircompetenciaActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btninserircompetencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 690, 30, 20));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("ENDEREÇO");
+        jpnpainelcentral.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, -1, -1));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblPais.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel3.add(lblPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 20));
+
+        lblCidade.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel3.add(lblCidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 360, 20));
+
+        lblEstado.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel3.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 40, 40, 20));
+        jPanel3.add(lblBairro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 340, 20));
+        jPanel3.add(lblNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 70, 50, 20));
+
+        jpnpainelcentral.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 420, 100));
+
+        btnExcluirExperiencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirExperiencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirExperienciasActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btnExcluirExperiencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 30, 20));
+
+        btnExcluirFormacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirFormacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirFormacaoActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btnExcluirFormacao, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 550, -1, 20));
+
+        btnExcluirCompetencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirCompetencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirCompetenciaActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btnExcluirCompetencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 687, -1, 20));
+
+        btnExcluirIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirIdioma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirIdiomaActionPerformed(evt);
+            }
+        });
+        jpnpainelcentral.add(btnExcluirIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 827, 30, 20));
+
+        getContentPane().add(jpnpainelcentral);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void lbldescricionaboutmeComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_lbldescricionaboutmeComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbldescricionaboutmeComponentAdded
+
+    private void btneditaboutmeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditaboutmeActionPerformed
+        TelaEditarSobreMim tela = SpringContext.getBean(TelaEditarSobreMim.class);
+        tela.setDados(perfilcandidato.getId(), perfilcandidato.getSobre());
+        tela.setTelaApresentacao(this);
+        tela.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btneditaboutmeActionPerformed
+
+    private void btninsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btninsertActionPerformed
+        TelaEditarExperiencia tela = SpringContext.getBean(TelaEditarExperiencia.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setTelaApresentacao(this);
+        tela.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btninsertActionPerformed
+
+    private void btnadicionarformacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnadicionarformacaoActionPerformed
+        // TODO add your handling code here:
+        TelaEditarFormacao tela = SpringContext.getBean(TelaEditarFormacao.class); // modal
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+
+        carregarFormacoes(); // atualiza painel depois que fechar
+    }//GEN-LAST:event_btnadicionarformacaoActionPerformed
+
+    private void btninserircompetenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btninserircompetenciaActionPerformed
+        // TODO add your handling code here:
+        TelaEditarCompetencia tela = SpringContext.getBean(TelaEditarCompetencia.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+        
+        
+    }//GEN-LAST:event_btninserircompetenciaActionPerformed
+
+    private void btncontactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncontactActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btncontactActionPerformed
+
+    private void btnExcluirExperienciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirExperienciasActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirExperiencia tela =
+        SpringContext.getBean(TelaExcluirExperiencia.class);
+
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirExperienciasActionPerformed
+
+    private void btnExcluirFormacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirFormacaoActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirFormacao tela =
+        SpringContext.getBean(TelaExcluirFormacao.class);
+
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirFormacaoActionPerformed
+
+    private void btnExcluirCompetenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirCompetenciaActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirCompetencia tela =
+        SpringContext.getBean(TelaExcluirCompetencia.class);
+
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirCompetenciaActionPerformed
+
+    private void btnExcluirIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirIdiomaActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirIdioma tela =
+        SpringContext.getBean(TelaExcluirIdioma.class);
+
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirIdiomaActionPerformed
+
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcluirCompetencia;
+    private javax.swing.JButton btnExcluirExperiencias;
+    private javax.swing.JButton btnExcluirFormacao;
+    private javax.swing.JButton btnExcluirIdioma;
+    private javax.swing.JButton btnadicionarformacao;
+    private javax.swing.JButton btncontact;
+    private javax.swing.JButton btneditaboutme;
+    private javax.swing.JButton btninserircompetencia;
+    private javax.swing.JButton btninseriridioma;
+    private javax.swing.JButton btninsert;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jpnpainelcentral;
+    private javax.swing.JLabel lblBairro;
+    private javax.swing.JLabel lblCidade;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblIdioma;
+    private javax.swing.JLabel lblNivel;
+    private javax.swing.JLabel lblNomeCompetencia;
+    private javax.swing.JLabel lblNomeIdioma;
+    private javax.swing.JLabel lblNumero;
+    private javax.swing.JLabel lblPais;
+    private javax.swing.JLabel lblSite;
+    private javax.swing.JLabel lblTelefone;
+    private javax.swing.JLabel lblaboutme;
+    private javax.swing.JLabel lblcompetence;
+    private javax.swing.JLabel lblcompletedname;
+    private javax.swing.JLabel lblcoursename;
+    private javax.swing.JLabel lbldateend;
+    private javax.swing.JLabel lbldateendformation;
+    private javax.swing.JLabel lbldatestart;
+    private javax.swing.JLabel lbldatestartformation;
+    private javax.swing.JLabel lbldescricionaboutme;
+    private javax.swing.JLabel lblempresa;
+    private javax.swing.JLabel lblexpirence;
+    private javax.swing.JLabel lblformation;
+    private javax.swing.JLabel lblinstituicion;
+    private javax.swing.JLabel lblkingformation;
+    private javax.swing.JLabel lbltitulo;
+    private javax.swing.JPanel pnlContato;
+    private javax.swing.JPanel pnlIdioma;
+    private javax.swing.JPanel pnlcompetencia;
+    private javax.swing.JPanel pnlexpirenceinterne;
+    // End of variables declaration//GEN-END:variables
+}

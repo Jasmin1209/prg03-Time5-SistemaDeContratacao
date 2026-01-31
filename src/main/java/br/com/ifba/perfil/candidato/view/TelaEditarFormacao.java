@@ -30,6 +30,7 @@ public class TelaEditarFormacao extends javax.swing.JFrame {
 
     /**
      * Creates new form TelaEditarFormacao
+     * @param idPerfil
      * @param formacao
      */
     public TelaEditarFormacao(Long idPerfil, Formacao formacao){
@@ -42,6 +43,11 @@ public class TelaEditarFormacao extends javax.swing.JFrame {
     public TelaEditarFormacao() {
         initComponents();
         configurarComponentes();
+    }
+   
+    
+    public void setDados(Long idPerfil) {
+        this.idPerfil = idPerfil;
     }
     
     private void configurarComponentes(){

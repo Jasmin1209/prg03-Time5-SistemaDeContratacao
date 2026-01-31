@@ -10,6 +10,7 @@ import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -61,5 +62,50 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     @Override
     public Idioma addIdioma (Long id, Idioma idioma){
        return perfilcandidatoservice.addIdioma(id, idioma);
+    }
+    
+    @Override
+    public PerfilCandidato findById(Long id){
+        return perfilcandidatoservice.findById(id);
+    }
+    
+    @Override
+    public Set<Experiencia> findAllExperiencia(Long id){
+        return perfilcandidatoservice.findAllExperiencia(id);
+    }
+    
+    @Override
+    public void deletedByIdExperiencia(Long idExperiencia){
+        perfilcandidatoservice.deletedByIdExperiencia(idExperiencia);
+    }
+    
+    @Override
+    public Set<Formacao> findAllFormacao(Long id){
+        return perfilcandidatoservice.findAllFormacao(id);
+    }
+    
+    @Override
+    public void deletedByIdFormacao(Long idFormacao){
+        perfilcandidatoservice.deletedByIdFormacao(idFormacao);
+    }
+    
+    @Override
+    public Set<Competencia> findAllCompetencia(Long id){
+        return perfilcandidatoservice.findAllCompetencia(id);
+    }
+    
+    @Override
+    public void deleteByIdCompetencia (Long idCompetencia){
+        perfilcandidatoservice.deleteByIdCompetencia(idCompetencia);
+    }
+    
+    @Override
+    public Set<Idioma> findAllIdioma (Long id){
+        return perfilcandidatoservice.findAllIdioma(id);
+    }
+    
+    @Override
+    public void deleteByIdIdioma (Long idIdioma){
+        perfilcandidatoservice.deleteByIdIdioma(idIdioma);
     }
 }

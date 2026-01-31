@@ -4,6 +4,7 @@
  */
 package br.com.ifba.perfil.entity;
 
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
 //Anotações JPA
 import jakarta.persistence.CascadeType;
@@ -52,11 +53,11 @@ public class PerfilCandidato extends Perfil{
     
     @OneToOne
     @JoinColumn(
-            name = "usuario_id",
+            name = "usuarioCandidato_id",
             nullable = false,
             unique = true
     )
-    private UsuarioCandidato usuarioPerfil;
+    private Usuario usuarioPerfil;
     
     @OneToMany( 
             mappedBy = "perfilCandidato",
