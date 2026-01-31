@@ -6,7 +6,7 @@ package br.com.ifba.telaPrincipal.view;
 
 import br.com.ifba.infrastructure.spring.SpringContext;
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoController;
-import br.com.ifba.perfil.candidato.view.TelaApresentacao;
+import br.com.ifba.perfil.candidato.view.TelaApresentacaoCandidato;
 import br.com.ifba.perfil.entity.PerfilCandidato;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.view.LoginCandidatoView;
@@ -16,13 +16,19 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.usuario.view.LoginEmpresaView;
 import javax.swing.JOptionPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Taila
  */
+@Component
+@Scope("prototype")
 public class TelaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
@@ -34,23 +40,37 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
     private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
     
-    private Usuario usuarioLogado;
+ 
+    private SessaoUsuario sessaoUsuario;
     private VagaController vagaController;
     private UsuarioCandidatoController controller;
     private PerfilCandidatoController perfilCandidatoController;
 
     /**
      * Creates new form TelaPrincipal
+     * @param sessaoUsuario
+     * @param vagaController
+     * @param controller
+     * @param perfilCandidatoController
      */
-    public TelaPrincipal(Usuario usuarioLogado, VagaController vagaController, UsuarioCandidatoController controller) {
-        this.usuarioLogado = usuarioLogado;
+    @Autowired
+    public TelaPrincipal(
+            SessaoUsuario sessaoUsuario, 
+            VagaController vagaController, 
+            UsuarioCandidatoController controller,
+            PerfilCandidatoController perfilCandidatoController
+    ) {
+        this.sessaoUsuario = sessaoUsuario;
         this.vagaController = vagaController;
         this.controller = controller;
         this.perfilCandidatoController = perfilCandidatoController;
     
         initComponents();
         estilizarTela();
-        configurarAcessos();// Método para esconder/mostrar botões
+    }
+    
+    public void atualizarSessao() {
+        configurarAcessos();
     }
 
     
@@ -98,10 +118,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     private void configurarAcessos() {
-        if (this.usuarioLogado != null) {
-           btnCadastro.setText("Meu Perfil"); // Se logou, o botão vira logout
-           lblTextinho.setText("Bem-vindo(a), " + usuarioLogado.getNome() + "!");
-    }
+        if (sessaoUsuario != null && sessaoUsuario.getUsuario() != null) {
+        btnCadastro.setText("Meu Perfil");
+        lblTextinho.setText(
+            "Bem-vindo(a), " + sessaoUsuario.getUsuario().getNome() + "!"
+        );
+        } else {
+            btnCadastro.setText("Entrar");
+            lblTextinho.setText("Encontre o seu próximo desafio!");
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -210,20 +235,27 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void btnListarVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarVagasActionPerformed
         // Passamos o usuário que veio do login
-        VagaListar telaListagem = new VagaListar(this.usuarioLogado, this.vagaController);
+        if (sessaoUsuario.getUsuario() == null) {
+            JOptionPane.showMessageDialog(this, "Faça login para ver as vagas.");
+            return;
+        }
+        VagaListar telaListagem = new VagaListar(sessaoUsuario.getUsuario(), vagaController);
         telaListagem.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnListarVagasActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
-        if (this.usuarioLogado != null) {
+        if (sessaoUsuario.getUsuario() != null) {
             try {
                 // 1. Pega a tela do Spring
-                TelaApresentacao telaPerfil = SpringContext.getBean(TelaApresentacao.class);
+                TelaApresentacaoCandidato telaPerfil = SpringContext.getBean(TelaApresentacaoCandidato.class);
             
                 // 2. Busca o perfil usando o controller
-                PerfilCandidato perfil = perfilCandidatoController.findByUsuarioPerfil_Nome(usuarioLogado.getNome());
-            
+                PerfilCandidato perfil =
+                    perfilCandidatoController.findByUsuarioPerfilNome(
+                            sessaoUsuario.getUsuario().getNome()
+                    );
+                
                 if (perfil != null) {
                     telaPerfil.setPerfilCandidato(perfil);
                     telaPerfil.setVisible(true);
@@ -246,10 +278,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     null, opc, opc[0]);
         
                 if(escolha == 0) { // Candidato
-                    new LoginCandidatoView(controller).setVisible(true);
+                    LoginCandidatoView login = SpringContext.getBean(LoginCandidatoView.class);
+                    login.setVisible(true);
                     this.dispose();
                 } else if (escolha == 1) {// Empresa
-                    new LoginEmpresaView().setVisible(true);
+                    LoginEmpresaView login = SpringContext.getBean(LoginEmpresaView.class);
+                    login.setVisible(true);
                     this.dispose();
                 }
             }

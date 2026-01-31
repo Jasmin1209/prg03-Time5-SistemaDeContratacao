@@ -3,28 +3,39 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.usuario.view;
+import br.com.ifba.telaPrincipal.view.TelaPrincipal;
 import br.com.ifba.usuario.controller.UsuarioEmpresaController;
+import br.com.ifba.usuario.navegador.NavegadorTelas;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import java.awt.Color;
 
 @Component
+@Scope("prototype")
 public class LoginEmpresaView extends javax.swing.JFrame {
 
+    
+    private TelaPrincipal telaprincipal;
     private final UsuarioEmpresaController controller;
-    private final CadastroEmpresaView cadastroEmpresaView;
-    private final EsqueciSenhaView esqueciSenhaView;
+    private final NavegadorTelas navegador;
+    
+    private void voltarParaTelaPrincipal() {
+        telaprincipal.setVisible(true);
+        this.dispose();
+    }
+
+    
 
     // Injeção correta pelo construtor (Spring)
     public LoginEmpresaView(
             UsuarioEmpresaController controller,
-            CadastroEmpresaView cadastroEmpresaView,
-            EsqueciSenhaView esqueciSenhaView
+            NavegadorTelas navegador,
+            TelaPrincipal telaprincipal
     ) {
         this.controller = controller;
-        this.cadastroEmpresaView = cadastroEmpresaView;
-        this.esqueciSenhaView = esqueciSenhaView;
+        this.navegador = navegador;
+        this.telaprincipal = telaprincipal;
         initComponents();
         configurarTela();
         
@@ -343,13 +354,13 @@ private void configurarBotoes() {
 
     private void btnEsqueciSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsqueciSenhaActionPerformed
         // Abre a tela de recuperação de senha
-        esqueciSenhaView.setVisible(true);
+        navegador.abrirLoginEmpresa();
         this.dispose();
     }//GEN-LAST:event_btnEsqueciSenhaActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
         // Abre a tela de cadastro da empresa
-        cadastroEmpresaView.setVisible(true);
+        navegador.abrirCadastroEmpresa();
         this.dispose();
     }//GEN-LAST:event_btnCadastroActionPerformed
     // ================== VALIDAÇÕES ==================

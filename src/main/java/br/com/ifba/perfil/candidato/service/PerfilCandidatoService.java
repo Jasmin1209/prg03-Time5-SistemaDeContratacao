@@ -24,6 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PerfilCandidatoService implements PerfilCandidatoIService {
 
+
     private final PerfilCandidatoRepository perfilCandidatoRepository;
 
     /**

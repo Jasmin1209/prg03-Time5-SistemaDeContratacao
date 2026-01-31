@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PerfilEmpresaService implements PerfilEmpresaIService{
+    
+   
     private final PerfilEmpresaRepository perfilempresarepository;
     
     @Override
@@ -68,15 +70,15 @@ public class PerfilEmpresaService implements PerfilEmpresaIService{
 
     @Override
     public PerfilEmpresa addSetor (Long id, String novoSetor){
-        PerfilEmpresa perfil = perfilempresarepository.findById(id).
+        PerfilEmpresa perfilEmpresa = perfilempresarepository.findById(id).
                 orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
         
         if(novoSetor == null || novoSetor.isEmpty()){
             throw new IllegalArgumentException("O campo não pode ser vazio");
         }
         
-        perfil.setSetor(novoSetor);
-        return perfilempresarepository.save(perfil);
+        perfilEmpresa.setSetor(novoSetor);
+        return perfilempresarepository.save(perfilEmpresa);
     }
     
     @Override 
