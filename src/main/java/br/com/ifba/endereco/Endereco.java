@@ -37,4 +37,11 @@ public class Endereco extends PersistenceEntity implements Serializable{
     @NotBlank
     @Column(name = "cidade", nullable = false)
     private String cidade;
+    
+    @Column(name = "bairro", nullable = true)
+    private String bairro;
+    
+    @Column(name = "número", nullable = true)
+    private Integer numero;
+    
 }

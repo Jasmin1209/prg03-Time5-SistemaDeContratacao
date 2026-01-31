@@ -25,9 +25,9 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
     private PerfilCandidatoIController perfilcandidatocontroller;
     private Experiencia experiencia;
     private Long idPerfil;
-    private TelaApresentacao telaapresentacao;
+    private TelaApresentacaoCandidato telaapresentacao;
     
-    public void setTelaApresentacao(TelaApresentacao telaapresentacao){
+    public void setTelaApresentacao(TelaApresentacaoCandidato telaapresentacao){
         this.telaapresentacao = telaapresentacao;
     }
     

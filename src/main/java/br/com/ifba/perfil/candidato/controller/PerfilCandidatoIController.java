@@ -9,6 +9,7 @@ import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import java.util.Set;
 
 /**
  *
@@ -16,11 +17,11 @@ import br.com.ifba.perfil.entity.PerfilCandidato;
  */
 public interface PerfilCandidatoIController {
     
-    public PerfilCandidato update (PerfilCandidato perfilCandidato);
+    PerfilCandidato update (PerfilCandidato perfilCandidato);
     
-    public void delete (PerfilCandidato perfilCandidato);
+    void delete (PerfilCandidato perfilCandidato);
     
-    public PerfilCandidato findByUsuarioPerfilNome (String nome);
+    PerfilCandidato findByUsuarioPerfilNome (String nome);
     
     void updateSobreMim(Long idPerfil, String novoSobreMim);
     
@@ -31,4 +32,22 @@ public interface PerfilCandidatoIController {
     Competencia addCompetencia (Long id, Competencia competencia);
     
     Idioma addIdioma (Long id, Idioma idioma);
+    
+    PerfilCandidato findById(Long id);
+    
+    Set<Experiencia> findAllExperiencia(Long id);
+    
+    void deletedByIdExperiencia(Long idExperiencia);
+    
+    Set<Formacao> findAllFormacao(Long id);
+    
+    void deletedByIdFormacao(Long idFormacao);
+    
+    Set<Competencia> findAllCompetencia(Long id);
+     
+    void deleteByIdCompetencia (Long idCompetencia);
+     
+    Set<Idioma> findAllIdioma (Long id);
+     
+    void deleteByIdIdioma (Long idIdioma);
 }

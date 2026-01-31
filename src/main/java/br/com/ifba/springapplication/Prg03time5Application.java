@@ -1,6 +1,6 @@
 package br.com.ifba.springapplication;
 
-import br.com.ifba.perfil.candidato.view.TelaApresentacao;
+import br.com.ifba.perfil.candidato.view.TelaApresentacaoCandidato;
 import br.com.ifba.usuario.view.LoginCandidatoView;
 import java.awt.EventQueue;
 import org.springframework.boot.SpringApplication;
