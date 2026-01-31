@@ -3,37 +3,40 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.usuario.view;
-import javax.swing.JOptionPane;
-import br.com.ifba.usuario.entity.UsuarioEmpresa;
-import br.com.ifba.usuario.view.CadastroEmpresaView;
-import br.com.ifba.usuario.view.EsqueciSenhaView;
-import java.util.regex.Pattern;
 import br.com.ifba.usuario.controller.UsuarioEmpresaController;
-import br.com.ifba.usuario.service.UsuarioEmpresaService;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
+import java.awt.Color;
 
 @Component
-
-/**
- * Tela de login destinada ao usuário do tipo empresa.
- * Coleta as credenciais de acesso e solicita a
- * autenticação por meio do controller.
- * @author luiza
- */
-
 public class LoginEmpresaView extends javax.swing.JFrame {
-    
-    private final UsuarioEmpresaController controller =
-        new UsuarioEmpresaController(
-            new UsuarioEmpresaService()
-        );
-    /**
-     * Creates new form LoginEmpresaView
-     */
-    public LoginEmpresaView() {
+
+    private final UsuarioEmpresaController controller;
+    private final CadastroEmpresaView cadastroEmpresaView;
+    private final EsqueciSenhaView esqueciSenhaView;
+
+    // Injeção correta pelo construtor (Spring)
+    public LoginEmpresaView(
+            UsuarioEmpresaController controller,
+            CadastroEmpresaView cadastroEmpresaView,
+            EsqueciSenhaView esqueciSenhaView
+    ) {
+        this.controller = controller;
+        this.cadastroEmpresaView = cadastroEmpresaView;
+        this.esqueciSenhaView = esqueciSenhaView;
         initComponents();
         configurarTela();
-    }
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            voltarParaTelaPrincipal();
+        }
+    });
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -89,10 +92,6 @@ public class LoginEmpresaView extends javax.swing.JFrame {
         lblEmail.setText("E-mail:");
 
         lblSenha.setText("Senha:");
-
-        txtEmail.setText("jTextField1");
-
-        txtSenha.setText("jTextField2");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -225,105 +224,142 @@ public class LoginEmpresaView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void configurarTela() {
+    // ================== PADRÃO VISUAL DO PROJETO ==================
+private static final java.awt.Color AZUL_CLARO = new java.awt.Color(71, 178, 240);
+private static final java.awt.Color AZUL_MEDIO = new java.awt.Color(54, 150, 209);
+private static final java.awt.Color AZUL_BASE  = new java.awt.Color(36, 121, 178);
+private static final java.awt.Color AZUL_FORTE = new java.awt.Color(18, 92, 146);
+private static final java.awt.Color AZUL_FUNDO = new java.awt.Color(0, 63, 115);
+
+private static final java.awt.Color TEXTO_PADRAO = new java.awt.Color(90, 90, 90);
+private static final java.awt.Color BORDA_CAMPO  = new java.awt.Color(200, 200, 200);
+
+// ================== CONFIGURAÇÃO GERAL ==================
+private void configurarTela() {
     configurarCores();
     configurarFontes();
     configurarCampos();
     configurarBotoes();
-    setLocationRelativeTo(null); // Centraliza a tela
+
+    setSize(677, 567);
+    setResizable(false);
+    setLocationRelativeTo(null);
 }
-    private void configurarCores() {
+
+// ================== CORES ==================
+private void configurarCores() {
+
     // Fundo principal
-    jPanel4.setBackground(new java.awt.Color(0, 51, 51));
+    jPanel4.setBackground(AZUL_FUNDO);
+
+    // Cabeçalho
+    jPanel5.setBackground(AZUL_BASE);
 
     // Cards
     jPanel2.setBackground(java.awt.Color.WHITE);
     jPanel3.setBackground(java.awt.Color.WHITE);
-    jPanel5.setBackground(new java.awt.Color(239, 238, 238));
+
+    // Título
+    lblLogin.setForeground(java.awt.Color.WHITE);
 
     // Labels
-    lblLogin.setForeground(new java.awt.Color(80, 80, 80));
-    lblEmail.setForeground(new java.awt.Color(100, 100, 100));
-    lblSenha.setForeground(new java.awt.Color(100, 100, 100));
+    lblEmail.setForeground(TEXTO_PADRAO);
+    lblSenha.setForeground(TEXTO_PADRAO);
 }
-    private void configurarFontes() {
-    lblLogin.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 32));
+
+// ================== FONTES ==================
+private void configurarFontes() {
+
+    lblLogin.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 30));
+
     lblEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
     lblSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
 
     txtEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
     txtSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+
+    btnEntrar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+    btnCadastro.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+    btnEsqueciSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
 }
-    private void configurarCampos() {
+
+// ================== CAMPOS ==================
+private void configurarCampos() {
+
     txtEmail.setText("");
     txtSenha.setText("");
 
-    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(
-        new java.awt.Color(200, 200, 200)
-    ));
-    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(
-        new java.awt.Color(200, 200, 200)
-    ));
+    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
 }
-    private void configurarBotoes() {
-    btnEntrar.setBackground(new java.awt.Color(0, 102, 102));
+
+// ================== BOTÕES ==================
+private void configurarBotoes() {
+
+    // Botão principal
+    btnEntrar.setBackground(AZUL_MEDIO);
     btnEntrar.setForeground(java.awt.Color.WHITE);
     btnEntrar.setFocusPainted(false);
-    btnEntrar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
 
+    // Botões de navegação
     btnCadastro.setBorderPainted(false);
     btnCadastro.setContentAreaFilled(false);
-    btnCadastro.setForeground(new java.awt.Color(0, 102, 102));
-    btnCadastro.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+    btnCadastro.setForeground(AZUL_BASE);
 
     btnEsqueciSenha.setBorderPainted(false);
     btnEsqueciSenha.setContentAreaFilled(false);
     btnEsqueciSenha.setForeground(new java.awt.Color(120, 120, 120));
-    btnEsqueciSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
 }
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-                                        
-    String email = txtEmail.getText();
-    String senha = txtSenha.getText();
+        String email = txtEmail.getText();
+        String senha = txtSenha.getText();
 
-    if (campoVazio(email) || campoVazio(senha)) {
-        JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-        return;
-    }
+        if (campoVazio(email) || campoVazio(senha)) {
+            JOptionPane.showMessageDialog(this,
+                    "Informe e-mail e senha.");
+            return;
+        }
 
-    if (!emailValido(email)) {
-        JOptionPane.showMessageDialog(this, "E-mail inválido.");
-        return;
-    }
+        if (!emailValido(email)) {
+            JOptionPane.showMessageDialog(this,
+                    "E-mail inválido.");
+            return;
+        }
 
-    boolean loginOk = controller.login(email, senha);
+        try {
+            controller.login(email, senha);
 
-    if (loginOk) {
-        JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
-        // futuramente: abrir tela principal da empresa
-    } else {
-        JOptionPane.showMessageDialog(this, "E-mail ou senha inválidos.");
-    }
+            JOptionPane.showMessageDialog(this,
+                    "Login realizado com sucesso!");
+            // futuramente: abrir dashboard
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro inesperado ao realizar login.");
+        }
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void btnEsqueciSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsqueciSenhaActionPerformed
         // Abre a tela de recuperação de senha
-        new EsqueciSenhaView().setVisible(true);
-        this.dispose(); // Fecha a tela atual
+        esqueciSenhaView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnEsqueciSenhaActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
         // Abre a tela de cadastro da empresa
-        new CadastroEmpresaView().setVisible(true);
-        this.dispose(); // Fecha a tela de login
+        cadastroEmpresaView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCadastroActionPerformed
+    // ================== VALIDAÇÕES ==================
     private boolean campoVazio(String valor) {
-    return valor == null || valor.trim().isEmpty();
-}
+        return valor == null || valor.trim().isEmpty();
+    }
 
-private boolean emailValido(String email) {
-    return Pattern.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email);
-}
+    private boolean emailValido(String email) {
+        return Pattern.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastro;

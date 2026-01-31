@@ -10,7 +10,7 @@ import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.TipoContratacao;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
-import br.com.ifba.vaga.service.VagaService;
+import br.com.ifba.vaga.controller.VagaController;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -23,15 +23,16 @@ public class VagaCadastrar extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaCadastrar.class.getName());
 
     private Usuario usuarioLogado;
-    private VagaService vagaService;
+    private VagaController vagaController;
     private ButtonGroup grupoStatus; // Agrupa os RadioButtons para que apenas um seja selecionado
     
     /**
      * Creates new form VagaCadastrar
      */
-    public VagaCadastrar(Usuario usuarioLogado, VagaService vagaService) {
+    public VagaCadastrar(Usuario usuarioLogado, VagaController vagaController) {
         this.usuarioLogado = usuarioLogado;
-        this.vagaService = vagaService;
+        this.vagaController = vagaController;
+
 
 
         initComponents();
@@ -410,10 +411,10 @@ public class VagaCadastrar extends javax.swing.JFrame {
             vaga.setLocalizacao(endereco);
 
 
-            vagaService.save(vaga);
+            vagaController.save(vaga);
             
             // Fecha tela e volta para listagem
-            new VagaListar(usuarioLogado, vagaService).setVisible(true);
+            new VagaListar(usuarioLogado, vagaController).setVisible(true);
             this.dispose();
 
             JOptionPane.showMessageDialog(this, "Vaga cadastrada com sucesso!");
@@ -447,7 +448,7 @@ public class VagaCadastrar extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
-         new VagaListar(usuarioLogado, vagaService).setVisible(true);
+         new VagaListar(usuarioLogado, vagaController).setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed

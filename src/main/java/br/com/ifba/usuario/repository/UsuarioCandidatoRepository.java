@@ -9,15 +9,17 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Repositório responsável pelo acesso
- * aos dados do usuário candidato.
+ * Repositório responsável pelo acesso aos dados
+ * persistidos do usuário candidato.
+ * Utiliza Spring Data JPA.
  * @author luiza
  */
+
 @Repository
 public interface UsuarioCandidatoRepository
         extends JpaRepository<UsuarioCandidato, Long> {
 
     Optional<UsuarioCandidato> findByEmail(String email);
-    
-    Optional<UsuarioCandidato> findByCPF(String email);
+
+    Optional<UsuarioCandidato> findByCPF(String cpf);
 }

@@ -3,33 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.usuario.view;
-import javax.swing.JOptionPane;
+import br.com.ifba.usuario.controller.UsuarioEmpresaController;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import java.util.regex.Pattern;
-import br.com.ifba.usuario.controller.UsuarioEmpresaController;
-import br.com.ifba.usuario.service.UsuarioEmpresaService;
+import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
+import java.awt.Color;
 
 @Component
-
-/**
- * Tela de cadastro do usuário do tipo empresa.
- * Responsável por coletar os dados da empresa
- * e encaminhá-los para validação e cadastro.
- * @author luiza
- */
-
 public class CadastroEmpresaView extends javax.swing.JFrame {
-    
-    private final UsuarioEmpresaController controller =
-        new UsuarioEmpresaController(
-            new UsuarioEmpresaService()
-        );
-    
-    /**
-     * Creates new form CadastroEmpresaView
-     */
-    public CadastroEmpresaView() {
+
+    private final UsuarioEmpresaController controller;
+    private final LoginEmpresaView loginEmpresaView;
+
+    // Injeção correta pelo construtor (Spring)
+    public CadastroEmpresaView(
+            UsuarioEmpresaController controller,
+            LoginEmpresaView loginEmpresaView
+    ) {
+        this.controller = controller;
+        this.loginEmpresaView = loginEmpresaView;
         initComponents();
         configurarTela();
     }
@@ -106,14 +99,6 @@ public class CadastroEmpresaView extends javax.swing.JFrame {
                 btnCadastrarActionPerformed(evt);
             }
         });
-
-        txtNome.setText("jTextField1");
-
-        txtCNPJ.setText("jTextField2");
-
-        txtTelefone.setText("jTextField3");
-
-        txtEmail.setText("jTextField4");
 
         txtSenha.setText("jTextField5");
 
@@ -219,26 +204,56 @@ public class CadastroEmpresaView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void configurarTela() {
+    // ================== PADRÃO VISUAL DO PROJETO ==================
+
+// 🎨 Paleta
+private static final Color AZUL_CLARO = new Color(71, 178, 240);   // #47b2f0
+private static final Color AZUL_MEDIO = new Color(54, 150, 209);   // #3696d1
+private static final Color AZUL_BASE  = new Color(36, 121, 178);   // #2479b2
+private static final Color AZUL_FORTE = new Color(18, 92, 146);    // #125c92
+private static final Color AZUL_FUNDO = new Color(0, 63, 115);     // #003f73
+
+private static final Color TEXTO_PADRAO = new Color(90, 90, 90);
+private static final Color BORDA_CAMPO  = new Color(200, 200, 200);
+
+// ================== CONFIGURAÇÃO GERAL ==================
+private void configurarTela() {
     configurarCores();
     configurarFontes();
     configurarCampos();
     configurarBotao();
+
+    setSize(677, 567);
+    setResizable(false);
     setLocationRelativeTo(null);
 }
-    private void configurarCores() {
-    jPanel3.setBackground(new java.awt.Color(0, 51, 51));
-    jPanel2.setBackground(new java.awt.Color(239, 238, 238));
-    jPanel4.setBackground(java.awt.Color.WHITE);
 
-    lblCadastro.setForeground(new java.awt.Color(80, 80, 80));
-    lblNome.setForeground(new java.awt.Color(100, 100, 100));
-    lblCNPJ.setForeground(new java.awt.Color(100, 100, 100));
-    lblTelefone.setForeground(new java.awt.Color(100, 100, 100));
-    lblEmail.setForeground(new java.awt.Color(100, 100, 100));
-    lblSenha.setForeground(new java.awt.Color(100, 100, 100));
+// ================== CORES ==================
+private void configurarCores() {
+
+    // Fundo geral
+    jPanel3.setBackground(AZUL_FUNDO);
+
+    // Cabeçalho
+    jPanel2.setBackground(AZUL_BASE);
+
+    // Card do formulário
+    jPanel4.setBackground(Color.WHITE);
+
+    // Título
+    lblCadastro.setForeground(Color.WHITE);
+
+    // Labels
+    lblNome.setForeground(TEXTO_PADRAO);
+    lblCNPJ.setForeground(TEXTO_PADRAO);
+    lblTelefone.setForeground(TEXTO_PADRAO);
+    lblEmail.setForeground(TEXTO_PADRAO);
+    lblSenha.setForeground(TEXTO_PADRAO);
 }
-    private void configurarFontes() {
+
+// ================== FONTES ==================
+private void configurarFontes() {
+
     lblCadastro.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 30));
 
     lblNome.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
@@ -253,104 +268,112 @@ public class CadastroEmpresaView extends javax.swing.JFrame {
     txtEmail.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
     txtSenha.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
 }
-    private void configurarCampos() {
+
+// ================== CAMPOS ==================
+private void configurarCampos() {
+
     txtNome.setText("");
     txtCNPJ.setText("");
     txtTelefone.setText("");
     txtEmail.setText("");
     txtSenha.setText("");
 
-    java.awt.Color borda = new java.awt.Color(200, 200, 200);
-
-    txtNome.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtCNPJ.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtTelefone.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
-    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(borda));
+    txtNome.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtCNPJ.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtTelefone.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
+    txtSenha.setBorder(javax.swing.BorderFactory.createLineBorder(BORDA_CAMPO));
 }
-    private void configurarBotao() {
-    btnCadastrar.setBackground(new java.awt.Color(0, 102, 102));
-    btnCadastrar.setForeground(java.awt.Color.WHITE);
+
+// ================== BOTÃO ==================
+private void configurarBotao() {
+
+    btnCadastrar.setBackground(AZUL_MEDIO);
+    btnCadastrar.setForeground(Color.WHITE);
     btnCadastrar.setFocusPainted(false);
     btnCadastrar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
 }
 
+
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-                                            
-    String nome = txtNome.getText();
-    String cnpj = txtCNPJ.getText();
-    String telefone = txtTelefone.getText();
-    String email = txtEmail.getText();
-    String senha = txtSenha.getText();
+      String nome = txtNome.getText();
+        String cnpj = txtCNPJ.getText();
+        String telefone = txtTelefone.getText();
+        String email = txtEmail.getText();
+        String senha = txtSenha.getText();
 
-    if (campoVazio(nome) || campoVazio(cnpj) || campoVazio(telefone)
-            || campoVazio(email) || campoVazio(senha)) {
-        JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-        return;
-    }
+        if (campoVazio(nome) || campoVazio(cnpj) || campoVazio(telefone)
+                || campoVazio(email) || campoVazio(senha)) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            return;
+        }
 
-    if (!cnpjValido(cnpj)) {
-        JOptionPane.showMessageDialog(this, "CNPJ inválido (14 números).");
-        return;
-    }
+        if (!cnpjValido(cnpj)) {
+            JOptionPane.showMessageDialog(this, "CNPJ inválido (14 números).");
+            return;
+        }
 
-    if (!telefoneValido(telefone)) {
-        JOptionPane.showMessageDialog(this, "Telefone inválido.");
-        return;
-    }
+        if (!telefoneValido(telefone)) {
+            JOptionPane.showMessageDialog(this, "Telefone inválido.");
+            return;
+        }
 
-    if (!emailValido(email)) {
-        JOptionPane.showMessageDialog(this, "E-mail inválido.");
-        return;
-    }
+        if (!emailValido(email)) {
+            JOptionPane.showMessageDialog(this, "E-mail inválido.");
+            return;
+        }
 
-    if (!senhaForte(senha)) {
-        JOptionPane.showMessageDialog(this,
-            "Senha fraca! Use letras, números e mínimo de 8 caracteres.");
-        return;
-    }
+        if (!senhaForte(senha)) {
+            JOptionPane.showMessageDialog(this,
+                    "Senha fraca! Use letras, números e mínimo de 8 caracteres.");
+            return;
+        }
 
-    UsuarioEmpresa empresa = new UsuarioEmpresa();
-    empresa.setNome(nome);
-    empresa.setCnpj(cnpj);
-    empresa.setTelefone(telefone);
-    empresa.setEmail(email);
-    empresa.setSenha(senha);
+        UsuarioEmpresa empresa = new UsuarioEmpresa();
+        empresa.setNome(nome);
+        empresa.setCnpj(cnpj);
+        empresa.setTelefone(telefone);
+        empresa.setEmail(email);
+        empresa.setSenha(senha);
 
-    try {
-        controller.cadastrar(empresa);
+        try {
+            controller.cadastrar(empresa);
 
-        JOptionPane.showMessageDialog(this,
-                "Empresa cadastrada com sucesso!");
+            JOptionPane.showMessageDialog(this,
+                    "Empresa cadastrada com sucesso!");
 
-        new LoginEmpresaView().setVisible(true);
-        this.dispose();
+            loginEmpresaView.setVisible(true);
+            this.dispose();
 
-    } catch (IllegalArgumentException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage());
-    }
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro inesperado ao cadastrar empresa.");
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
+    // ================== VALIDAÇÕES ==================
     private boolean campoVazio(String valor) {
-    return valor == null || valor.trim().isEmpty();
-}
+        return valor == null || valor.trim().isEmpty();
+    }
 
-private boolean emailValido(String email) {
-    return Pattern.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email);
-}
+    private boolean emailValido(String email) {
+        return Pattern.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email);
+    }
 
-private boolean telefoneValido(String telefone) {
-    return Pattern.matches("\\d{10,11}", telefone); // só números
-}
+    private boolean telefoneValido(String telefone) {
+        return Pattern.matches("\\d{10,11}", telefone);
+    }
 
-private boolean cnpjValido(String cnpj) {
-    return Pattern.matches("\\d{14}", cnpj);
-}
+    private boolean cnpjValido(String cnpj) {
+        return Pattern.matches("\\d{14}", cnpj);
+    }
 
-private boolean senhaForte(String senha) {
-    return senha.length() >= 8
-        && senha.matches(".*[A-Za-z].*")
-        && senha.matches(".*\\d.*");
-}
+    private boolean senhaForte(String senha) {
+        return senha.length() >= 8
+                && senha.matches(".*[A-Za-z].*")
+                && senha.matches(".*\\d.*");
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
