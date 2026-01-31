@@ -21,5 +21,5 @@ public interface UsuarioCandidatoRepository
 
     Optional<UsuarioCandidato> findByEmail(String email);
 
-    Optional<UsuarioCandidato> findByCPF(String cpf);
+    Optional<UsuarioCandidato> findByCpf(String cpf);
 }

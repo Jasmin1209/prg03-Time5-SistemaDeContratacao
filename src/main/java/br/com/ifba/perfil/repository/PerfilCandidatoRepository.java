@@ -13,6 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  *
@@ -20,14 +25,35 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
+@Transactional
 public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato, Long>{
         Optional<PerfilCandidato> findByUsuarioPerfilNome(String nome);
-        Set<Experiencia> findAllExperiencia(Long id);
-        void deletedByIdExperiencia(Long idExperiencia);
-        Set<Formacao> findAllFormacao(Long id);
-        void deletedByIdFormacao(Long idFormacao);
-        Set<Competencia> findAllCompetencia(Long id);
-        void deleteByIdCompetencia (Long idCompetencia);
-        Set<Idioma> findAllIdioma (Long id);
-        void deleteByIdIdioma (Long idIdioma);
+
+    @Query("SELECT p.experiencias FROM PerfilCandidato p WHERE p.id = :id")
+    Set<Experiencia> findAllExperiencia(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM Experiencia e WHERE e.id = :id")
+    void deletedByIdExperiencia(@Param("id") Long id);
+
+    @Query("SELECT p.formacaoAcademica FROM PerfilCandidato p WHERE p.id = :id")
+    Set<Formacao> findAllFormacao(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM Formacao f WHERE f.id = :id")
+    void deletedByIdFormacao(@Param("id") Long id);
+
+    @Query("SELECT p.competencias FROM PerfilCandidato p WHERE p.id = :id")
+    Set<Competencia> findAllCompetencia(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM Competencia c WHERE c.id = :id")
+    void deleteByIdCompetencia(@Param("id") Long id);
+
+    @Query("SELECT p.idiomas FROM PerfilCandidato p WHERE p.id = :id")
+    Set<Idioma> findAllIdioma(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM Idioma i WHERE i.id = :id")
+    void deleteByIdIdioma(@Param("id") Long id);
 }
