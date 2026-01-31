@@ -4,6 +4,10 @@
  */
 package br.com.ifba.telaPrincipal.view;
 
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.perfil.candidato.controller.PerfilCandidatoController;
+import br.com.ifba.perfil.candidato.view.TelaApresentacao;
+import br.com.ifba.perfil.entity.PerfilCandidato;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.view.LoginCandidatoView;
 import br.com.ifba.vaga.controller.VagaController;
@@ -12,6 +16,8 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import br.com.ifba.usuario.view.LoginEmpresaView;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,10 +27,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
 
+    // 🎨 Paleta de Cores: Azul Profissional
+    private static final Color AZUL_CLARO = new Color(71, 178, 240);  // #47b2f0
+    private static final Color AZUL_MEDIO = new Color(54, 150, 209);  // #3696d1
+    private static final Color AZUL_BASE  = new Color(36, 121, 178);  // #2479b2
+    private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
+    private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
     
     private Usuario usuarioLogado;
     private VagaController vagaController;
     private UsuarioCandidatoController controller;
+    private PerfilCandidatoController perfilCandidatoController;
 
     /**
      * Creates new form TelaPrincipal
@@ -33,47 +46,62 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.usuarioLogado = usuarioLogado;
         this.vagaController = vagaController;
         this.controller = controller;
+        this.perfilCandidatoController = perfilCandidatoController;
     
         initComponents();
         estilizarTela();
+        configurarAcessos();// Método para esconder/mostrar botões
     }
 
     
     private void estilizarTela() {
-        //======JFRAME=====
-        setTitle("Sistema de Vagas");
-        setSize(530, 433);
+        //====== JFRAME =====
+        setTitle("Sistema de Vagas - Início");
+        setSize(677, 567); // Mantendo o padrão de tamanho das outras telas
         setLocationRelativeTo(null);
         setResizable(false);
         
-        //==========HEADER=============
+        //======= FUNDO GERAL (AZUL FUNDO) ========
+        getContentPane().setBackground(AZUL_FUNDO);
+    
+        //========== HEADER (jpnlTitulo) =============
         jpnlTitulo.setBackground(Color.WHITE);
-        
-        lblTitulo.setText("Sistema de Vagas");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        lblTitulo.setForeground(Color.BLACK);
-        
+    
+        lblTitulo.setText("SISTEMA DE GESTÃO DE VAGAS");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblTitulo.setForeground(AZUL_FUNDO);
+    
+        // Botão de Entrada no Header (Azul Claro)
         btnCadastro.setText("Entrar");
+        btnCadastro.setBackground(AZUL_CLARO);
+        btnCadastro.setForeground(Color.WHITE);
         btnCadastro.setFocusPainted(false);
-        
-        
-        //=======Fundo========
-        getContentPane().setBackground(new Color(30, 63, 95));
-        
-        //=======CARD(jpnlVerVagas========
+        btnCadastro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    
+        //======= CARD CENTRAL (jpnlVerVagas) ========
         jpnlVerVagas.setBackground(Color.WHITE);
-        jpnlVerVagas.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        
-        btnListarVagas.setText("Ver vagas");
-        btnListarVagas.setFont(new Font("Arial", Font.BOLD, 16));
+        jpnlVerVagas.setBorder(BorderFactory.createLineBorder(AZUL_CLARO, 2));
+    
+        // Botão Principal de Ver Vagas (Azul Base)
+        btnListarVagas.setText("VER VAGAS DISPONÍVEIS");
+        btnListarVagas.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnListarVagas.setForeground(Color.WHITE);
-        btnListarVagas.setBackground(new Color(40, 130, 200));
+        btnListarVagas.setBackground(AZUL_BASE);
         btnListarVagas.setFocusPainted(false);
         btnListarVagas.setBorderPainted(false);
-        
+        btnListarVagas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    
+        // Texto de apoio
         lblTextinho.setText("Encontre o seu próximo desafio!");
-        lblTextinho.setFont(new Font("Arial", Font.PLAIN, 13));
-        lblTextinho.setForeground(Color.DARK_GRAY);
+        lblTextinho.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+        lblTextinho.setForeground(new Color(100, 100, 100)); // Cinza suave
+    }
+    
+    private void configurarAcessos() {
+        if (this.usuarioLogado != null) {
+           btnCadastro.setText("Meu Perfil"); // Se logou, o botão vira logout
+           lblTextinho.setText("Bem-vindo(a), " + usuarioLogado.getNome() + "!");
+    }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,6 +121,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblTitulo.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         lblTitulo.setText("jLabel1");
 
         btnCadastro.setText("jButton1");
@@ -107,20 +136,20 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jpnlTituloLayout.setHorizontalGroup(
             jpnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnlTituloLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addContainerGap()
                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 313, Short.MAX_VALUE)
                 .addComponent(btnCadastro)
                 .addGap(16, 16, 16))
         );
         jpnlTituloLayout.setVerticalGroup(
             jpnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnlTituloLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addGroup(jpnlTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTitulo)
                     .addComponent(btnCadastro))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         btnListarVagas.setText("jButton1");
@@ -130,6 +159,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        lblTextinho.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         lblTextinho.setText("jLabel1");
 
         javax.swing.GroupLayout jpnlVerVagasLayout = new javax.swing.GroupLayout(jpnlVerVagas);
@@ -137,54 +167,92 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jpnlVerVagasLayout.setHorizontalGroup(
             jpnlVerVagasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnlVerVagasLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(btnListarVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnlVerVagasLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblTextinho, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
+                .addContainerGap(94, Short.MAX_VALUE)
+                .addGroup(jpnlVerVagasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnlVerVagasLayout.createSequentialGroup()
+                        .addComponent(btnListarVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(82, 82, 82))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnlVerVagasLayout.createSequentialGroup()
+                        .addComponent(lblTextinho, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70))))
         );
         jpnlVerVagasLayout.setVerticalGroup(
             jpnlVerVagasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnlVerVagasLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(95, 95, 95)
                 .addComponent(btnListarVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTextinho, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addComponent(jpnlVerVagas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 112, Short.MAX_VALUE))
             .addComponent(jpnlTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(123, 123, 123)
+                .addComponent(jpnlVerVagas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jpnlTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
+                .addGap(56, 56, 56)
                 .addComponent(jpnlVerVagas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 101, Short.MAX_VALUE))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListarVagasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarVagasActionPerformed
-        LoginCandidatoView tela = new LoginCandidatoView(controller);
-        tela.setVisible(true);
+        // Passamos o usuário que veio do login
+        VagaListar telaListagem = new VagaListar(this.usuarioLogado, this.vagaController);
+        telaListagem.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnListarVagasActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
-        // TODO add your handling code here:
+        if (this.usuarioLogado != null) {
+            try {
+                // 1. Pega a tela do Spring
+                TelaApresentacao telaPerfil = SpringContext.getBean(TelaApresentacao.class);
+            
+                // 2. Busca o perfil usando o controller
+                PerfilCandidato perfil = perfilCandidatoController.findByUsuarioPerfil_Nome(usuarioLogado.getNome());
+            
+                if (perfil != null) {
+                    telaPerfil.setPerfilCandidato(perfil);
+                    telaPerfil.setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Perfil não encontrado!");
+                }
+                
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.SEVERE, "Erro ao abrir perfil", e);
+                }
+            
+            } else {
+                String[] opc = {"Candidato", "Empresa", "Cancelar"};
+                int escolha = JOptionPane.showOptionDialog(this,
+                    "Como você deseja acessar o sistema?",
+                    "Seleção de Perfil",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, opc, opc[0]);
+        
+                if(escolha == 0) { // Candidato
+                    new LoginCandidatoView(controller).setVisible(true);
+                    this.dispose();
+                } else if (escolha == 1) {// Empresa
+                    new LoginEmpresaView().setVisible(true);
+                    this.dispose();
+                }
+            }
     }//GEN-LAST:event_btnCadastroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

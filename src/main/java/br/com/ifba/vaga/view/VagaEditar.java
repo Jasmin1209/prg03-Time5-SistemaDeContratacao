@@ -11,6 +11,9 @@ import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
 import br.com.ifba.vaga.enums.TipoContratacao;
 import br.com.ifba.vaga.controller.VagaController;
+import java.awt.Color;
+
+
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -23,6 +26,14 @@ public class VagaEditar extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaEditar.class.getName());
 
+    
+    // 🎨 Paleta de Cores: Azul Profissional
+    private static final Color AZUL_CLARO = new Color(71, 178, 240);  // #47b2f0
+    private static final Color AZUL_MEDIO = new Color(54, 150, 209);  // #3696d1
+    private static final Color AZUL_BASE  = new Color(36, 121, 178);  // #2479b2
+    private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
+    private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
+    
     private Usuario usuarioLogado;
     private VagaController vagaController;
     private Vaga vaga;
@@ -43,7 +54,10 @@ public class VagaEditar extends javax.swing.JFrame {
     }
     
     private void configurarTela() {
-       setLocationRelativeTo(null);       
+       setSize(677, 567);
+       setLocationRelativeTo(null);  
+       
+       jLabel1.setForeground(AZUL_FUNDO); // Aplica o azul mais escuro no "Editar Vaga"
        
        grupoStatus = new ButtonGroup();
        grupoStatus.add(jrdAtiva);
@@ -119,14 +133,30 @@ public class VagaEditar extends javax.swing.JFrame {
 
     
     private void estilizarBotoes() {
-        btnSalvar.setBackground(new java.awt.Color(76, 175, 80));
-        btnSalvar.setForeground(java.awt.Color.WHITE);
+        //Botão Salvar (Ação Principal) - Usando o Azul Base para destaque
+        btnSalvar.setBackground(AZUL_BASE); 
+        btnSalvar.setForeground(Color.WHITE);
         btnSalvar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvar.setFocusPainted(false);
 
-        btnCancelar.setBackground(new java.awt.Color(244, 67, 54));
-        btnCancelar.setForeground(java.awt.Color.WHITE);
+        //Botão Cancelar (Ação Secundária) - Usando o Azul Claro
+        btnCancelar.setBackground(AZUL_CLARO);
+        btnCancelar.setForeground(Color.WHITE);
         btnCancelar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
-    }
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelar.setFocusPainted(false);
+
+        // Botão Candidatos - Usando o Azul Médio para diferenciar
+        btnCandidatos.setBackground(AZUL_MEDIO);
+        btnCandidatos.setForeground(Color.WHITE);
+        btnCandidatos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        // Botão Excluir 
+        btnExcluir.setBackground(new java.awt.Color(231, 76, 60)); // Vermelho Alerta
+        btnExcluir.setForeground(Color.WHITE);
+        btnExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+}
     
     private void carregarDadosVagas() {
         if(vaga == null) {
@@ -189,15 +219,15 @@ public class VagaEditar extends javax.swing.JFrame {
         jboxTipo = new javax.swing.JComboBox<>();
         jboxModelo = new javax.swing.JComboBox<>();
         btnExcluir = new javax.swing.JButton();
-        txtSalario = new java.awt.TextField();
-        txtCidade = new java.awt.TextField();
-        txtTitulo = new java.awt.TextField();
-        txtQtd = new java.awt.TextField();
         btnCandidatos = new javax.swing.JButton();
+        txtTitulo = new javax.swing.JTextField();
+        txtQtd = new javax.swing.JTextField();
+        txtCidade = new javax.swing.JTextField();
+        txtSalario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 24)); // NOI18N
         jLabel1.setText("Editar Vaga");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -227,6 +257,10 @@ public class VagaEditar extends javax.swing.JFrame {
         });
 
         btnSalvar.setText("Salvar");
+        btnSalvar.setToolTipText("");
+        btnSalvar.setMaximumSize(new java.awt.Dimension(88, 27));
+        btnSalvar.setMinimumSize(new java.awt.Dimension(88, 27));
+        btnSalvar.setPreferredSize(new java.awt.Dimension(88, 27));
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalvarActionPerformed(evt);
@@ -278,54 +312,51 @@ public class VagaEditar extends javax.swing.JFrame {
             }
         });
 
-        txtSalario.setText("textField1");
-
-        txtCidade.setText("textField1");
-
-        txtTitulo.setText("textField1");
-
-        txtQtd.setText("textField2");
-
         btnCandidatos.setText("Candidatos");
+        btnCandidatos.setMaximumSize(new java.awt.Dimension(88, 27));
+        btnCandidatos.setMinimumSize(new java.awt.Dimension(88, 27));
+        btnCandidatos.setPreferredSize(new java.awt.Dimension(88, 27));
         btnCandidatos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCandidatosActionPerformed(evt);
             }
         });
 
+        txtTitulo.setText("jTextField1");
+
+        txtQtd.setText("jTextField1");
+
+        txtCidade.setText("jTextField1");
+
+        txtSalario.setText("jTextField1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
+                        .addComponent(jLabel9)
+                        .addGap(27, 27, 27)
+                        .addComponent(jrdAtiva, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61)
+                        .addComponent(jrdEncerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(172, 172, 172)
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExcluir)
+                        .addGap(174, 174, 174))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jrdAtiva, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jrdEncerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnSalvar)
-                                .addGap(99, 99, 99)
-                                .addComponent(btnCandidatos))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(131, 131, 131)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnExcluir))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblQtd)
@@ -336,8 +367,8 @@ public class VagaEditar extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jboxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -345,17 +376,19 @@ public class VagaEditar extends javax.swing.JFrame {
                                         .addComponent(lblSalario))
                                     .addComponent(lblPeriodo)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addComponent(jLabel9))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                                    .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(53, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(131, 131, 131)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCandidatos, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,15 +398,14 @@ public class VagaEditar extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnExcluir))
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblTitulo)
-                                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblQtd))
+                            .addComponent(btnCandidatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTitulo)
+                            .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblQtd)
                             .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,11 +423,11 @@ public class VagaEditar extends javax.swing.JFrame {
                             .addComponent(lblPeriodo)
                             .addComponent(jboxPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblSalario)
                             .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
@@ -403,21 +435,22 @@ public class VagaEditar extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(jLabel7))
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(29, 29, 29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jrdAtiva)
                     .addComponent(jrdEncerrar))
-                .addGap(18, 18, 18)
+                .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvar)
-                    .addComponent(btnCandidatos))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnExcluir)
+                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -429,21 +462,23 @@ public class VagaEditar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-         try {
-        if (!validarCampos()) {
-            return;
-        }
+        try {
+            if (!validarCampos()) {
+                return;
+            }
 
-        preencherVaga();
-        vagaController.update(vaga);
+        preencherVaga(); // Atualiza o objeto 'vaga' com o que está na tela
+        vagaController.update(vaga); // Envia para o banco de dados
 
         JOptionPane.showMessageDialog(this, "Vaga atualizada com sucesso!");
+        
+        // Abre a tela de detalhes atualizada e fecha a de edição
         new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
         dispose();
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao salvar a vaga.");
-    }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar a vaga: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void jboxPeriodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jboxPeriodoActionPerformed
@@ -510,10 +545,10 @@ public class VagaEditar extends javax.swing.JFrame {
     private javax.swing.JLabel lblSalario;
     private javax.swing.JLabel lblTipo;
     private javax.swing.JLabel lblTitulo;
-    private java.awt.TextField txtCidade;
+    private javax.swing.JTextField txtCidade;
     private javax.swing.JTextArea txtDescricao;
-    private java.awt.TextField txtQtd;
-    private java.awt.TextField txtSalario;
-    private java.awt.TextField txtTitulo;
+    private javax.swing.JTextField txtQtd;
+    private javax.swing.JTextField txtSalario;
+    private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
 }
