@@ -15,5 +15,5 @@ public interface UsuarioEmpresaServiceInterface {
 
     void cadastrar(UsuarioEmpresa empresa);
 
-    boolean login(String email, String senha);
+    UsuarioEmpresa login(String email, String senha);
 }

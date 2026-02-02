@@ -5,12 +5,15 @@
 package br.com.ifba.perfil.empresa.controller;
 
 import br.com.ifba.perfil.entity.PerfilEmpresa;
+import br.com.ifba.usuario.entity.UsuarioEmpresa;
 
 /**
  *
  * @author USER
  */
 public interface PerfilEmpresaIController {
+    PerfilEmpresa buscarPerfilCompleto(Long usuarioId);
+    
     public PerfilEmpresa update (PerfilEmpresa perfilEmpresa);
     
     public void delete (PerfilEmpresa perfilEmpresa);
@@ -22,4 +25,10 @@ public interface PerfilEmpresaIController {
     PerfilEmpresa addSetor (Long id, String novoSetor);
     
     PerfilEmpresa findById (Long id);
+    
+    PerfilEmpresa findByUsuarioId(Long usuarioId);
+    
+    void saveOrUpdate(PerfilEmpresa empresa);
+    
+    UsuarioEmpresa buscarUsuarioEmpresa(Long idUsuario);
 }

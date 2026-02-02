@@ -5,12 +5,17 @@
 package br.com.ifba.perfil.empresa.service;
 
 import br.com.ifba.perfil.entity.PerfilEmpresa;
+import br.com.ifba.usuario.entity.UsuarioEmpresa;
 
 /**
  *
  * @author USER
  */
 public interface PerfilEmpresaIService {
+       
+       UsuarioEmpresa buscarUsuarioEmpresa(Long idUsuario);
+       
+       PerfilEmpresa buscarPerfilCompleto(Long usuarioId);
        
        PerfilEmpresa update(PerfilEmpresa perfilEmpresa);
 
@@ -23,4 +28,8 @@ public interface PerfilEmpresaIService {
        PerfilEmpresa addSetor (Long id, String novoSetor);
       
        PerfilEmpresa findById(Long id);
+       
+       PerfilEmpresa findByUsuarioId(Long usuarioId);
+    
+        void save(PerfilEmpresa empresa);
 }

@@ -3,22 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.repository;
+
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repositório responsável pelo acesso aos dados
- * persistidos do usuário do tipo empresa.
- * Utiliza Spring Data JPA.
- * @author luiza
+ *
+ * @author USER
  */
-
-@Repository
-public interface UsuarioEmpresaRepository
-        extends JpaRepository<UsuarioEmpresa, Long> {
-
+public interface UsuarioEmpresaRepository extends JpaRepository<UsuarioEmpresa, Long>{
+ 
     Optional<UsuarioEmpresa> findByCnpj(String cnpj);
 
     Optional<UsuarioEmpresa> findByEmail(String email);

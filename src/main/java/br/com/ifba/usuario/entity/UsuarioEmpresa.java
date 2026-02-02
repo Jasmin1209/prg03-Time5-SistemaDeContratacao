@@ -3,18 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.entity;
+
 import jakarta.persistence.Entity;
 
 /**
- * Entidade que representa um usuário do tipo empresa.
- * Especializa a classe Usuario, adicionando informações
- * específicas para empresas.
- * @author luiza
+ *
+ * @author USER
  */
-
-@Entity
-public class UsuarioEmpresa extends Usuario {
-
+@Entity 
+public class UsuarioEmpresa extends Usuario{
+    
     private String cnpj;
 
     public String getCnpj() {
@@ -25,4 +23,3 @@ public class UsuarioEmpresa extends Usuario {
         this.cnpj = cnpj;
     }
 }
-

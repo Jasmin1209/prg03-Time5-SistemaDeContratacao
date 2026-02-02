@@ -10,6 +10,7 @@ import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import br.com.ifba.usuario.entity.Usuario;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,21 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     private final PerfilCandidatoIService perfilcandidatoservice;
 
     @Override
+    public PerfilCandidato buscarPerfilCompleto(Long usuarioId) {
+        return perfilcandidatoservice.buscarPerfilCompleto(usuarioId);
+    }
+    
+    @Override
+    public PerfilCandidato criarPerfil(Long usuarioId, PerfilCandidato perfil) {
+        return perfilcandidatoservice.criarPerfil(usuarioId, perfil);
+    }
+
+    @Override
+    public PerfilCandidato save(PerfilCandidato perfil){
+        return perfilcandidatoservice.save(perfil);
+    }
+    
+    @Override
     public PerfilCandidato update(PerfilCandidato perfilCandidato) {
         return perfilcandidatoservice.update(perfilCandidato);
     }
@@ -35,18 +51,17 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     }
 
     @Override
+    public PerfilCandidato findByUsuarioPerfilId(Long usuarioId){
+        return perfilcandidatoservice.findByUsuarioPerfilId(usuarioId);
+    }
+    @Override
     public PerfilCandidato findByUsuarioPerfilNome(String nome) {
         return perfilcandidatoservice.findByUsuarioPerfilNome(nome);
     }
     
     @Override
-    public void updateSobreMim(Long idPerfil, String novoSobreMim){
-        perfilcandidatoservice.updateSobreMim(idPerfil, novoSobreMim);
-    }
-    
-    @Override
-    public Experiencia addExperiencia (Long id, Experiencia experiencia) {
-       return perfilcandidatoservice.addExperiencia(id, experiencia);
+    public void addExperiencia (Long id, Experiencia experiencia) {
+         perfilcandidatoservice.addExperiencia(id, experiencia);
     }
 
     @Override

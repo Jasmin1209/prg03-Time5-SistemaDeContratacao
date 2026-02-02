@@ -9,7 +9,19 @@ package br.com.ifba.perfil.enums;
  * @author USER
  */
 public enum Nivel {
-    BASICO,
-    INTERMEDIARIO,
-    AVANCADO
+    
+    BASICO("Básico"),
+    INTERMEDIARIO("Intermediário"),
+    AVANCADO("Avançado");
+    
+    private final String label;
+
+    Nivel(String label) {
+        this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }

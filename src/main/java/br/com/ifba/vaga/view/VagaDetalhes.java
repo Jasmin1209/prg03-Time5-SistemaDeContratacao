@@ -5,17 +5,21 @@
 package br.com.ifba.vaga.view;
 
 
-import br.com.ifba.candidaturas.view.CandidaturaInscricao;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.vaga.controller.VagaController;
 import br.com.ifba.vaga.entity.Vaga;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 /**
  *
  * @author Taila
  */
+@Component
+@Scope("prototype")
 public class VagaDetalhes extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaDetalhes.class.getName());
@@ -28,13 +32,16 @@ public class VagaDetalhes extends javax.swing.JFrame {
     private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
     
     // Atributos que armazenam os dados necessários para a tela funcionar
+    
+    private final SessaoUsuario sessaoUsuario;
     private VagaController vagaController;
     private Usuario usuarioLogado;
     private Vaga  vaga; // Objeto da vaga específica que será exibida
     /**
      * Creates new form VagaDetalhes
      */
-    public VagaDetalhes(Usuario usuarioLogado, VagaController vagaController, Vaga vaga) {
+    public VagaDetalhes(SessaoUsuario sessaoUsuario, VagaController vagaController, Vaga vaga) {
+        this.sessaoUsuario = sessaoUsuario;
         this.usuarioLogado = usuarioLogado;
         this.vagaController = vagaController;
         this.vaga = vaga;
@@ -247,13 +254,13 @@ public class VagaDetalhes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        new VagaListar(usuarioLogado, vagaController).setVisible(true);
+        new VagaListar(sessaoUsuario, vagaController).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
         if (usuarioLogado instanceof UsuarioEmpresa) {
-            new VagaEditar(usuarioLogado, vagaController, vaga).setVisible(true);
+            new VagaEditar(sessaoUsuario, vagaController, vaga).setVisible(true);
             this.dispose();
         } else {
             //new CandidaturaInscricao(usuarioLogado, vaga).setVisible(true);

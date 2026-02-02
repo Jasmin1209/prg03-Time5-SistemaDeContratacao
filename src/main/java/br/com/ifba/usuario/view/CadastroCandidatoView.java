@@ -317,6 +317,8 @@ private void configurarBotao() {
 
             JOptionPane.showMessageDialog(this,
                     "Cadastro realizado com sucesso!");
+           
+
 
             LoginCandidatoView login =
                     context.getBean(LoginCandidatoView.class);

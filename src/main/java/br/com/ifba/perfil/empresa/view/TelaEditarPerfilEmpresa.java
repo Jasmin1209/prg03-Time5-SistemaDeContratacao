@@ -4,8 +4,14 @@
  */
 package br.com.ifba.perfil.empresa.view;
 
+import br.com.ifba.endereco.Endereco;
+import br.com.ifba.endereco.Estado;
 import br.com.ifba.perfil.empresa.controller.PerfilEmpresaIController;
+import br.com.ifba.perfil.entity.PerfilCandidato;
 import br.com.ifba.perfil.entity.PerfilEmpresa;
+import br.com.ifba.usuario.entity.UsuarioCandidato;
+import br.com.ifba.usuario.entity.UsuarioEmpresa;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -34,24 +40,73 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
      */
     public TelaEditarPerfilEmpresa() {
         initComponents();
+        carregarEstados();
     }
 
-    public void setDados(Long idEmpresa){
-        this.idEmpresa = idEmpresa;
-        this.empresa = perfilEmpresaController.findById(idEmpresa);
-        
-        jTextField1.setText(empresa.getUsuarioEmpresa().getNome());
-        jTextField6.setText(empresa.getUsuarioEmpresa().getEmail());
-        jTextField7.setText(String.valueOf(empresa.getUsuarioEmpresa().getTelefone()));
-        
-        jTextField2.setText(empresa.getEndereco().getPais());
-        jComboBox1.setSelectedItem(empresa.getEndereco().getEstado());
-        jTextField3.setText(empresa.getEndereco().getCidade());
-        jTextField4.setText(empresa.getEndereco().getBairro());
-        jTextField5.setText(String.valueOf(empresa.getEndereco().getNumero()));
-        
-        jTextField8.setText(empresa.getSite());      
+    private void carregarTelaComPerfil(PerfilEmpresa perfil) {
+
+    if (perfil == null) return;
+
+    UsuarioEmpresa usuario = (UsuarioEmpresa) perfil.getUsuarioEmpresa();
+
+    if (usuario != null) {
+        txtNome.setText(usuario.getNome());
+        txtEmail.setText(usuario.getEmail());
+        txtTelefone.setText(usuario.getTelefone());
     }
+    }
+    /**
+     * Creates new form TelaEditarPerfil
+     */
+    private void carregarEstados() {
+        cmbEstado.setModel(new DefaultComboBoxModel<>(Estado.values()));
+    }
+    
+    public void setDados(Long idEmpresa) {
+    this.idEmpresa = idEmpresa;
+
+    // tenta buscar o perfil
+    this.empresa = perfilEmpresaController.findByUsuarioId(idEmpresa);
+
+    // ===============================
+    // PRIMEIRO ACESSO (perfil não existe)
+    // ===============================
+    if (this.empresa == null) {
+
+        this.empresa = new PerfilEmpresa();
+
+        // busca apenas o usuário empresa
+        this.empresa.setUsuarioEmpresa(
+            perfilEmpresaController.buscarUsuarioEmpresa(idEmpresa)
+        );
+
+        // cria endereço vazio para evitar NPE
+        this.empresa.setEndereco(new Endereco());
+
+        // NÃO preenche campos → tela vazia para cadastro
+        return;
+    }
+
+    // ===============================
+    // PERFIL JÁ EXISTE (edição)
+    // ===============================
+    txtNome.setText(empresa.getUsuarioEmpresa().getNome());
+    txtEmail.setText(empresa.getUsuarioEmpresa().getEmail());
+    txtTelefone.setText(empresa.getUsuarioEmpresa().getTelefone());
+    txtSetor.setText(empresa.getSetor());
+    txtDescricao.setText(empresa.getSobre());
+    jTextField8.setText(empresa.getSite());
+    
+    if(empresa.getEndereco() != null){
+    Endereco e = empresa.getEndereco();
+    jTextField2.setText(empresa.getEndereco().getPais());
+    cmbEstado.setSelectedItem(empresa.getEndereco().getEstado());
+    jTextField3.setText(empresa.getEndereco().getCidade());
+    jTextField4.setText(empresa.getEndereco().getBairro());
+    jTextField5.setText(String.valueOf(empresa.getEndereco().getNumero()));
+    }
+    
+}
     
     public void setTelaApresentacao(TelaApresentacaoEmpresa tela) {
         this.telaapresentacao = tela;
@@ -67,12 +122,12 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
 
         lblPerfilEmpresa = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtNome = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cmbEstado = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -83,14 +138,19 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txtTelefone = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jTextField8 = new javax.swing.JTextField();
         btnsalvar = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDescricao = new javax.swing.JTextArea();
+        jLabel13 = new javax.swing.JLabel();
+        txtSetor = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblPerfilEmpresa.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
@@ -99,15 +159,13 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
 
         jLabel1.setText("NOME");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 38, -1, -1));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 438, -1));
+        getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 438, -1));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel3.setText("PAÍS");
 
         jLabel4.setText("ESTADO");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel5.setText("CIDADE");
 
@@ -136,7 +194,7 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel4)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel5)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -149,7 +207,7 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,7 +219,7 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -189,9 +247,9 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
 
         jLabel9.setText("EMAIL");
 
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                txtEmailActionPerformed(evt);
             }
         });
 
@@ -209,11 +267,11 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -226,19 +284,19 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 300, 432, -1));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 300, 432, 100));
 
         btnsalvar.setText("SALVAR");
         btnsalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -246,7 +304,26 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
                 btnsalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnsalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 450, -1, -1));
+        getContentPane().add(btnsalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, -1, -1));
+
+        jLabel12.setText("DESCRIÇÃO");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 440, -1, -1));
+
+        txtDescricao.setColumns(20);
+        txtDescricao.setRows(5);
+        jScrollPane1.setViewportView(txtDescricao);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 420, -1));
+
+        jLabel13.setText("SETOR");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, -1, -1));
+
+        txtSetor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSetorActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtSetor, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 380, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -255,47 +332,81 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_txtEmailActionPerformed
 
     private void btnsalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarActionPerformed
         // TODO add your handling code here:
-    PerfilEmpresa empresa = perfilEmpresaController.findById(idEmpresa);
+    try {
+        // 1. Validação básica de segurança
+        if (idEmpresa == null) {
+             JOptionPane.showMessageDialog(this, "Erro: Identificador da empresa não encontrado.");
+             return;
+        }
 
-    // ===== USUÁRIO =====
-    empresa.getUsuarioEmpresa().setNome(jTextField1.getText());
-    empresa.getUsuarioEmpresa().setEmail(jTextField6.getText());
-    empresa.getUsuarioEmpresa().setTelefone(jTextField7.getText());
+        // 2. Garante o vínculo com o usuário para não violar constraints do banco
+        UsuarioEmpresa usuarioEmpresa = perfilEmpresaController.buscarUsuarioEmpresa(idEmpresa);
+        empresa.setUsuarioEmpresa(usuarioEmpresa);
 
-    // ===== ENDEREÇO =====
-    empresa.getEndereco().setPais(jTextField2.getText());
-    empresa.getEndereco().setEstado(jComboBox1.getSelectedItem().toString());
-    empresa.getEndereco().setCidade(jTextField3.getText());
-    empresa.getEndereco().setBairro(jTextField4.getText());
-    empresa.getEndereco().setNumero(
-        Integer.parseInt(jTextField5.getText())
-    );
-    
-    // ===== PERFIL EMPRESA =====
-    empresa.setSite(jTextField8.getText());
+        // 3. Atualiza o Endereço (Mantendo a referência para evitar erro de Detached)
+        Endereco endereco = empresa.getEndereco();
+        if (endereco == null) {
+            endereco = new Endereco();
+            empresa.setEndereco(endereco);
+        }
+        
+        endereco.setPais(jTextField2.getText());
+        // Proteção contra seleção nula no ComboBox
+        Object estado = cmbEstado.getSelectedItem();
+        endereco.setEstado(estado != null ? estado.toString() : "");
+        
+        endereco.setCidade(jTextField3.getText());
+        endereco.setBairro(jTextField4.getText());
+        
+        // Proteção para o campo número
+        String numStr = jTextField5.getText().trim();
+        endereco.setNumero(numStr.isEmpty() ? 0 : Integer.parseInt(numStr));
 
-    perfilEmpresaController.update(empresa);
+        // 4. Atualiza dados do Perfil
+        empresa.setSite(jTextField8.getText());
+        empresa.setSobre(txtDescricao.getText());
+        empresa.setSetor(txtSetor.getText()); // Campo obrigatório @NotBlank
 
-    JOptionPane.showMessageDialog(this, "Perfil atualizado com sucesso!");
+        // 5. Salva no Banco
+        perfilEmpresaController.saveOrUpdate(empresa);
 
-    telaapresentacao.atualizarTela();
-    dispose();
+        // 6. Atualiza a tela de apresentação antes de fechar
+        if (this.telaapresentacao != null) {
+            this.telaapresentacao.setPerfil(empresa);
+            this.telaapresentacao.setVisible(true);
+        }
+
+        JOptionPane.showMessageDialog(this, "Perfil salvo com sucesso!");
+        this.dispose(); // Fecha apenas esta janela
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "O campo 'Número' deve ser preenchido apenas com algarismos.");
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnsalvarActionPerformed
+
+    private void txtSetorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSetorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSetorActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnsalvar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Estado> cmbEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -306,14 +417,17 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lblPerfilEmpresa;
+    private javax.swing.JTextArea txtDescricao;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtSetor;
+    private javax.swing.JTextField txtTelefone;
     // End of variables declaration//GEN-END:variables
 }

@@ -13,7 +13,10 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import br.com.ifba.perfil.repository.PerfilCandidatoRepository;
+import br.com.ifba.usuario.entity.UsuarioCandidato;
+import br.com.ifba.usuario.service.UsuarioCandidatoService;
 import java.util.Set;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -27,6 +30,56 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
 
     private final PerfilCandidatoRepository perfilCandidatoRepository;
 
+    private final UsuarioCandidatoService usuarioCandidatoService;
+
+    //BUSCAR PERFIL
+    @Override
+    @Transactional(readOnly = true)
+     public PerfilCandidato buscarPerfilCompleto(Long usuarioId) {
+
+        PerfilCandidato perfil =
+                perfilCandidatoRepository.buscarPerfilCompleto(usuarioId);
+
+        if (perfil == null) {
+            throw new NoSuchElementException("Perfil não encontrado para o usuário ID: " + usuarioId);
+        }
+
+        return perfil;
+    }
+     
+     
+     
+     
+    //CRUD PERFIL
+    @Override
+    @Transactional
+    public PerfilCandidato save(PerfilCandidato perfil) {
+        if (perfil.getUsuarioPerfil() == null) {
+            throw new RuntimeException("Perfil sem usuário vinculado");
+        }
+        
+        return perfilCandidatoRepository.save(perfil);
+    }
+    
+    @Override
+    @Transactional
+    public PerfilCandidato criarPerfil(Long usuarioId, PerfilCandidato perfil) {
+
+         UsuarioCandidato usuario = usuarioCandidatoService.findById(usuarioId);
+         
+        if(usuario == null){
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
+        if (perfilCandidatoRepository
+            .findByUsuarioPerfilId(usuario.getId()) != null) {
+            throw new IllegalStateException("Usuário já possui perfil");
+        }
+    
+        perfil.setUsuarioPerfil(usuario);
+
+        return perfilCandidatoRepository.save(perfil);
+    }
+
     /**
      * Atualiza um perfil de candidato.
      * 
@@ -35,6 +88,7 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
      * @return    
      */
     @Override
+    @Transactional
     public PerfilCandidato update(PerfilCandidato perfilCandidato) {
         if (perfilCandidato.getId() == null) {
             throw new IllegalArgumentException("O ID do perfil não pode ser nulo.");
@@ -52,6 +106,7 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
      * @param perfilCandidato
      */
     @Override
+    @Transactional
     public void delete(PerfilCandidato perfilCandidato) {
         if (perfilCandidato.getId() == null) {
             throw new IllegalArgumentException("O ID do perfil não pode ser nulo.");
@@ -65,64 +120,76 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
 
 
+    //BUSCAS
     /**
      * Busca um perfil pelo nome.
      * @param nome
      * @return 
      */
     @Override
+    @Transactional
     public PerfilCandidato findByUsuarioPerfilNome(String nome) {
         return perfilCandidatoRepository.findByUsuarioPerfilNome(nome)
                 .orElseThrow(() -> new NoSuchElementException(
                         "Perfil de candidato não encontrado com nome: " + nome));
     }
     
+    
+    
     @Override
-    public void updateSobreMim(Long idPerfil, String novoSobreMim) {
+    @Transactional(readOnly = true)
+    public PerfilCandidato findById(Long id){
+        return perfilCandidatoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado"));
+    }
+    
+    
+    @Override
+    @Transactional(readOnly = true)
+    public PerfilCandidato findByUsuarioPerfilId(Long usuarioId){
+        PerfilCandidato perfil = perfilCandidatoRepository.buscarPerfilCompleto(usuarioId);
+    
+    if (perfil == null) {
+        throw new NoSuchElementException("Perfil não encontrado para o ID: " + usuarioId);
+    }
+    return perfil;
+    }
+    
+    //===================
+    //EXPERIENCIAS
+    //===================
+    @Override
+    @Transactional
+    public void addExperiencia (Long id, Experiencia experiencia){
         
-    PerfilCandidato perfil = perfilCandidatoRepository.findById(idPerfil)
-        .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
+        PerfilCandidato perfil = perfilCandidatoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
 
-    if(novoSobreMim == null || novoSobreMim.trim().isEmpty()){
-        throw new IllegalArgumentException("O campo não pode ser vazio");
-    }
-    
-   
-    perfil.setSobre(novoSobreMim);
-    perfilCandidatoRepository.save(perfil);
+        // força inicialização dentro da sessão
+        perfil.getExperiencias().size();
 
-    }
-    
-    @Override
-    public Experiencia addExperiencia (Long id, Experiencia experiencia){
-        
-    if (experiencia.getCargo() == null || experiencia.getCargo().trim().isEmpty()) {
-        throw new IllegalArgumentException("Título é obrigatório.");
-    }
+        experiencia.setPerfilCandidato(perfil); // lado dono da relação
+        perfil.getExperiencias().add(experiencia);
 
-    if (experiencia.getEmpresa() == null || experiencia.getEmpresa().trim().isEmpty()) {
-        throw new IllegalArgumentException("Empresa é obrigatória.");
-    }
-
-    if (experiencia.getDataInicial() == null) {
-        throw new IllegalArgumentException("Data inicial é obrigatória.");
-    }
-
-    PerfilCandidato perfil = perfilCandidatoRepository.findById(id)
-        .orElseThrow(() ->
-            new NoSuchElementException("Perfil de candidato não encontrado")
-        );
-
-    experiencia.setPerfilCandidato(perfil);
-    
-    perfil.getExperiencias().add(experiencia);
-
-    perfilCandidatoRepository.save(perfil);
-    
-    return experiencia;
+        perfilCandidatoRepository.save(perfil);
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public Set<Experiencia> findAllExperiencia(Long id){
+        return perfilCandidatoRepository.findAllExperiencia(id);
+    }
+    
+    @Override 
+    @Transactional
+    public void deletedByIdExperiencia(Long idExperiencia){
+        perfilCandidatoRepository.deletedByIdExperiencia(idExperiencia);
+    }
+    
+    //=============
+    //FORMAÇÃO
+    //=============
+    @Override
+    @Transactional
     public Formacao addFormacao (Long id, Formacao formacao){
          if (formacao.getInstituicao() == null || formacao.getInstituicao().trim().isEmpty()) {
         throw new IllegalArgumentException("Instituição é obrigatória.");
@@ -153,8 +220,24 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     
     return formacao;
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Set<Formacao> findAllFormacao(Long id){
+        return perfilCandidatoRepository.findAllFormacao(id);
+    }
+    
+    @Override
+    @Transactional
+    public void deletedByIdFormacao(Long idFormacao){
+        perfilCandidatoRepository.deletedByIdFormacao(idFormacao);
+    }
 
+    //=============
+    //COMPETÊNCIA
+    //============
     @Override 
+    @Transactional
     public Competencia addCompetencia (Long id, Competencia competencia){
         if(competencia.getTitulo() == null){
             throw new IllegalArgumentException("Título da competência é obrigatório");
@@ -174,6 +257,23 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public Set<Competencia> findAllCompetencia(Long id){
+        return perfilCandidatoRepository.findAllCompetencia(id);
+    }
+    
+    @Override
+    @Transactional
+    public void deleteByIdCompetencia (Long idCompetencia){
+        perfilCandidatoRepository.deleteByIdCompetencia(idCompetencia);
+    }
+    
+    
+    //=============
+    //IDIOMA
+    //=============
+    @Override
+    @Transactional
     public Idioma addIdioma (Long id, Idioma idioma){
         if(idioma.getIdioma() == null){
             throw new IllegalArgumentException("O idioma é obrigatório");
@@ -197,49 +297,18 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
-    public PerfilCandidato findById(Long id){
-        return perfilCandidatoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado"));
-    }
-    
-    @Override
-    public Set<Experiencia> findAllExperiencia(Long id){
-        return perfilCandidatoRepository.findAllExperiencia(id);
-    }
-    
-    @Override 
-    public void deletedByIdExperiencia(Long idExperiencia){
-        perfilCandidatoRepository.deletedByIdExperiencia(idExperiencia);
-    }
-    
-    @Override
-    public Set<Formacao> findAllFormacao(Long id){
-        return perfilCandidatoRepository.findAllFormacao(id);
-    }
-    
-    @Override
-    public void deletedByIdFormacao(Long idFormacao){
-        perfilCandidatoRepository.deletedByIdFormacao(idFormacao);
-    }
-    
-    @Override
-    public Set<Competencia> findAllCompetencia(Long id){
-        return perfilCandidatoRepository.findAllCompetencia(id);
-    }
-    
-    @Override
-    public void deleteByIdCompetencia (Long idCompetencia){
-        perfilCandidatoRepository.deleteByIdCompetencia(idCompetencia);
-    }
-    
-    @Override
+    @Transactional(readOnly = true)
     public Set<Idioma> findAllIdioma (Long id){
         return perfilCandidatoRepository.findAllIdioma(id);
     }
     
     @Override
+    @Transactional
     public void deleteByIdIdioma (Long idIdioma){
         perfilCandidatoRepository.deleteByIdIdioma(idIdioma);
     }
+    
+    
 }
 
 

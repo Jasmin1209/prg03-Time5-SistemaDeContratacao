@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.controller;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import br.com.ifba.usuario.service.UsuarioEmpresaService;
 import org.springframework.stereotype.Controller;
@@ -25,9 +26,8 @@ public class UsuarioEmpresaController
     }
 
     @Override
-    public boolean login(String email, String senha) {
-        service.login(email, senha);
-        return true;
+    public Usuario login(String email, String senha) {
+        return service.login(email, senha);
     }
 
     @Override

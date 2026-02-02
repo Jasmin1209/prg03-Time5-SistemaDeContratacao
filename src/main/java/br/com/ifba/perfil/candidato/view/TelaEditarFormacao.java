@@ -28,26 +28,23 @@ public class TelaEditarFormacao extends javax.swing.JFrame {
     private Long idPerfil;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarFormacao.class.getName());
 
-    /**
-     * Creates new form TelaEditarFormacao
-     * @param idPerfil
-     * @param formacao
-     */
-    public TelaEditarFormacao(Long idPerfil, Formacao formacao){
-        this.formacao = formacao;
-        this.idPerfil = idPerfil;
+    
+    public TelaEditarFormacao() {
         initComponents();
         configurarComponentes();
         carregarDados();
     }
-    public TelaEditarFormacao() {
-        initComponents();
-        configurarComponentes();
-    }
    
+    private TelaApresentacaoCandidato telaApresentacao;
+
+public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+    this.telaApresentacao = tela;
+}
+
     
     public void setDados(Long idPerfil) {
         this.idPerfil = idPerfil;
+        this.formacao = new Formacao();
     }
     
     private void configurarComponentes(){
@@ -301,7 +298,7 @@ public class TelaEditarFormacao extends javax.swing.JFrame {
 
 
         perfilcandidatocontroller.addFormacao(idPerfil, formacao);
-
+        telaApresentacao.recarregarPerfil();
 
     JOptionPane.showMessageDialog(this, "Formação acadêmica salva com sucesso.");
     dispose();

@@ -4,27 +4,23 @@
  */
 package br.com.ifba.perfil.entity;
 
-import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
 //Anotações JPA
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-//Tipos Java
-import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 //Anotações Lombok
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -32,8 +28,8 @@ import lombok.NoArgsConstructor;
  */
 
 @Entity
-@Table(name = "perfil_candidato")
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,14 +47,14 @@ public class PerfilCandidato extends Perfil{
         * JoinColumn: Estabele a chave estrangeira
     */
     
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
-            name = "usuarioCandidato_id",
+            name = "usuario_id",
             nullable = false,
             unique = true
     )
-    private Usuario usuarioPerfil;
-    
+    private UsuarioCandidato usuarioPerfil;
+     
     @OneToMany( 
             mappedBy = "perfilCandidato",
             cascade = CascadeType.ALL,
@@ -87,6 +83,6 @@ public class PerfilCandidato extends Perfil{
     )
     private Set<Idioma> idiomas = new LinkedHashSet<>();
     
-    @Column(name = "pretencao_salarial", nullable = true)
-    private BigDecimal pretencaoSalarial;
+    
+    
 }

@@ -6,6 +6,7 @@ package br.com.ifba.vaga.view;
 
 import br.com.ifba.endereco.Endereco;
 import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.TipoContratacao;
@@ -14,6 +15,7 @@ import br.com.ifba.vaga.controller.VagaController;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import org.springframework.beans.factory.annotation.Autowired;
 /**
  *
  * @author Taila
@@ -22,6 +24,7 @@ public class VagaCadastrar extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaCadastrar.class.getName());
 
+    private final SessaoUsuario sessaoUsuario;
     private Usuario usuarioLogado;
     private VagaController vagaController;
     private ButtonGroup grupoStatus; // Agrupa os RadioButtons para que apenas um seja selecionado
@@ -29,12 +32,13 @@ public class VagaCadastrar extends javax.swing.JFrame {
     /**
      * Creates new form VagaCadastrar
      */
-    public VagaCadastrar(Usuario usuarioLogado, VagaController vagaController) {
-        this.usuarioLogado = usuarioLogado;
+    @Autowired
+    public VagaCadastrar(SessaoUsuario sessaoUsuario, VagaController vagaController) {
+        this.sessaoUsuario = sessaoUsuario;
         this.vagaController = vagaController;
+        this.usuarioLogado = usuarioLogado;
 
-
-
+       
         initComponents();
         configurarTela();
         carregarDescricaoPadrao();
@@ -45,7 +49,7 @@ public class VagaCadastrar extends javax.swing.JFrame {
      * Configurações lógicas da interface gráfica
      */
     private void configurarTela() {
-        this.setSize(677, 567);
+        this.setSize(677, 677);
         setLocationRelativeTo(null);
 
         // Lógica dos RadioButtons: impede que "Ativa" e "Encerrada" fiquem marcados ao mesmo tempo
@@ -146,7 +150,6 @@ public class VagaCadastrar extends javax.swing.JFrame {
         txtSalario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(677, 567));
 
         lblTitulo.setFont(new java.awt.Font("Rockwell Extra Bold", 1, 18)); // NOI18N
         lblTitulo.setText("Cadastro da Vaga");
@@ -232,9 +235,13 @@ public class VagaCadastrar extends javax.swing.JFrame {
             }
         });
 
-        txtEndereco.setText("jTextField1");
+        txtEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEnderecoActionPerformed(evt);
+            }
+        });
 
-        txtSalario.setText("jTextField1");
+        txtSalario.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -392,7 +399,7 @@ public class VagaCadastrar extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Vaga cadastrada com sucesso!");
         
             // 6. Fecha tela atual e volta para a listagem
-            new VagaListar(usuarioLogado, vagaController).setVisible(true);
+            new VagaListar(sessaoUsuario, vagaController).setVisible(true);
             this.dispose();
 
         } catch (NumberFormatException e) {
@@ -425,12 +432,16 @@ public class VagaCadastrar extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
-         new VagaListar(usuarioLogado, vagaController).setVisible(true);
+         new VagaListar(sessaoUsuario, vagaController).setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTituloActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTituloActionPerformed
+
+    private void txtEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnderecoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEnderecoActionPerformed
 
     /**
      * @param args the command line arguments

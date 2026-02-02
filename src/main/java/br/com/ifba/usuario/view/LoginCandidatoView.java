@@ -3,11 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.usuario.view;
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.telaPrincipal.view.TelaPrincipal;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 import java.awt.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tela responsável pelo login do usuário candidato.
@@ -277,6 +282,9 @@ private void configurarBotoes() {
     btnEsqueciSenha.setForeground(new java.awt.Color(120, 120, 120));
 }
 
+@Autowired
+private SessaoUsuario sessaoUsuario;
+
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         String email = txtEmail.getText();
         String senha = txtSenha.getText();
@@ -292,14 +300,16 @@ private void configurarBotoes() {
                     "E-mail inválido.");
             return;
         }
-
+        
         try {
-            controller.login(email, senha);
-
-            JOptionPane.showMessageDialog(this,
-                    "Login realizado com sucesso!");
-           
-
+            
+            Usuario usuarioLogado = controller.login(email, senha);
+            sessaoUsuario.setUsuario(usuarioLogado);
+                TelaPrincipal telaprincipal = SpringContext.getBean(TelaPrincipal.class);
+                telaprincipal.atualizarSessao();
+                telaprincipal.setVisible(true);
+                this.dispose();
+            
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         } catch (Exception e) {

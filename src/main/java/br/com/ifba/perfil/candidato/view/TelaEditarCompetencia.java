@@ -8,17 +8,22 @@ import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
 import br.com.ifba.perfil.entity.Competencia;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author USER
  */
+@Component
+@Scope("protorype")
 public class TelaEditarCompetencia extends javax.swing.JFrame {
     @Autowired
     private PerfilCandidatoIController perfilcandidatocontroller;
     
     private Long idPerfil;
     private Competencia competencia;
+
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarCompetencia.class.getName());
 
@@ -27,13 +32,21 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
      */
     public TelaEditarCompetencia() {
         initComponents();
+         this.competencia = new Competencia(); // ✅ cria o objeto
     }
     
      public void setDados(Long idPerfil) {
         this.idPerfil = idPerfil;
-        this.competencia = competencia;
-        txtTitulo.setText(competencia.getTitulo());
+        this.competencia = new Competencia(); // ✅ sempre nova competência
+        txtTitulo.setText(""); // limpa campo
     }
+
+     
+   private TelaApresentacaoCandidato telaApresentacao;
+
+public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+    this.telaApresentacao = tela;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,16 +118,23 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
     private void btnsalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarActionPerformed
         // TODO add your handling code here:
         String titulo = txtTitulo.getText().trim();
+
+    if(titulo.isEmpty()){
+        JOptionPane.showMessageDialog(this, "Informe o título da competência.");
+        return;
+    }
+
+    try{
+        competencia.setTitulo(titulo);
+        perfilcandidatocontroller.addCompetencia(idPerfil, competencia);
+
         
-        try{
-            competencia.setTitulo(titulo);
-            perfilcandidatocontroller.addCompetencia(idPerfil, competencia);
-            JOptionPane.showMessageDialog(this, "Competencia adicionada com sucesso");
-            
-            dispose();
-        } catch (Exception e ){
-            JOptionPane.showMessageDialog(this, JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(this, "Competência adicionada com sucesso");
+
+        dispose();
+    } catch (Exception e ){
+        JOptionPane.showMessageDialog(this, "Erro ao salvar competência: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnsalvarActionPerformed
 
     
