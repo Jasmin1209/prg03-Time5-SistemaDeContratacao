@@ -6,6 +6,7 @@ package br.com.ifba.vaga.view;
 
 import br.com.ifba.candidaturas.view.CandidaturaListar;
 import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.ModeloContratacao;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
@@ -17,11 +18,17 @@ import java.awt.Color;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Taila
  */
+
+@Component
+@Scope("prototype")
 public class VagaEditar extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaEditar.class.getName());
@@ -34,6 +41,7 @@ public class VagaEditar extends javax.swing.JFrame {
     private static final Color AZUL_FORTE = new Color(18, 92, 146);   // #125c92
     private static final Color AZUL_FUNDO = new Color(0, 63, 115);    // #003f73
     
+    private final SessaoUsuario sessaoUsuario;
     private Usuario usuarioLogado;
     private VagaController vagaController;
     private Vaga vaga;
@@ -43,10 +51,12 @@ public class VagaEditar extends javax.swing.JFrame {
     /**
      * Creates new form VagaEditar
      */
-    public VagaEditar(Usuario usuarioLogado, VagaController vagaController, Vaga vaga) {
+    @Autowired
+    public VagaEditar(SessaoUsuario sessaoUsuario, VagaController vagaController, Vaga vaga) {
         this.usuarioLogado = usuarioLogado;
         this.vagaController = vagaController;
         this.vaga = vaga;
+        this.sessaoUsuario = sessaoUsuario;
 
         initComponents();
         estilizarBotoes();
@@ -457,7 +467,7 @@ public class VagaEditar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
+        new VagaDetalhes(sessaoUsuario, vagaController, vaga).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -473,7 +483,7 @@ public class VagaEditar extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Vaga atualizada com sucesso!");
         
         // Abre a tela de detalhes atualizada e fecha a de edição
-        new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
+        new VagaDetalhes(sessaoUsuario, vagaController, vaga).setVisible(true);
         dispose();
 
         } catch (Exception e) {
@@ -506,7 +516,7 @@ public class VagaEditar extends javax.swing.JFrame {
                // Passando o objeto Vaga inteiro como o seu Service exige
                vagaController.delete(vaga);
                JOptionPane.showMessageDialog(this, "Vaga excluída!");
-               new VagaListar(usuarioLogado, vagaController).setVisible(true);
+               new VagaListar(sessaoUsuario, vagaController).setVisible(true);
                this.dispose();
            } catch (Exception e) {
                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage());

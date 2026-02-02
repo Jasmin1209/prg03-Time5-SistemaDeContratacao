@@ -5,8 +5,12 @@
 package br.com.ifba.vaga.view;
 
 import br.com.ifba.endereco.Endereco;
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.perfil.candidato.view.TelaApresentacaoCandidato;
+import br.com.ifba.telaPrincipal.view.TelaPrincipal;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioEmpresa;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.vaga.controller.VagaController;
 import br.com.ifba.vaga.entity.Vaga;
 import br.com.ifba.vaga.enums.PeriodoContratacao;
@@ -29,12 +33,17 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 
 /**
  *
  * @author Taila
  */
+@Component
+@Scope("prototype")
 public class VagaListar extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VagaListar.class.getName());
@@ -49,26 +58,26 @@ public class VagaListar extends javax.swing.JFrame {
     private static final Color VERMELHO = new Color(231, 76, 60);
     private static final Color ROXO = new Color(110, 86, 207);
 
-    private Usuario usuarioLogado;
+    
     private VagaController vagaController;
+    private Usuario usuarioLogado;
+    private SessaoUsuario sessaoUsuario;
 
     
-    public VagaListar(Usuario usuarioLogado, VagaController vagaController) {
-        this.usuarioLogado = usuarioLogado;
+    @Autowired
+    public VagaListar(SessaoUsuario sessaoUsuario, VagaController vagaController) {
+        this.sessaoUsuario = sessaoUsuario;
         this.vagaController = vagaController;
-
+        this.usuarioLogado = sessaoUsuario.getUsuario();
+        
         initComponents();
         setLocationRelativeTo(null);
-
-        btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);
-
-        // Se o banco estiver vazio, adiciona cursos de exemplo
-        if (vagaController.findAll().isEmpty()) {
-                for (Vaga c : gerarVagasTeste()) {
-                    vagaController.save(c);
-                }
-        }
+        carregarFiltros(); // Preenche os ComboBoxes de busca  
+        carregarVagas(vagaController.findAll());
         
+        
+         btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);
+         
         // Customização do painel onde as vagas serão "empilhadas"
         pnListarVagas.setBackground(new Color(245, 246, 250));
         pnListarVagas.setBorder(
@@ -80,10 +89,7 @@ public class VagaListar extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     
         // Mostra o botão "Cadastrar" apenas se o usuário for empresa
-        btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);
-
-        carregarFiltros(); // Preenche os ComboBoxes de busca             
-        carregarVagas(vagaController.findAll());// Busca e exibe todas as vagas do banco
+        btnCadastrar.setVisible(usuarioLogado instanceof UsuarioEmpresa);    
 
     }
 
@@ -215,7 +221,7 @@ public class VagaListar extends javax.swing.JFrame {
         }
 
         btnDetalhes.addActionListener(e -> {
-            new VagaDetalhes(usuarioLogado, vagaController, vaga).setVisible(true);
+            new VagaDetalhes(sessaoUsuario , vagaController, vaga).setVisible(true);
             this.dispose();
         });
 
@@ -351,6 +357,7 @@ public class VagaListar extends javax.swing.JFrame {
         cBoxModelo = new javax.swing.JComboBox<>();
         btnBuscar = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
+        btnVoltar = new javax.swing.JButton();
         scroolVagas = new javax.swing.JScrollPane();
         pnListarVagas = new javax.swing.JPanel();
 
@@ -388,13 +395,24 @@ public class VagaListar extends javax.swing.JFrame {
             }
         });
 
+        btnVoltar.setText("VOLTAR");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnFiltrosLayout = new javax.swing.GroupLayout(pnFiltros);
         pnFiltros.setLayout(pnFiltrosLayout);
         pnFiltrosLayout.setHorizontalGroup(
             pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                    .addGroup(pnFiltrosLayout.createSequentialGroup()
+                        .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -407,17 +425,17 @@ public class VagaListar extends javax.swing.JFrame {
         );
         pnFiltrosLayout.setVerticalGroup(
             pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnFiltrosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnFiltrosLayout.createSequentialGroup()
+                .addComponent(btnVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cboxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cBoxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cBoxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnBuscar)
-                        .addComponent(btnCadastrar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addComponent(btnCadastrar)))
+                .addContainerGap())
         );
 
         pnListarVagas.setLayout(new javax.swing.BoxLayout(pnListarVagas, javax.swing.BoxLayout.Y_AXIS));
@@ -439,7 +457,7 @@ public class VagaListar extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scroolVagas, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+                .addComponent(scroolVagas, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -488,14 +506,23 @@ public class VagaListar extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        VagaCadastrar telaCadastro = new VagaCadastrar(usuarioLogado, vagaController);
+        VagaCadastrar telaCadastro = new VagaCadastrar(sessaoUsuario, vagaController);
         telaCadastro.setVisible(true);
         this.dispose(); // fecha a tela de listagem
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        TelaPrincipal tela = SpringContext.getBean(TelaPrincipal.class);
+        tela.atualizarSessao();
+        tela.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCadastrar;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JComboBox<String> cBoxModelo;
     private javax.swing.JComboBox<String> cboxTipo;
     private javax.swing.JScrollPane jScrollPane1;

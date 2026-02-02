@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.controller;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
 import br.com.ifba.usuario.service.UsuarioCandidatoService;
 import org.springframework.stereotype.Controller;
@@ -25,9 +26,8 @@ public class UsuarioCandidatoController
     }
 
     @Override
-    public boolean login(String email, String senha) {
-        service.login(email, senha);
-        return true;
+    public Usuario login(String email, String senha) {
+        return service.login(email, senha);
     }
 
     @Override
@@ -37,5 +37,10 @@ public class UsuarioCandidatoController
 
     public void verificarEmail(String email) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public UsuarioCandidato findById(Long idCandidato) {
+        return service.findById(idCandidato);
     }
 }

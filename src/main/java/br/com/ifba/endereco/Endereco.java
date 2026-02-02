@@ -26,16 +26,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Endereco extends PersistenceEntity implements Serializable{
     
-    @NotBlank
-    @Column(name = "pais", nullable = false)
+    
+    @Column(name = "pais", nullable = true)
     private String pais;
     
-    @NotBlank
-    @Column(name = "estado", nullable = false)
+    
+    @Column(name = "estado", nullable = true)
     private String estado;
     
-    @NotBlank
-    @Column(name = "cidade", nullable = false)
+    
+    @Column(name = "cidade", nullable = true)
     private String cidade;
     
     @Column(name = "bairro", nullable = true)

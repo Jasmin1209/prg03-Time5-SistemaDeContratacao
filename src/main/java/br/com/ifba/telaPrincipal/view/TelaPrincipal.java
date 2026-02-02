@@ -7,7 +7,12 @@ package br.com.ifba.telaPrincipal.view;
 import br.com.ifba.infrastructure.spring.SpringContext;
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoController;
 import br.com.ifba.perfil.candidato.view.TelaApresentacaoCandidato;
+import br.com.ifba.perfil.candidato.view.TelaEditarPerfil;
+import br.com.ifba.perfil.empresa.controller.PerfilEmpresaController;
+import br.com.ifba.perfil.empresa.view.TelaApresentacaoEmpresa;
+import br.com.ifba.perfil.empresa.view.TelaEditarPerfilEmpresa;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import br.com.ifba.perfil.entity.PerfilEmpresa;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.view.LoginCandidatoView;
 import br.com.ifba.vaga.controller.VagaController;
@@ -16,6 +21,8 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import br.com.ifba.usuario.entity.UsuarioCandidato;
+import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.usuario.view.LoginEmpresaView;
 import javax.swing.JOptionPane;
@@ -28,7 +35,7 @@ import org.springframework.stereotype.Component;
  * @author Taila
  */
 @Component
-@Scope("prototype")
+@Scope("singleton")
 public class TelaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaPrincipal.class.getName());
@@ -42,9 +49,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
  
     private SessaoUsuario sessaoUsuario;
-    private VagaController vagaController;
-    private UsuarioCandidatoController controller;
     private PerfilCandidatoController perfilCandidatoController;
+    private PerfilEmpresaController perfilEmpresaController;
 
     /**
      * Creates new form TelaPrincipal
@@ -58,22 +64,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
             SessaoUsuario sessaoUsuario, 
             VagaController vagaController, 
             UsuarioCandidatoController controller,
-            PerfilCandidatoController perfilCandidatoController
+            PerfilCandidatoController perfilCandidatoController,
+            PerfilEmpresaController perfilEmpresaController
     ) {
         this.sessaoUsuario = sessaoUsuario;
-        this.vagaController = vagaController;
-        this.controller = controller;
         this.perfilCandidatoController = perfilCandidatoController;
+        this.perfilEmpresaController = perfilEmpresaController;
     
         initComponents();
         estilizarTela();
+        configurarAcessos();
     }
     
     public void atualizarSessao() {
         configurarAcessos();
     }
 
-    
     private void estilizarTela() {
         //====== JFRAME =====
         setTitle("Sistema de Vagas - Início");
@@ -118,11 +124,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     private void configurarAcessos() {
-        if (sessaoUsuario != null && sessaoUsuario.getUsuario() != null) {
-        btnCadastro.setText("Meu Perfil");
-        lblTextinho.setText(
-            "Bem-vindo(a), " + sessaoUsuario.getUsuario().getNome() + "!"
-        );
+        if (sessaoUsuario.getUsuario() != null) {
+            btnCadastro.setText("Meu Perfil");
+            lblTextinho.setText(
+                "Bem-vindo(a), " + sessaoUsuario.getUsuario().getNome() + "!"
+            );
         } else {
             btnCadastro.setText("Entrar");
             lblTextinho.setText("Encontre o seu próximo desafio!");
@@ -239,37 +245,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Faça login para ver as vagas.");
             return;
         }
-        VagaListar telaListagem = new VagaListar(sessaoUsuario.getUsuario(), vagaController);
-        telaListagem.setVisible(true);
-        this.dispose();
+       VagaListar telaListagem = SpringContext.getBean(VagaListar.class);
+       telaListagem.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_btnListarVagasActionPerformed
 
     private void btnCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroActionPerformed
-        if (sessaoUsuario.getUsuario() != null) {
-            try {
-                // 1. Pega a tela do Spring
-                TelaApresentacaoCandidato telaPerfil = SpringContext.getBean(TelaApresentacaoCandidato.class);
-            
-                // 2. Busca o perfil usando o controller
-                PerfilCandidato perfil =
-                    perfilCandidatoController.findByUsuarioPerfilNome(
-                            sessaoUsuario.getUsuario().getNome()
-                    );
-                
-                if (perfil != null) {
-                    telaPerfil.setPerfilCandidato(perfil);
-                    telaPerfil.setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Perfil não encontrado!");
-                }
-                
-            } catch (Exception e) {
-                logger.log(java.util.logging.Level.SEVERE, "Erro ao abrir perfil", e);
-                }
-            
-            } else {
-                String[] opc = {"Candidato", "Empresa", "Cancelar"};
+        Usuario usuario = sessaoUsuario.getUsuario();
+
+        if(usuario == null){
+            String[] opc = {"Candidato", "Empresa", "Cancelar"};
                 int escolha = JOptionPane.showOptionDialog(this,
                     "Como você deseja acessar o sistema?",
                     "Seleção de Perfil",
@@ -286,7 +271,54 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     login.setVisible(true);
                     this.dispose();
                 }
+                
+                return;
+        }
+        
+            try {
+                if (usuario instanceof UsuarioCandidato) {
+                PerfilCandidato perfil = perfilCandidatoController.buscarPerfilCompleto(usuario.getId());
+
+
+                if (perfil != null) {
+                    TelaApresentacaoCandidato tela =
+                        SpringContext.getBean(TelaApresentacaoCandidato.class);
+                    tela.setPerfil(perfil);
+                    tela.setVisible(true);
+                } else {
+                    TelaEditarPerfil tela =
+                        SpringContext.getBean(TelaEditarPerfil.class);
+
+                    tela.setDados(usuario.getId()); // 👈 passe o usuário
+                    tela.setVisible(true);
+                    setVisible(false);
+                }
+
+                this.setVisible(false);
+                
+                } else if (usuario instanceof UsuarioEmpresa) {
+                    
+                    PerfilEmpresa perfil = perfilEmpresaController.buscarPerfilCompleto(usuario.getId());
+                    
+                    if(perfil != null){
+                    TelaApresentacaoEmpresa tela = 
+                            SpringContext.getBean(TelaApresentacaoEmpresa.class);
+                    tela.setPerfil(perfil);
+                    tela.setVisible(true);
+                    } else {
+                        TelaEditarPerfilEmpresa tela = SpringContext.getBean(TelaEditarPerfilEmpresa.class);
+                        
+                        tela.setDados(usuario.getId());
+                        tela.setVisible(true);
+                        setVisible(false);
+                    }
+                }
+                
+            } catch (Exception e) {
+                logger.log(java.util.logging.Level.SEVERE, "Erro ao abrir perfil", e);
             }
+            
+       
     }//GEN-LAST:event_btnCadastroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

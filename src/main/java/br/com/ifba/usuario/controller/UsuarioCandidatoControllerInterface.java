@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package br.com.ifba.usuario.controller;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
 
 /**
@@ -13,7 +14,9 @@ import br.com.ifba.usuario.entity.UsuarioCandidato;
  */
 public interface UsuarioCandidatoControllerInterface {
 
-    boolean login(String email, String senha);
+    Usuario login(String email, String senha) ;
 
     void cadastrar(UsuarioCandidato candidato);
+    
+    UsuarioCandidato findById(Long idCandidato);
 }

@@ -4,8 +4,10 @@
  */
 package br.com.ifba.perfil.empresa.view;
 
+import br.com.ifba.endereco.Endereco;
 import br.com.ifba.infrastructure.spring.SpringContext;
 import br.com.ifba.perfil.empresa.controller.PerfilEmpresaIController;
+import br.com.ifba.perfil.entity.PerfilCandidato;
 import br.com.ifba.perfil.entity.PerfilEmpresa;
 import br.com.ifba.vaga.controller.VagaIController;
 import br.com.ifba.vaga.entity.Vaga;
@@ -41,6 +43,19 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         initComponents();
         atualizarTela();
     }
+    
+    /* =========================
+       PERFIL
+       ========================= */
+    public void setPerfil(PerfilEmpresa perfil) {
+    if (perfil == null || perfil.getUsuarioEmpresa()== null) {
+        JOptionPane.showMessageDialog(this, "Perfil inválido ou incompleto.");
+        return;
+    }
+
+    this.perfilEmpresa = perfil;
+    atualizarTela();
+    }
 
     private void carregarDadosEmpresa() {
         
@@ -52,6 +67,31 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         lblnomeempresa.setText(perfilEmpresa.getUsuarioEmpresa().getNome());
         lblDescricao.setText(perfilEmpresa.getSobre());
         lblsetorempresa.setText(perfilEmpresa.getSetor());
+        
+        // ===== CONTATO =====
+        lblEmail.setText(perfilEmpresa.getUsuarioEmpresa().getEmail());
+        lblTelefone.setText(perfilEmpresa.getUsuarioEmpresa().getTelefone());
+        
+        if(perfilEmpresa.getSite() != null){
+            lblsite.setText(perfilEmpresa.getSite());
+        }
+        
+        // ===== ENDEREÇO =====
+        if (perfilEmpresa.getEndereco() != null) {
+            Endereco e = perfilEmpresa.getEndereco();
+            lblpais.setText(e.getPais());
+            lblcidade.setText(e.getCidade());
+            lblestado.setText(e.getEstado());
+            lblbairro.setText(e.getBairro());
+            lblnumero.setText(e.getNumero() != null ? String.valueOf(e.getNumero()) : "");
+        } else {
+            // Limpa os labels caso não haja endereço
+            lblpais.setText("");
+            lblcidade.setText("");
+            lblestado.setText("");
+            lblbairro.setText("");
+            lblnumero.setText("");
+        }
     }
     
     /* ===============================
@@ -81,7 +121,7 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblnomeempresa = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         lblsobre = new javax.swing.JLabel();
         lblDescricao = new javax.swing.JLabel();
         lblsetor = new javax.swing.JLabel();
@@ -90,12 +130,6 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         pnlVagas = new javax.swing.JPanel();
         btnInserirSobre = new javax.swing.JButton();
         btnInserirSetor = new javax.swing.JButton();
-        pnlEndereco = new javax.swing.JPanel();
-        lblpais = new javax.swing.JLabel();
-        lblcidade = new javax.swing.JLabel();
-        lblestado = new javax.swing.JLabel();
-        lblbairro = new javax.swing.JLabel();
-        lblnumero = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         lblinformacoes = new javax.swing.JLabel();
         pnlContato = new javax.swing.JPanel();
@@ -103,20 +137,28 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         lblTelefone = new javax.swing.JLabel();
         lblsite = new javax.swing.JLabel();
         lblEndereco = new javax.swing.JLabel();
+        pnlEndereco = new javax.swing.JPanel();
+        lblpais = new javax.swing.JLabel();
+        lblcidade = new javax.swing.JLabel();
+        lblestado = new javax.swing.JLabel();
+        lblbairro = new javax.swing.JLabel();
+        lblnumero = new javax.swing.JLabel();
+        lblnomeempresa = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
         btnEditarPerfil = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jButton2.setText("jButton2");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        lblnomeempresa.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        getContentPane().add(lblnomeempresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 378, 27));
 
         lblsobre.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblsobre.setText("SOBRE");
-        getContentPane().add(lblsobre, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, -1, -1));
+        getContentPane().add(lblsobre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, -1));
 
         lblDescricao.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        getContentPane().add(lblDescricao, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 384, 100));
+        getContentPane().add(lblDescricao, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, 260, 380, 90));
 
         lblsetor.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblsetor.setText("SETOR");
@@ -150,7 +192,7 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
                 btnInserirSobreActionPerformed(evt);
             }
         });
-        getContentPane().add(btnInserirSobre, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 250, -1, 20));
+        getContentPane().add(btnInserirSobre, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 430, -1, 20));
 
         btnInserirSetor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cadastrar.png"))); // NOI18N
         btnInserirSetor.addActionListener(new java.awt.event.ActionListener() {
@@ -159,48 +201,6 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnInserirSetor, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 380, -1, 20));
-
-        pnlEndereco.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lblpais.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        lblcidade.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        lblestado.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        javax.swing.GroupLayout pnlEnderecoLayout = new javax.swing.GroupLayout(pnlEndereco);
-        pnlEndereco.setLayout(pnlEnderecoLayout);
-        pnlEnderecoLayout.setHorizontalGroup(
-            pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlEnderecoLayout.createSequentialGroup()
-                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblpais, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlEnderecoLayout.createSequentialGroup()
-                        .addComponent(lblcidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblestado, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlEnderecoLayout.createSequentialGroup()
-                        .addComponent(lblbairro, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblnumero, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        pnlEnderecoLayout.setVerticalGroup(
-            pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlEnderecoLayout.createSequentialGroup()
-                .addComponent(lblpais, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblcidade, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
-                    .addComponent(lblestado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblbairro, javax.swing.GroupLayout.DEFAULT_SIZE, 13, Short.MAX_VALUE)
-                    .addComponent(lblnumero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(pnlEndereco, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 370, 70));
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -248,15 +248,71 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         lblEndereco.setText("ENDEREÇO");
         jPanel2.add(lblEndereco, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, -1));
 
-        btnEditarPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        pnlEndereco.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblpais.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        lblcidade.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        lblestado.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout pnlEnderecoLayout = new javax.swing.GroupLayout(pnlEndereco);
+        pnlEndereco.setLayout(pnlEnderecoLayout);
+        pnlEnderecoLayout.setHorizontalGroup(
+            pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEnderecoLayout.createSequentialGroup()
+                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblpais, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlEnderecoLayout.createSequentialGroup()
+                        .addComponent(lblcidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblestado, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlEnderecoLayout.createSequentialGroup()
+                        .addComponent(lblbairro, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblnumero, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        pnlEnderecoLayout.setVerticalGroup(
+            pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEnderecoLayout.createSequentialGroup()
+                .addComponent(lblpais, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblcidade, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                    .addComponent(lblestado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlEnderecoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblbairro, javax.swing.GroupLayout.DEFAULT_SIZE, 13, Short.MAX_VALUE)
+                    .addComponent(lblnumero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.add(pnlEndereco, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, 70));
+
+        lblnomeempresa.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel2.add(lblnomeempresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 378, 20));
+
+        jButton3.setText("VOLTAR");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 80, 20));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 390, 240));
+
+        btnEditarPerfil.setText("EDITAR PERFIL");
         btnEditarPerfil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarPerfilActionPerformed(evt);
             }
         });
-        jPanel2.add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 40, 30, 20));
+        getContentPane().add(btnEditarPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 350, 120, 20));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 390, 240));
+        jButton1.setText("jButton1");
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -291,6 +347,11 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnEditarPerfilActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /* ===============================
        MÉTODO PARA ATUALIZAR A TELA
        =============================== */
@@ -305,6 +366,9 @@ public class TelaApresentacaoEmpresa extends javax.swing.JFrame {
     private javax.swing.JButton btnEditarPerfil;
     private javax.swing.JButton btnInserirSetor;
     private javax.swing.JButton btnInserirSobre;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblEmail;

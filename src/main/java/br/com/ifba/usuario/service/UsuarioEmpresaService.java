@@ -47,7 +47,7 @@ public class UsuarioEmpresaService
     }
 
     @Override
-    public boolean login(String email, String senha) {
+    public UsuarioEmpresa login(String email, String senha) {
         UsuarioEmpresa empresa = repository.findByEmail(email)
                 .orElseThrow(() ->
                         new IllegalArgumentException("E-mail não cadastrado."));
@@ -56,7 +56,7 @@ public class UsuarioEmpresaService
             throw new IllegalArgumentException("Senha inválida.");
         }
 
-        return true;
+        return empresa;
     }
 
     private void validar(UsuarioEmpresa empresa) {

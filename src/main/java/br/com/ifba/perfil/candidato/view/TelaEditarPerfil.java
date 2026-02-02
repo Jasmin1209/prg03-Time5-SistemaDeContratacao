@@ -4,11 +4,20 @@
  */
 package br.com.ifba.perfil.candidato.view;
 
+import br.com.ifba.endereco.Estado;
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import javax.swing.DefaultComboBoxModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import br.com.ifba.endereco.Endereco;
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.usuario.controller.UsuarioCandidatoController;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.entity.UsuarioCandidato;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -23,39 +32,94 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
     PerfilCandidatoIController perfilCandidatoController;
     
     private Long idCandidato;
-    private TelaApresentacaoCandidato telaapresentacao;
+    private TelaApresentacaoCandidato tela;
     private PerfilCandidato candidato;
+    private UsuarioCandidato usuarioCandidato;
+
+    public void setUsuario(UsuarioCandidato usuarioCandidato) {
+        this.usuarioCandidato = usuarioCandidato;
+    }
+
+    @Autowired
+    UsuarioCandidatoController usuarioCandidatoController;
+
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarPerfil.class.getName());
 
     /**
      * Creates new form TelaEditarPerfil
      */
-    public TelaEditarPerfil() {
-        initComponents();
-    }
-
-    public void setDados(Long idCandidato) {
-    this.idCandidato = idCandidato;
-
-    this.candidato = perfilCandidatoController.findById(idCandidato);
-
-        if (candidato != null) {
-            txtNome.setText(candidato.getUsuarioPerfil().getNome());
-            txtEmail.setText(candidato.getUsuarioPerfil().getEmail());
-            txtTelefone.setText(candidato.getUsuarioPerfil().getTelefone());
-
-            if (candidato.getEndereco() != null) {
-                txtPais.setText(candidato.getEndereco().getPais());
-                // cmbEstado.setSelectedItem(candidato.getEndereco().getEstado());
-                // cidade, bairro, numero se existirem
-            }
-        }
+    private void carregarEstados() {
+        cmbEstado.setModel(new DefaultComboBoxModel<>(Estado.values()));
     }
     
-    public void setTelaApresentacao(TelaApresentacaoCandidato tela) {
-        this.telaapresentacao = tela;
+    public TelaEditarPerfil() {
+        initComponents();
+        carregarEstados();
+        carregarTelaComPerfil(candidato);
+        
+        // ===== TAMANHO FIXO DA TELA =====
+        setSize(460, 680);     // ajuste se quiser
+        setResizable(false);  // impede redimensionamento
+        setLocationRelativeTo(null); // centraliza na tela
     }
+
+    
+
+    public void setDados(Long usuarioId) {
+ 
+    PerfilCandidato perfil = perfilCandidatoController.findByUsuarioPerfilId(usuarioId);
+
+    if (perfil == null) {
+        JOptionPane.showMessageDialog(this, "Perfil não encontrado para este usuário.");
+        return;
+    }
+
+    this.candidato = perfil;
+
+    // sempre carrega a tela a partir do perfil completo
+    carregarTelaComPerfil(perfil);  
+    }
+    
+    private TelaApresentacaoCandidato telaApresentacao;
+
+public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+    this.telaApresentacao = tela;
+}
+
+    private void carregarTelaComPerfil(PerfilCandidato perfil) {
+
+    if (perfil == null) return;
+
+    UsuarioCandidato usuario = perfil.getUsuarioPerfil();
+
+    if (usuario != null) {
+        txtNome.setText(usuario.getNome());
+        txtEmail.setText(usuario.getEmail());
+        txtTelefone.setText(usuario.getTelefone());
+    }
+
+    txtSobreMim.setText(perfil.getSobre());
+
+    if (perfil.getEndereco() != null) {
+        Endereco e = perfil.getEndereco();
+
+        txtPais.setText(e.getPais());
+
+        if (e.getEstado() != null) {
+            try {
+                cmbEstado.setSelectedItem(Estado.valueOf(e.getEstado()));
+            } catch (IllegalArgumentException ex) {
+                cmbEstado.setSelectedItem(null);
+            }
+        }
+            jTextField1.setText(e.getCidade()); 
+            jTextField2.setText(e.getBairro()); 
+            jTextField3.setText(e.getNumero() != null ? String.valueOf(e.getNumero()) : "");
+    }
+}
+
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -89,6 +153,9 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         txtSite = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtSobreMim = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -109,8 +176,6 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
         lblPais.setText("PAÍS");
 
         lblEstado.setText("ESTADO");
-
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel1.setText("CIDADE");
 
@@ -159,7 +224,7 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlEnderecoLayout.setVerticalGroup(
@@ -258,7 +323,16 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
                 btnSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 460, -1, -1));
+        getContentPane().add(btnSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 590, -1, -1));
+
+        jLabel8.setText("SOBRE MIM");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 440, -1, -1));
+
+        txtSobreMim.setColumns(20);
+        txtSobreMim.setRows(5);
+        jScrollPane1.setViewportView(txtSobreMim);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 420, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -273,27 +347,61 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
-        candidato.getUsuarioPerfil().setNome(txtNome.getText());
-        candidato.getUsuarioPerfil().setEmail(txtEmail.getText());
-        candidato.getUsuarioPerfil().setTelefone(txtTelefone.getText());
+        if (candidato == null || candidato.getUsuarioPerfil() == null) {
+                JOptionPane.showMessageDialog(
+                this,
+                "Erro interno: perfil não carregado corretamente.\nReabra a tela."
+            );
+            return;
+        }
 
-    // Atualizar endereço se existir
-    if (candidato.getEndereco() != null) {
-        candidato.getEndereco().setPais(txtPais.getText());
-        // estado, cidade, bairro, numero
-    }
+        
+    UsuarioCandidato usuario = candidato.getUsuarioPerfil();
+        
+    // ===== USUÁRIO =====
+    usuario.setNome(txtNome.getText());
+    usuario.setEmail(txtEmail.getText());
+    usuario.setTelefone(txtTelefone.getText());
+        
+    // ===== PERFIL =====
+    candidato.setSobre(txtSobreMim.getText());
+       
+    Endereco e = candidato.getEndereco();
+            if (e == null) {
+                e = new Endereco();
+                candidato.setEndereco(e);
+            }
 
-    perfilCandidatoController.update(candidato);
+            e.setPais(txtPais.getText());
 
-    // Volta para a tela de apresentação
-    telaapresentacao.setVisible(true);
-    this.dispose();
+            Estado estadoSelecionado = (Estado) cmbEstado.getSelectedItem();
+            if (estadoSelecionado != null) {
+                e.setEstado(estadoSelecionado.name());
+            }
+
+            e.setCidade(jTextField1.getText());
+            e.setBairro(jTextField2.getText());
+
+            String numStr = jTextField3.getText().trim();
+            e.setNumero(numStr.isEmpty() ? 0 : Integer.parseInt(numStr));
+
+            // Salva utilizando o update (que internamente faz merge) [cite: 49, 279]
+            perfilCandidatoController.update(candidato);
+
+            // SINCRONIZAÇÃO: Atualiza a tela de apresentação antes de fechar [cite: 120, 281]
+            if (this.telaApresentacao != null) {
+                this.telaApresentacao.setPerfil(candidato); // Isso dispara o atualizarTela() [cite: 121]
+                this.telaApresentacao.setVisible(true);
+            }
+
+            JOptionPane.showMessageDialog(this, "Perfil atualizado com sucesso!");
+            dispose();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JComboBox<String> cmbEstado;
+    private javax.swing.JComboBox<Estado> cmbEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -301,6 +409,8 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -315,6 +425,7 @@ public class TelaEditarPerfil extends javax.swing.JFrame {
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtPais;
     private javax.swing.JTextField txtSite;
+    private javax.swing.JTextArea txtSobreMim;
     private javax.swing.JTextField txtTelefone;
     // End of variables declaration//GEN-END:variables
 }

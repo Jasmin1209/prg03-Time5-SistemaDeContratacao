@@ -5,7 +5,6 @@
 package br.com.ifba.perfil.entity;
 
 //Anotações JPA
-import br.com.ifba.endereco.Endereco;
 import br.com.ifba.usuario.entity.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +17,6 @@ import jakarta.validation.constraints.NotBlank;
 
 //Lombok
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +36,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PerfilEmpresa extends Perfil{
     
+ 
     @OneToOne
     @JoinColumn(
             name = "usuarioEmpresa_id",

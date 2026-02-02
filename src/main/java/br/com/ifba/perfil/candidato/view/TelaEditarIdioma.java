@@ -31,16 +31,19 @@ public class TelaEditarIdioma extends javax.swing.JFrame {
     public TelaEditarIdioma() {
         initComponents();
         carregarNiveis();
+        this.idioma = new Idioma(); // ✅ cria sempre novo
     }
     
-    /**
-     * Recebe os dados do idioma a ser editado
-     * @param idPerfil
-     * @param idioma
-     */
-    public void setDados(Long idPerfil, Idioma idioma) {
+    private TelaApresentacaoCandidato telaApresentacao;
+
+public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+    this.telaApresentacao = tela;
+}
+    
+    
+    public void setDados(Long idPerfil) {
         this.idPerfil = idPerfil;
-        this.idioma = idioma;
+        this.idioma = new Idioma();
 
         txtNomeIdioma.setText(idioma.getIdioma());
         cmbNivel.setSelectedItem(idioma.getNivel());

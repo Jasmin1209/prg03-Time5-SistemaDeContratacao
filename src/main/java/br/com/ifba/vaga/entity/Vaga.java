@@ -74,9 +74,10 @@ public class Vaga extends PersistenceEntity implements Serializable{
     private Set<String> beneficios;
 
     // Localização da vaga
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco localizacao;
+
     
     // Descrição da vaga
     @Column(name = "descricao", length = 1000)
@@ -89,4 +90,6 @@ public class Vaga extends PersistenceEntity implements Serializable{
     // Status da vaga (true = ativa | false = encerrada)
     @Column(name = "status",nullable = false)
     private Boolean status;
+    
+    
 }

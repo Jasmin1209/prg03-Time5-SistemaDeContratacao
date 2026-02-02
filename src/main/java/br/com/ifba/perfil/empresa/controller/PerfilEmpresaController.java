@@ -6,6 +6,7 @@ package br.com.ifba.perfil.empresa.controller;
 
 import br.com.ifba.perfil.empresa.service.PerfilEmpresaIService;
 import br.com.ifba.perfil.entity.PerfilEmpresa;
+import br.com.ifba.usuario.entity.UsuarioEmpresa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Controller;
 public class PerfilEmpresaController implements PerfilEmpresaIController{
     private final PerfilEmpresaIService perfilempresaservice;
 
+    @Override
+    public PerfilEmpresa buscarPerfilCompleto(Long usuarioId) {
+        return perfilempresaservice.buscarPerfilCompleto(usuarioId);
+    }
     @Override
     public PerfilEmpresa update(PerfilEmpresa perfilCandidato) {
         return perfilempresaservice.update(perfilCandidato);
@@ -46,5 +51,20 @@ public class PerfilEmpresaController implements PerfilEmpresaIController{
     @Override
     public PerfilEmpresa findById (Long id){
         return perfilempresaservice.findById(id);
+    }
+    
+    @Override
+    public PerfilEmpresa findByUsuarioId(Long usuarioId) {
+        return perfilempresaservice.findByUsuarioId(usuarioId);
+    }
+
+    @Override
+    public void saveOrUpdate(PerfilEmpresa empresa) {
+        perfilempresaservice.save(empresa);
+    }
+    
+    @Override
+    public UsuarioEmpresa buscarUsuarioEmpresa(Long idUsuario){
+        return perfilempresaservice.buscarUsuarioEmpresa(idUsuario);
     }
 }

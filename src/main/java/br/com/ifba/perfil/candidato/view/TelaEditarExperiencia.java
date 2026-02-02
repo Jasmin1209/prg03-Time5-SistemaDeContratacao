@@ -25,10 +25,10 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
     private PerfilCandidatoIController perfilcandidatocontroller;
     private Experiencia experiencia;
     private Long idPerfil;
-    private TelaApresentacaoCandidato telaapresentacao;
+    private TelaApresentacaoCandidato tela;
     
-    public void setTelaApresentacao(TelaApresentacaoCandidato telaapresentacao){
-        this.telaapresentacao = telaapresentacao;
+    public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela){
+        this.tela = tela;
     }
     
     public void setDados(Long idPerfil) {
@@ -56,6 +56,7 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
         configurarSpinners();
     }
 
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -207,33 +208,68 @@ public class TelaEditarExperiencia extends javax.swing.JFrame {
     private void btnsalvarexperienciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarexperienciaActionPerformed
         // TODO add your handling code here:
 
-    experiencia.setCargo(txttitulo.getText());
-    experiencia.setEmpresa(txtempresa.getText());
-
-    //transforma as informações colocadas no spinner em datas válidas
-    LocalDate dataInicio = LocalDate.of(
-            (int) spnAnoInicial.getValue(),
-            (int) spnMesInicial.getValue(),
-            (int) spnDiaInicial.getValue() 
-   
-    );
-
-    experiencia.setDataInicial(dataInicio);
-    
-    LocalDate dataFim = null; //se for nulo fica considerado como trabalho atual
-    if ((int) spnAnoFinal.getValue() > 0) {
-        dataFim = LocalDate.of(
-                (int) spnAnoFinal.getValue(),
-                (int) spnMesFinal.getValue(),
-                (int) spnDiaFinal.getValue()
-               
-        );
+     // ===== VALIDAÇÕES BÁSICAS =====
+    if (txttitulo.getText().isBlank()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Informe o título/cargo.");
+        return;
     }
 
-    experiencia.setDataFinal(dataFim);
+    if (txtempresa.getText().isBlank()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Informe a empresa.");
+        return;
+    }
+
+    int diaIni = (int) spnDiaInicial.getValue();
+    int mesIni = (int) spnMesInicial.getValue();
+    int anoIni = (int) spnAnoInicial.getValue();
+
+    LocalDate dataInicio;
+    try {
+        dataInicio = LocalDate.of(anoIni, mesIni, diaIni);
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Data inicial inválida.");
+        return;
+    }
+
+    // ===== DATA FINAL =====
+    int diaFim = (int) spnDiaFinal.getValue();
+    int mesFim = (int) spnMesFinal.getValue();
+    int anoFim = (int) spnAnoFinal.getValue();
+
+    LocalDate dataFim = null;
+
+    // só cria data se usuário realmente preencheu
+    if (anoFim > 0 && mesFim > 0 && diaFim > 0) {
+        try {
+            dataFim = LocalDate.of(anoFim, mesFim, diaFim);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Data final inválida.");
+            return;
+        }
+
+        // valida lógica temporal
+        if (dataFim.isBefore(dataInicio)) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Data final não pode ser anterior à data inicial.");
+            return;
+        }
+    }
+
+    // ===== SET DADOS =====
+    experiencia.setCargo(txttitulo.getText());
+    experiencia.setEmpresa(txtempresa.getText());
+    experiencia.setDataInicial(dataInicio);
+    experiencia.setDataFinal(dataFim); // null = atual
+
+    // ===== PERSISTÊNCIA =====
     perfilcandidatocontroller.addExperiencia(idPerfil, experiencia);
 
-    telaapresentacao.setVisible(true);
+    // ===== VOLTA PARA TELA PRINCIPAL =====
+    if (tela != null) {
+        tela.recarregarPerfil();
+        tela.setVisible(true);
+    }
+
     this.dispose();
 
     }//GEN-LAST:event_btnsalvarexperienciaActionPerformed

@@ -31,6 +31,7 @@ import lombok.Setter;
 @Getter 
 @Setter
 @NoArgsConstructor 
+
 public abstract class Perfil extends PersistenceEntity implements Serializable{
     
     //o uso de columnDefinition = "TEXT" permite armazenar textos longos

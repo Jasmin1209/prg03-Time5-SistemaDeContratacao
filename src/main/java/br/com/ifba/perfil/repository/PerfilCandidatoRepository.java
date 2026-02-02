@@ -27,7 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato, Long>{
-        Optional<PerfilCandidato> findByUsuarioPerfilNome(String nome);
+    
+    PerfilCandidato findByUsuarioPerfilId(Long usuarioId);
+    
+    Optional<PerfilCandidato> findByUsuarioPerfilNome(String nome);
 
     @Query("SELECT p.experiencias FROM PerfilCandidato p WHERE p.id = :id")
     Set<Experiencia> findAllExperiencia(@Param("id") Long id);
@@ -56,4 +59,16 @@ public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato
     @Modifying
     @Query("DELETE FROM Idioma i WHERE i.id = :id")
     void deleteByIdIdioma(@Param("id") Long id);
+    
+    @Query("""
+        SELECT DISTINCT p FROM PerfilCandidato p
+        JOIN FETCH p.usuarioPerfil u
+        LEFT JOIN FETCH p.endereco
+        LEFT JOIN FETCH p.experiencias
+        LEFT JOIN FETCH p.formacaoAcademica
+        LEFT JOIN FETCH p.competencias
+        LEFT JOIN FETCH p.idiomas
+        WHERE u.id = :usuarioId
+    """)
+    PerfilCandidato buscarPerfilCompleto(@Param("usuarioId") Long usuarioId);
 }

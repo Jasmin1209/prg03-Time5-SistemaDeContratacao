@@ -3,14 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package br.com.ifba.usuario.service;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.entity.UsuarioCandidato;
-import br.com.ifba.usuario.repository.UsuarioCandidatoRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.springframework.stereotype.Service;
 import java.util.Set;
+import br.com.ifba.usuario.repository.UsuarioCandidatoRepository;
 
 /**
  * Camada de serviço responsável pelas
@@ -20,7 +21,7 @@ import java.util.Set;
  * @author luiza
  */
 @Service
-public class UsuarioCandidatoService
+public class UsuarioCandidatoService 
         implements UsuarioCandidatoServiceInterface {
 
     private final UsuarioCandidatoRepository repository;
@@ -46,21 +47,22 @@ public class UsuarioCandidatoService
     }
 
     @Override
-    public boolean login(String email, String senha) {
-        UsuarioCandidato usuario = repository.findByEmail(email)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("E-mail não cadastrado."));
+    public UsuarioCandidato login(String email, String senha) {
 
-        if (!usuario.getSenha().equals(senha)) {
-            throw new IllegalArgumentException("Senha inválida.");
-        }
+    UsuarioCandidato candidato = repository.findByEmail(email)
+            .orElseThrow(() ->
+                    new IllegalArgumentException("E-mail não cadastrado."));
 
-        return true;
+    if (!candidato.getSenha().equals(senha)) {
+        throw new IllegalArgumentException("Senha inválida.");
     }
 
-    private void validar(UsuarioCandidato candidato) {
+    return candidato; // ✅ RETORNA O USUÁRIO
+}
+    
+    public void validar(UsuarioCandidato usuario) {
         Set<ConstraintViolation<UsuarioCandidato>> erros =
-                validator.validate(candidato);
+                validator.validate(usuario);
 
         if (!erros.isEmpty()) {
             StringBuilder msg = new StringBuilder();
@@ -69,5 +71,13 @@ public class UsuarioCandidatoService
             );
             throw new IllegalArgumentException(msg.toString());
         }
+    }
+    
+    @Override
+    public UsuarioCandidato findById(Long idCandidato) {
+        return repository.findById(idCandidato)
+            .orElseThrow(() ->
+                new IllegalArgumentException("Usuário candidato não encontrado")
+            );
     }
 }

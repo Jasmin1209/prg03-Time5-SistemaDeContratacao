@@ -3,11 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.usuario.view;
+import br.com.ifba.infrastructure.spring.SpringContext;
 import br.com.ifba.telaPrincipal.view.TelaPrincipal;
 import br.com.ifba.usuario.controller.UsuarioEmpresaController;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.navegador.NavegadorTelas;
+import br.com.ifba.usuario.sessao.SessaoUsuario;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -321,6 +325,10 @@ private void configurarBotoes() {
     btnEsqueciSenha.setContentAreaFilled(false);
     btnEsqueciSenha.setForeground(new java.awt.Color(120, 120, 120));
 }
+
+@Autowired
+private SessaoUsuario sessaoUsuario;
+
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         String email = txtEmail.getText();
         String senha = txtSenha.getText();
@@ -338,11 +346,16 @@ private void configurarBotoes() {
         }
 
         try {
-            controller.login(email, senha);
+            Usuario usuarioLogado = controller.login(email, senha);
 
-            JOptionPane.showMessageDialog(this,
-                    "Login realizado com sucesso!");
-            // futuramente: abrir dashboard
+        // 🔴 ESSENCIAL
+        sessaoUsuario.setUsuario(usuarioLogado);
+
+        TelaPrincipal telaPrincipal = SpringContext.getBean(TelaPrincipal.class);
+        telaPrincipal.atualizarSessao();
+        telaPrincipal.setVisible(true);
+
+        this.dispose();
 
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
