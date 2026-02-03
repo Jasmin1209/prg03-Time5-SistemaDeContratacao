@@ -53,18 +53,23 @@ public class VagaEditar extends javax.swing.JFrame {
      */
     @Autowired
     public VagaEditar(SessaoUsuario sessaoUsuario, VagaController vagaController, Vaga vaga) {
-        this.usuarioLogado = usuarioLogado;
+        this.usuarioLogado = sessaoUsuario.getUsuario();
         this.vagaController = vagaController;
         this.vaga = vaga;
         this.sessaoUsuario = sessaoUsuario;
 
         initComponents();
+        
+        // --- Configuração do Campo de Descrição ---
+        txtDescricao.setLineWrap(true);      // Faz o texto pular para a linha seguinte
+        txtDescricao.setWrapStyleWord(true); // Evita que palavras sejam cortadas ao meio
+        
         estilizarBotoes();
         configurarTela();
     }
     
     private void configurarTela() {
-       setSize(677, 567);
+       //setSize(677, 567);
        setLocationRelativeTo(null);  
        
        jLabel1.setForeground(AZUL_FUNDO); // Aplica o azul mais escuro no "Editar Vaga"
@@ -175,10 +180,14 @@ public class VagaEditar extends javax.swing.JFrame {
             return;
         }
         
+        //Preenchimento de campos de texto simples
         txtTitulo.setText(vaga.getTitulo());
         txtQtd.setText(String.valueOf(vaga.getQuantidade()));
+
+        //Configuração da Descrição com reset de scroll
         txtDescricao.setText(vaga.getDescricao());
-        
+        txtDescricao.setCaretPosition(0); // Garante que o texto comece no topo
+
         //Proteção contra Localização nula para evitar NullPointerException
         if (vaga.getLocalizacao() != null) {
             txtCidade.setText(vaga.getLocalizacao().getCidade());

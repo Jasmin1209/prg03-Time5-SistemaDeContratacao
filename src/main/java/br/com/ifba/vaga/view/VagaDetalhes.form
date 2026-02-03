@@ -43,14 +43,15 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                      <Component id="lblTituloVaga" min="-2" pref="153" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="268" max="-2" attributes="0"/>
-                      <Component id="btnAcao" min="-2" pref="86" max="-2" attributes="0"/>
+                      <Component id="lblTituloVaga" min="-2" pref="455" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="btnEditar" min="-2" pref="111" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="262" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -70,18 +71,18 @@
               </Group>
               <Component id="lblTituloVaga" min="-2" pref="28" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                       <Component id="lblDescricao" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="406" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="10" max="32767" attributes="0"/>
-              <Component id="btnAcao" min="-2" pref="26" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnEditar" min="-2" pref="26" max="-2" attributes="0"/>
+              <EmptySpace pref="20" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -127,9 +128,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVoltarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnAcao">
+    <Component class="javax.swing.JButton" name="btnEditar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Editar"/>
+      </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAcaoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditarActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTituloVaga">

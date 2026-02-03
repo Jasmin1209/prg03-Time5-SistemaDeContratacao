@@ -42,14 +42,14 @@ public class VagaDetalhes extends javax.swing.JFrame {
      */
     public VagaDetalhes(SessaoUsuario sessaoUsuario, VagaController vagaController, Vaga vaga) {
         this.sessaoUsuario = sessaoUsuario;
-        this.usuarioLogado = usuarioLogado;
+        this.usuarioLogado = sessaoUsuario.getUsuario();
         this.vagaController = vagaController;
         this.vaga = vaga;
 
         
         initComponents();
         setLocationRelativeTo(null); // Centraliza a janela
-        this.setSize(677, 567);
+        //this.setSize(677, 567);
         
         // Configura o JTextArea para quebrar o texto automaticamente quando chegar ao fim da largura
         txtDescricao.setLineWrap(true);
@@ -61,70 +61,64 @@ public class VagaDetalhes extends javax.swing.JFrame {
     }
     
     private void carregarDados() {
-        // Verifica se a vaga existe para evitar erro de NullPointerException
-        if(vaga == null) {
+        if (vaga == null) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar dados da vaga.");
             return;
         }
-        
-        //Atualiza o Título dinâmico no topo da tela
+
         lblTituloVaga.setText(vaga.getTitulo());
-        
-        // StringBuilder é usado para concatenar textos de forma mais eficiente que String comum
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("📝 DESCRIÇÃO DA VAGA\n\n");
-        sb.append("Estamos em busca de um(a) ").append(vaga.getTitulo()).append("\n\n");
-        
-        // --- STATUS DA VAGA ---
-        String statusTexto = (vaga.getStatus() != null && vaga.getStatus()) ? "✅ ATIVA" : "🚫 ENCERRADA";
+
+       StringBuilder sb = new StringBuilder();
+
+        // 🔹 dados da vaga
+        sb.append("-----------------------------------------------------------\n");
+        String statusTexto = (vaga.getStatus() != null && vaga.getStatus())
+                ? "✅ ATIVA"
+                : "🚫 ENCERRADA";
+
         sb.append("📊 Status: ").append(statusTexto).append("\n");
-        
-        // Pega os dados do objeto 'vaga' e adiciona ao texto
         sb.append("📌 Quantidade de vagas: ").append(vaga.getQuantidade()).append("\n");
         sb.append("💼 Modelo de contratação: ").append(vaga.getModelo()).append("\n");
         sb.append("🏢 Tipo de contratação: ").append(vaga.getTipo()).append("\n");
         sb.append("⏰ Período de contratação: ").append(vaga.getPeriodo()).append("\n");
-        
-        // Localização segura
-        String cidade = (vaga.getLocalizacao() != null) ? vaga.getLocalizacao().getCidade() : "Não informada";
+
+        String cidade = (vaga.getLocalizacao() != null)
+                ? vaga.getLocalizacao().getCidade()
+                : "Não informada";
+
         sb.append("📍 Localização: ").append(cidade).append("\n");
 
-        // Salário seguro
         if (vaga.getFaixaSalarial() != null) {
-            sb.append("💰 Faixa salarial: R$ ").append(String.format("%,d", vaga.getFaixaSalarial())).append("\n\n");
+            sb.append("💰 Faixa salarial: R$ ")
+              .append(String.format("%,d", vaga.getFaixaSalarial()))
+              .append("\n");
         } else {
-            sb.append("💰 Faixa salarial: A combinar\n\n");
+            sb.append("💰 Faixa salarial: A combinar\n");
         }
         
-        sb.append("🚀 RESPONSABILIDADES\n");
-        sb.append(vaga.getDescricao()).append("\n\n");
-        
-        sb.append("REQUISITOS\n");
-        sb.append("A definir...\n\n"); // Pode preencher se tiver info
-    
-        sb.append("INFORMAÇÕES ADICIONAIS\n");
-        sb.append("A definir...\n\n"); // Pode preencher se tiver info
-        
-        sb.append("ETAPAS DO PROCESSO\n");
-        sb.append("A definir...\n\n"); 
-        
-        // Seta o texto final no componente JTextArea da tela
+         
+        sb.append("-----------------------------------------------------------\n");
+        sb.append("\n📝 DETALHES E REQUISITOS\n");
+        sb.append("\n");
+        sb.append(vaga.getDescricao() != null ? vaga.getDescricao() : "Nenhum detalhe adicional fornecido.");
+
+        // Aplicar ao componente
         txtDescricao.setText(sb.toString());
-        txtDescricao.setCaretPosition(0);// Garante que a barra de rolagem comece no topo
-        txtDescricao.setEditable(false);//Impede o usuário de apagar ou mudar o texto da descrição
-        txtDescricao.setLineWrap(true); // o texto quebrar a linha automaticamente  
-        txtDescricao.setWrapStyleWord(true); //para não cortar pralavras no meio
+
+        // Garante que o usuário veja o topo (os dados técnicos) assim que abrir
+        txtDescricao.setCaretPosition(0);
     }
+
+
     
     /**
      * Define o comportamento visual do botão principal baseado no tipo de usuário
      */
     private void configurarBotao() {
         if(usuarioLogado instanceof UsuarioEmpresa){
-            btnAcao.setText("Editar");
+            btnEditar.setText("Editar");
         }else {
-            btnAcao.setText("Candidatar-se");
+            btnEditar.setText("Candidatar-se");
         }
     }
     
@@ -146,11 +140,11 @@ public class VagaDetalhes extends javax.swing.JFrame {
         btnVoltar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     
         // Botão de Ação (Editar ou Candidatar)
-        btnAcao.setBackground(AZUL_BASE);
-        btnAcao.setForeground(Color.WHITE);
-        btnAcao.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
-        btnAcao.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAcao.setFocusPainted(false);
+        btnEditar.setBackground(AZUL_BASE);
+        btnEditar.setForeground(Color.WHITE);
+        btnEditar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditar.setFocusPainted(false);
     }
 
 
@@ -168,7 +162,7 @@ public class VagaDetalhes extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescricao = new javax.swing.JTextArea();
         btnVoltar = new javax.swing.JButton();
-        btnAcao = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         lblTituloVaga = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -191,9 +185,10 @@ public class VagaDetalhes extends javax.swing.JFrame {
             }
         });
 
-        btnAcao.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAcaoActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
 
@@ -220,11 +215,12 @@ public class VagaDetalhes extends javax.swing.JFrame {
                                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(46, 46, 46)
-                        .addComponent(lblTituloVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(lblTituloVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(262, 262, 262))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,9 +241,9 @@ public class VagaDetalhes extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(btnAcao, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -258,18 +254,15 @@ public class VagaDetalhes extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-    private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         if (usuarioLogado instanceof UsuarioEmpresa) {
             new VagaEditar(sessaoUsuario, vagaController, vaga).setVisible(true);
             this.dispose();
-        } else {
-            //new CandidaturaInscricao(usuarioLogado, vaga).setVisible(true);
-            //this.dispose();
         }
-    }//GEN-LAST:event_btnAcaoActionPerformed
+    }//GEN-LAST:event_btnEditarActionPerformed
                                        
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAcao;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDescricao;

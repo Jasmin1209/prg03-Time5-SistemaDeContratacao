@@ -40,6 +40,11 @@ public class VagaCadastrar extends javax.swing.JFrame {
 
        
         initComponents();
+        
+        // Essencial para o template não sumir para o lado
+        txtDescricao.setLineWrap(true);
+        txtDescricao.setWrapStyleWord(true);
+        
         configurarTela();
         carregarDescricaoPadrao();
         estilizarBotoes();  // Aplica cores e fontes personalizadas
@@ -98,22 +103,19 @@ public class VagaCadastrar extends javax.swing.JFrame {
         txtDescricao.setText(DESCRICAO_PADRAO);
     }
     // Template de texto constante
-    private static final String DESCRICAO_PADRAO = 
-            "📝 DESCRIÇÃO DA VAGA\n\n" +
-            "Estamos em busca de um(a) ____________________________\n\n" +
-    
-            "📍 Local: __________\n" +
-            "🕘 Modelo de trabalho: __________\n" +
-            "💼 Tipo de contratação: __________\n\n" +
-            "FAIXA SALARIAL: ____________\n\n" +
+    private static final String DESCRICAO_PADRAO =
             
-            "🚀 RESPONSABILIDADES\n\n" +
+            "🚀 RESPONSABILIDADES\n" +
+            "- \n\n" +
             
-            "REQUISITOS\n\n" +
+            "📌 REQUISITOS\n" +
+            "- \n\n" +
             
-            "INFORMAÇÕES ADICIONAIS\n\n" +
+            "ℹ️ INFORMAÇÕES ADICIONAIS\n" +
+            "- \n\n" +
             
-            "ETAPAS DO PROCESSO\n\n";
+            "⏳ ETAPAS DO PROCESSO\n" +
+            "- ";
             
     
     /**
