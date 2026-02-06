@@ -57,4 +57,20 @@ public interface PerfilCandidatoIController {
     void deleteByIdIdioma (Long idIdioma);
     
     PerfilCandidato findByUsuarioPerfilId(Long usuarioId);
+    
+    public Experiencia buscarExperienciaPorId(Long id);
+    
+    public Formacao buscarFormacaoPorId(Long id);
+    
+    public Competencia buscarCompetenciaPorId(Long id);
+    
+    public Idioma buscarIdiomaPorId(Long id);
+    
+    public Experiencia updateExperiencia(Long perfilId, Experiencia experienciaAtualizada);
+    
+    Competencia updateCompetencia(Long perfilId, Competencia competenciaAtualizada);
+    
+    Formacao updateFormacao(Long perfilId, Formacao formacaoAtualizada);
+    
+    Idioma updateIdioma(Long perfilId, Idioma idiomaAtualizada);
 }

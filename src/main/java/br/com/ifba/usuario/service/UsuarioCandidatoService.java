@@ -36,6 +36,15 @@ public class UsuarioCandidatoService
     }
 
     @Override
+    public void verificarEmail(String email) {
+        // Busca no repositório. Se não encontrar, o orElseThrow lança a exceção
+    repository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("E-mail não cadastrado."));
+    
+        // Se chegou aqui, o e-mail existe.    
+    }
+    
+    @Override
     public void cadastrar(UsuarioCandidato candidato) {
         validar(candidato);
 

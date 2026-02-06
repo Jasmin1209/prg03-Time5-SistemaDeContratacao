@@ -64,6 +64,7 @@ public class TelaApresentacaoCandidato extends javax.swing.JFrame {
     painelCompetencias.setLayout(new FlowLayout(FlowLayout.LEFT));
     jScrollPane5.setViewportView(painelCompetencias);
     
+    
 
 }
 
@@ -84,7 +85,7 @@ public class TelaApresentacaoCandidato extends javax.swing.JFrame {
 
 
     
-    private void atualizarTela() {
+    public void atualizarTela() {
 
          if (perfilcandidato == null) return;
 
@@ -97,17 +98,24 @@ public class TelaApresentacaoCandidato extends javax.swing.JFrame {
 
     // ===== PERFIL =====
     lblSobreMimCandidato.setText(perfilcandidato.getSobre());
+    lblSite.setText(perfilcandidato.getSite());
 
     // ===== ENDEREÇO =====
     if (perfilcandidato.getEndereco() != null) {
-        lblPais.setText(perfilcandidato.getEndereco().getPais());
+        String pais = perfilcandidato.getEndereco().getPais();
+        // Se o país for nulo ou vazio, coloca um aviso para você saber que o erro é no banco
+        lblPais.setText((pais == null || pais.isEmpty()) ? "País não informado" : pais);
+        
         lblEstado.setText(perfilcandidato.getEndereco().getEstado());
         lblCidade.setText(perfilcandidato.getEndereco().getCidade());
-    } else {
-        lblPais.setText("");
-        lblEstado.setText("");
-        lblCidade.setText("");
+        
+        // Se houver um label específico de país fora do scroll, use-o também
+        lblPaisCandidato.setText(lblPais.getText()); 
     }
+
+    // ===== SITE =====
+    String site = perfilcandidato.getSite();
+    lblSite.setText((site == null || site.isEmpty()) ? "Site não informado" : site);
         
         carregarExperiencias();
         carregarFormacoes();
@@ -250,7 +258,7 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
         initComponents();
         configurarPainelDinamico();
         
-        setSize(600, 3000);      // largura x altura
+        setSize(800, 700);      // largura x altura
         setLocationRelativeTo(null); // centraliza na tela
         setResizable(false);   // impede redimensionamento
     }
@@ -297,25 +305,38 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
         jLabel4 = new javax.swing.JLabel();
         lblSobreMimCandidato = new javax.swing.JLabel();
         btnSalvarPerfil = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        btnExcluiExperiencias = new javax.swing.JButton();
+        btnExcluirFormacao = new javax.swing.JButton();
+        btnExcluirCompetencia = new javax.swing.JButton();
+        btnExcluirIdioma = new javax.swing.JButton();
+        btnEditarExperiencias = new javax.swing.JButton();
+        btnEditarFormacao = new javax.swing.JButton();
+        btnEditarCompetencia = new javax.swing.JButton();
+        btnEditarIdioma = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
-        jpnpainelcentral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jpnpainelcentral.setLayout(new javax.swing.BoxLayout(jpnpainelcentral, javax.swing.BoxLayout.LINE_AXIS));
 
         lblcompetence.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jpnpainelcentral.add(lblcompetence, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 690, -1, -1));
+        jpnpainelcentral.add(lblcompetence);
+
+        getContentPane().add(jpnpainelcentral);
 
         jScrollPane2.setBackground(new java.awt.Color(102, 102, 255));
         jScrollPane2.setAutoscrolls(true);
         jScrollPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(627, 6000));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(627, 800));
         jScrollPane2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jScrollPane2MouseMoved(evt);
             }
         });
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(940, 1000));
 
         jLabel2.setText("EXPERIÊNCIAS");
 
@@ -370,8 +391,6 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
 
         jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 50, 200));
         jPanel3.add(lblpais, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-
-        lblPaisCandidato.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel3.add(lblPaisCandidato, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 20));
 
         pnlContato.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -408,6 +427,10 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI Symbol", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel5.setText("PERFIL CANDIDATO");
+
         jButton1.setText("VOLTAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -415,113 +438,208 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
             }
         });
 
+        btnExcluiExperiencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluiExperiencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluiExperienciasActionPerformed(evt);
+            }
+        });
+
+        btnExcluirFormacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirFormacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirFormacaoActionPerformed(evt);
+            }
+        });
+
+        btnExcluirCompetencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirCompetencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirCompetenciaActionPerformed(evt);
+            }
+        });
+
+        btnExcluirIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remover.png"))); // NOI18N
+        btnExcluirIdioma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirIdiomaActionPerformed(evt);
+            }
+        });
+
+        btnEditarExperiencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        btnEditarExperiencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarExperienciasActionPerformed(evt);
+            }
+        });
+
+        btnEditarFormacao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        btnEditarFormacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarFormacaoActionPerformed(evt);
+            }
+        });
+
+        btnEditarCompetencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        btnEditarCompetencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarCompetenciaActionPerformed(evt);
+            }
+        });
+
+        btnEditarIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/editar.png"))); // NOI18N
+        btnEditarIdioma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarIdiomaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(217, 217, 217)
-                .addComponent(btnSalvarPerfil)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel2)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel6)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnInserirFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnInserirIdiomas))
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnInserirCompetencia))))
+                .addComponent(btnSalvarPerfil)
+                .addGap(448, 448, 448))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(193, 193, 193)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnInserirExperiencias, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblSobreMimCandidato, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4)
-                            .addComponent(lblcompletedname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btncontact)
-                            .addComponent(pnlContato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(61, 61, 61)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(217, 217, 217)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblcompletedname, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
+                            .addComponent(btncontact)
+                            .addComponent(pnlContato, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSobreMimCandidato, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEditarFormacao)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnExcluirFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnInserirFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEditarExperiencias)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnExcluiExperiencias)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnInserirExperiencias))
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnEditarCompetencia)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnExcluirCompetencia)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnInserirCompetencia))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnEditarIdioma)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnExcluirIdioma)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnInserirIdiomas))
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(143, 143, 143))
+                .addContainerGap(303, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblcompletedname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jLabel5)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblcompletedname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btncontact)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btncontact, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlContato, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblSobreMimCandidato, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(btnSalvarPerfil)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnInserirExperiencias, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(btnInserirFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(btnInserirCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(39, 39, 39)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnInserirExperiencias, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(btnExcluiExperiencias, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnInserirIdiomas, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(125, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(13, 13, 13)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(btnInserirFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnEditarFormacao, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnExcluirFormacao, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3)
+                            .addComponent(btnInserirCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnExcluirCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEditarCompetencia, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel7)
+                            .addComponent(btnExcluirIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnInserirIdiomas, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEditarIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(btnEditarExperiencias, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel1);
 
-        jpnpainelcentral.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, -10, 540, 940));
-
-        getContentPane().add(jpnpainelcentral);
+        getContentPane().add(jScrollPane2);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
+        TelaPrincipal tela = SpringContext.getBean(TelaPrincipal.class);
+        tela.atualizarSessao();
+        tela.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -541,8 +659,8 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
 
     private void btnInserirIdiomasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirIdiomasActionPerformed
         // TODO add your handling code here:
-        TelaEditarIdioma tela =
-        SpringContext.getBean(TelaEditarIdioma.class);
+        TelaAdicionarIdioma tela =
+        SpringContext.getBean(TelaAdicionarIdioma.class);
 
         tela.setDados(perfilcandidato.getId());
         tela.setTelaApresentacaoCandidato(this);
@@ -551,8 +669,8 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
 
     private void btnInserirCompetenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirCompetenciaActionPerformed
         // TODO add your handling code here:
-        TelaEditarCompetencia tela =
-        SpringContext.getBean(TelaEditarCompetencia.class);
+        TelaAdicionarCompetencia tela =
+        SpringContext.getBean(TelaAdicionarCompetencia.class);
 
         tela.setDados(perfilcandidato.getId());
         tela.setTelaApresentacaoCandidato(this);
@@ -561,8 +679,8 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
 
     private void btnInserirFormacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirFormacaoActionPerformed
         // TODO add your handling code here:
-        TelaEditarFormacao tela =
-        SpringContext.getBean(TelaEditarFormacao.class);
+        TelaAdicionarFormacao tela =
+        SpringContext.getBean(TelaAdicionarFormacao.class);
 
         tela.setDados(perfilcandidato.getId());
         tela.setTelaApresentacaoCandidato(this);
@@ -571,8 +689,8 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
 
     private void btnInserirExperienciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirExperienciasActionPerformed
         // TODO add your handling code here:
-        TelaEditarExperiencia tela =
-        SpringContext.getBean(TelaEditarExperiencia.class);
+        TelaAdicionarExperiencia tela =
+        SpringContext.getBean(TelaAdicionarExperiencia.class);
 
         tela.setDados(perfilcandidato.getId());
         tela.setTelaApresentacaoCandidato(this);
@@ -583,9 +701,105 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
         // TODO add your handling code here:
     }//GEN-LAST:event_jScrollPane2MouseMoved
 
+    private void btnExcluiExperienciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluiExperienciasActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirExperiencia tela = SpringContext.getBean(TelaExcluirExperiencia.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluiExperienciasActionPerformed
+
+    private void btnExcluirFormacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirFormacaoActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirFormacao tela = SpringContext.getBean(TelaExcluirFormacao.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirFormacaoActionPerformed
+
+    private void btnExcluirCompetenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirCompetenciaActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirCompetencia tela = SpringContext.getBean(TelaExcluirCompetencia.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirCompetenciaActionPerformed
+
+    private void btnExcluirIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirIdiomaActionPerformed
+        // TODO add your handling code here:
+        TelaExcluirIdioma tela = SpringContext.getBean(TelaExcluirIdioma.class);
+        tela.setDados(perfilcandidato.getId());
+        tela.setVisible(true);
+    }//GEN-LAST:event_btnExcluirIdiomaActionPerformed
+
+    private void btnEditarExperienciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarExperienciasActionPerformed
+        // TODO add your handling code here:
+        // 1. Pega a tela de listagem de edição do contexto do Spring
+        TelaEditarExperiencia telaLista = SpringContext.getBean(TelaEditarExperiencia.class);
+    
+        // 2. Passa o ID do perfil para carregar a lista correta
+        telaLista.setDados(perfilcandidato.getId());
+    
+        // 3. Passa a referência desta tela (Apresentação) para que o botão voltar funcione
+        telaLista.setTelaApresentacaoCandidato(this);
+    
+        // 4. Exibe a tela de seleção
+        telaLista.setVisible(true);
+    }//GEN-LAST:event_btnEditarExperienciasActionPerformed
+
+    private void btnEditarFormacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarFormacaoActionPerformed
+        // TODO add your handling code here:
+        // 1. Pega a tela de listagem de edição do contexto do Spring
+        TelaEditarFormacao telaLista = SpringContext.getBean(TelaEditarFormacao.class);
+    
+        // 2. Passa o ID do perfil para carregar a lista correta
+        telaLista.setDados(perfilcandidato.getId());
+    
+        // 3. Passa a referência desta tela (Apresentação) para que o botão voltar funcione
+        telaLista.setTelaApresentacaoCandidato(this);
+    
+        // 4. Exibe a tela de seleção
+        telaLista.setVisible(true);
+    }//GEN-LAST:event_btnEditarFormacaoActionPerformed
+
+    private void btnEditarCompetenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCompetenciaActionPerformed
+        // TODO add your handling code here:
+        // 1. Pega a tela de listagem de edição do contexto do Spring
+        TelaEditarCompetencia telaLista = SpringContext.getBean(TelaEditarCompetencia.class);
+    
+        // 2. Passa o ID do perfil para carregar a lista correta
+        telaLista.setDados(perfilcandidato.getId());
+    
+        // 3. Passa a referência desta tela (Apresentação) para que o botão voltar funcione
+        telaLista.setTelaApresentacaoCandidato(this);
+    
+        // 4. Exibe a tela de seleção
+        telaLista.setVisible(true);
+    }//GEN-LAST:event_btnEditarCompetenciaActionPerformed
+
+    private void btnEditarIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarIdiomaActionPerformed
+        // TODO add your handling code here:
+        // 1. Pega a tela de listagem de edição do contexto do Spring
+        TelaEditarIdoma telaLista = SpringContext.getBean(TelaEditarIdoma.class);
+    
+        // 2. Passa o ID do perfil para carregar a lista correta
+        telaLista.setDados(perfilcandidato.getId());
+    
+        // 3. Passa a referência desta tela (Apresentação) para que o botão voltar funcione
+        telaLista.setTelaApresentacaoCandidato(this);
+    
+        // 4. Exibe a tela de seleção
+        telaLista.setVisible(true);
+    }//GEN-LAST:event_btnEditarIdiomaActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditarCompetencia;
+    private javax.swing.JButton btnEditarExperiencias;
+    private javax.swing.JButton btnEditarFormacao;
+    private javax.swing.JButton btnEditarIdioma;
+    private javax.swing.JButton btnExcluiExperiencias;
+    private javax.swing.JButton btnExcluirCompetencia;
+    private javax.swing.JButton btnExcluirFormacao;
+    private javax.swing.JButton btnExcluirIdioma;
     private javax.swing.JButton btnInserirCompetencia;
     private javax.swing.JButton btnInserirExperiencias;
     private javax.swing.JButton btnInserirFormacao;
@@ -597,6 +811,7 @@ private JPanel criarPainelIdioma(String nome, String nivel) {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;

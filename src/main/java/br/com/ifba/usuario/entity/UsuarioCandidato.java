@@ -7,7 +7,6 @@ package br.com.ifba.usuario.entity;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,8 @@ import lombok.Setter;
  */
 
 @Entity
-@Data
+@Setter
+@Getter
 public class UsuarioCandidato extends Usuario{
  
     @NotBlank

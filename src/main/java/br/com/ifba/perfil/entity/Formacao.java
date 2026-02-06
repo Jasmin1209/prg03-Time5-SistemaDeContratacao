@@ -64,4 +64,18 @@ public class Formacao extends PersistenceEntity implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY) //Muitas formações pertencem a um candidato
     @JoinColumn(name = "perfil_candidato_id", nullable = false)
     private PerfilCandidato perfilCandidato;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Formacao)) return false;
+        Formacao other = (Formacao) o;
+        return getId() != null && getId().equals(other.getId());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

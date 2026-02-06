@@ -65,49 +65,40 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
     public void setDados(Long idEmpresa) {
     this.idEmpresa = idEmpresa;
 
-    // tenta buscar o perfil
+    // Tenta buscar o perfil do banco
     this.empresa = perfilEmpresaController.findByUsuarioId(idEmpresa);
 
-    // ===============================
-    // PRIMEIRO ACESSO (perfil não existe)
-    // ===============================
     if (this.empresa == null) {
-
+        // CADASTRO NOVO
         this.empresa = new PerfilEmpresa();
-
-        // busca apenas o usuário empresa
-        this.empresa.setUsuarioEmpresa(
-            perfilEmpresaController.buscarUsuarioEmpresa(idEmpresa)
-        );
-
-        // cria endereço vazio para evitar NPE
+        this.empresa.setUsuarioEmpresa(perfilEmpresaController.buscarUsuarioEmpresa(idEmpresa));
         this.empresa.setEndereco(new Endereco());
+        
+        // Preenche apenas os dados que já vêm do Usuário
+        txtNome.setText(empresa.getUsuarioEmpresa().getNome());
+        txtEmail.setText(empresa.getUsuarioEmpresa().getEmail());
+        txtTelefone.setText(empresa.getUsuarioEmpresa().getTelefone());
+    } else {
+        // EDIÇÃO DE PERFIL EXISTENTE
+        txtNome.setText(empresa.getUsuarioEmpresa().getNome());
+        txtEmail.setText(empresa.getUsuarioEmpresa().getEmail());
+        txtTelefone.setText(empresa.getUsuarioEmpresa().getTelefone());
+        txtSetor.setText(empresa.getSetor());
+        txtDescricao.setText(empresa.getSobre());
+        jTextField8.setText(empresa.getSite());
 
-        // NÃO preenche campos → tela vazia para cadastro
-        return;
+        if (empresa.getEndereco() != null) {
+            jTextField2.setText(empresa.getEndereco().getPais());
+            cmbEstado.setSelectedItem(empresa.getEndereco().getEstado());
+            jTextField3.setText(empresa.getEndereco().getCidade());
+            jTextField4.setText(empresa.getEndereco().getBairro());
+            jTextField5.setText(empresa.getEndereco().getNumero() != null ? 
+                               String.valueOf(empresa.getEndereco().getNumero()) : "");
+        }
+    }
     }
 
-    // ===============================
-    // PERFIL JÁ EXISTE (edição)
-    // ===============================
-    txtNome.setText(empresa.getUsuarioEmpresa().getNome());
-    txtEmail.setText(empresa.getUsuarioEmpresa().getEmail());
-    txtTelefone.setText(empresa.getUsuarioEmpresa().getTelefone());
-    txtSetor.setText(empresa.getSetor());
-    txtDescricao.setText(empresa.getSobre());
-    jTextField8.setText(empresa.getSite());
-    
-    if(empresa.getEndereco() != null){
-    Endereco e = empresa.getEndereco();
-    jTextField2.setText(empresa.getEndereco().getPais());
-    cmbEstado.setSelectedItem(empresa.getEndereco().getEstado());
-    jTextField3.setText(empresa.getEndereco().getCidade());
-    jTextField4.setText(empresa.getEndereco().getBairro());
-    jTextField5.setText(String.valueOf(empresa.getEndereco().getNumero()));
-    }
-    
-}
-    
+   
     public void setTelaApresentacao(TelaApresentacaoEmpresa tela) {
         this.telaapresentacao = tela;
     }
@@ -376,13 +367,12 @@ public class TelaEditarPerfilEmpresa extends javax.swing.JFrame {
         // 5. Salva no Banco
         perfilEmpresaController.saveOrUpdate(empresa);
 
+        
+        
+        JOptionPane.showMessageDialog(this, "Perfil salvo com sucesso!");
         // 6. Atualiza a tela de apresentação antes de fechar
-        if (this.telaapresentacao != null) {
             this.telaapresentacao.setPerfil(empresa);
             this.telaapresentacao.setVisible(true);
-        }
-
-        JOptionPane.showMessageDialog(this, "Perfil salvo com sucesso!");
         this.dispose(); // Fecha apenas esta janela
 
     } catch (NumberFormatException e) {

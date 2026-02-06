@@ -100,6 +100,7 @@ public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
     }
 
     txtSobreMim.setText(perfil.getSobre());
+    txtSite.setText(perfil.getSite());
 
     if (perfil.getEndereco() != null) {
         Endereco e = perfil.getEndereco();

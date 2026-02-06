@@ -5,48 +5,49 @@
 package br.com.ifba.perfil.candidato.view;
 
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
+import br.com.ifba.perfil.entity.Competencia;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.enums.Nivel;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author USER
  */
-public class TelaEditarIdioma extends javax.swing.JFrame {
+@Component
+@Scope("prototype")
+public class TelaAdicionarIdioma extends javax.swing.JFrame {
     
     @Autowired
     private PerfilCandidatoIController perfilcandidatocontroller;
     
     private Long idPerfil;
-    private Idioma idioma;
+    private Idioma idiomaEmEdicao;
+    private TelaApresentacaoCandidato tela;
     
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarIdioma.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaAdicionarIdioma.class.getName());
 
     /**
      * Creates new form TelaEditarIdioma
      */
-    public TelaEditarIdioma() {
+    public TelaAdicionarIdioma() {
         initComponents();
         carregarNiveis();
-        this.idioma = new Idioma(); // ✅ cria sempre novo
+        this.setLocationRelativeTo(null);       
     }
     
-    private TelaApresentacaoCandidato telaApresentacao;
-
-public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
-    this.telaApresentacao = tela;
-}
+    
+    public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+        this.tela = tela;
+    }
     
     
     public void setDados(Long idPerfil) {
         this.idPerfil = idPerfil;
-        this.idioma = new Idioma();
-
-        txtNomeIdioma.setText(idioma.getIdioma());
-        cmbNivel.setSelectedItem(idioma.getNivel());
     }
     
     private void carregarNiveis(){
@@ -54,6 +55,14 @@ public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
         cmbNivel.addItem(Nivel.BASICO);
         cmbNivel.addItem(Nivel.INTERMEDIARIO);
         
+    }
+    
+    //MÉTODO PARA PREENCHER OS CAMPOS NA EDIÇÃO
+    public void preencherDados(Idioma idioma) {
+        this.idiomaEmEdicao = idioma;
+        
+    txtNomeIdioma.setText(idioma.getIdioma());
+    cmbNivel.setSelectedItem(idioma.getNivel());
     }
 
     /**
@@ -139,18 +148,37 @@ public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
         String nome = txtNomeIdioma.getText().trim();
         Nivel nivel = (Nivel) cmbNivel.getSelectedItem();
         
-        try{
-            idioma.setIdioma(nome);
-            idioma.setNivel(nivel);
-            
-            perfilcandidatocontroller.addIdioma(idPerfil, idioma);
-            
-            JOptionPane.showMessageDialog(this, "Idioma inserido com sucesso!");
-            dispose();
-            
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, JOptionPane.ERROR_MESSAGE);
+        try {
+        Idioma idioma;
+        
+        // Se houver uma competência em edição, usamos ela (mesma representação)
+        if (this.idiomaEmEdicao != null) {
+            idioma = this.idiomaEmEdicao;
+        } else {
+            idioma = new Idioma();
         }
+
+        idioma.setIdioma(nome);
+        idioma.setNivel(nivel);
+        
+        if (this.idiomaEmEdicao != null) {
+            // Chama o update para sincronizar a instância existente
+            perfilcandidatocontroller.updateIdioma(idPerfil, idioma);
+        } else {
+            // Chama o add para nova competência
+            perfilcandidatocontroller.addIdioma(idPerfil, idioma);
+        }
+
+        JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
+        
+        if (this.tela != null) {
+            this.tela.recarregarPerfil(); 
+        }
+        this.dispose();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
 

@@ -8,8 +8,10 @@ import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
 import br.com.ifba.perfil.entity.Competencia;
 import java.awt.FlowLayout;
 import java.util.Set;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -39,42 +41,63 @@ public class TelaExcluirCompetencia extends javax.swing.JFrame {
      */
     public TelaExcluirCompetencia() {
         initComponents();
+        
+        setSize(500, 600);      // largura x altura
+        setLocationRelativeTo(null); // centraliza na tela
+        setResizable(false);   // impede redimensionamento
     }
+    
+    private TelaApresentacaoCandidato telaApresentacao;
+
+    public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+        this.telaApresentacao = tela;
+    }
+    
     private void carregarCompetencias() {
 
-        pnlListar.removeAll();
+       pnlListar.removeAll();
+    // Define layout vertical para que cada item fique em uma linha
+    pnlListar.setLayout(new javax.swing.BoxLayout(pnlListar, javax.swing.BoxLayout.Y_AXIS));
 
-        Set<Competencia> competencias =
-                perfilCandidatoController.findAllCompetencia(id);
+    Set<Competencia> competencias = perfilCandidatoController.findAllCompetencia(id);
 
-        for (Competencia comp : competencias) {
-            pnlListar.add(criarLinha(comp));
+    if (competencias != null) {
+        for (Competencia comp : competencias) { 
+            pnlListar.add(criarLinha(comp)); 
         }
+    }
 
-        pnlListar.revalidate();
-        pnlListar.repaint();
+    // FORÇA A ATUALIZAÇÃO VISUAL (Essencial para as informações aparecerem)
+    pnlListar.revalidate(); 
+    pnlListar.repaint();
     }
     
     private JPanel criarLinha(Competencia comp) {
-        JPanel linha = new JPanel();
-        linha.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-        JLabel lbl = new JLabel(
-                comp.getTitulo()+ " "  
-        );
-        
-        JButton btnExcluir = new JButton("Excluir");
-        
-        btnExcluir.addActionListener(e -> {
-            perfilCandidatoController.deletedByIdExperiencia(comp.getId());
-            carregarCompetencias();
-        });
-        
-        linha.add(lbl);
-        linha.add(btnExcluir);
-        
-        return linha;
-    }
+    JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+    linha.setBorder(BorderFactory.createEtchedBorder());
+
+    JLabel lbl = new JLabel("Título: " + comp.getTitulo()); 
+    JButton btnExcluir = new JButton("Excluir"); 
+    btnExcluir.setBackground(new java.awt.Color(255, 102, 102)); 
+    
+    btnExcluir.addActionListener(e -> { 
+        int confirma = JOptionPane.showConfirmDialog(this, "Deseja excluir esta competência?");
+        if (confirma == JOptionPane.YES_OPTION) {
+            // CORREÇÃO: Chamar o método de COMPETÊNCIA, não de experiência
+            perfilCandidatoController.deleteByIdCompetencia(comp.getId()); 
+            
+            // ATUALIZAÇÃO: Avisa a tela principal para recarregar do banco
+            if (this.telaApresentacao != null) {
+                this.telaApresentacao.recarregarPerfil(); 
+            }
+            carregarCompetencias(); // Recarrega a lista local
+        }
+    });
+
+    linha.add(lbl); 
+    linha.add(btnExcluir);
+    return linha;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -87,6 +110,7 @@ public class TelaExcluirCompetencia extends javax.swing.JFrame {
 
         pnlListar = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,36 +127,57 @@ public class TelaExcluirCompetencia extends javax.swing.JFrame {
 
         jLabel1.setText("COMPETÊNCIAS");
 
+        btnVoltar.setText("VOLTAR");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(164, 164, 164)
-                        .addComponent(jLabel1)))
+                        .addComponent(btnVoltar)
+                        .addGap(74, 74, 74)
+                        .addComponent(jLabel1))
+                    .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(jLabel1)
+                .addGap(4, 4, 4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnVoltar))
                 .addGap(18, 18, 18)
                 .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(210, Short.MAX_VALUE))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        if (this.telaApresentacao != null) {
+            // Recarrega o perfil para que as exclusões/edições apareçam na tela principal
+            this.telaApresentacao.recarregarPerfil();
+            this.telaApresentacao.setVisible(true);
+        }
+        
+        this.dispose(); // Fecha a tela de exclusão/edição
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel pnlListar;
     // End of variables declaration//GEN-END:variables

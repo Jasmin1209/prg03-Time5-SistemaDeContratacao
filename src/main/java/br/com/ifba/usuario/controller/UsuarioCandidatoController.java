@@ -35,8 +35,9 @@ public class UsuarioCandidatoController
         service.cadastrar(candidato);
     }
 
+    @Override
     public void verificarEmail(String email) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        service.verificarEmail(email);
     }
 
     @Override
