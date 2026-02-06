@@ -9,6 +9,10 @@ import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import br.com.ifba.perfil.repository.CompetenciaRepository;
+import br.com.ifba.perfil.repository.ExperienciaRepository;
+import br.com.ifba.perfil.repository.FormacaoRepository;
+import br.com.ifba.perfil.repository.IdiomaRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,14 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     private final PerfilCandidatoRepository perfilCandidatoRepository;
 
     private final UsuarioCandidatoService usuarioCandidatoService;
+    
+    private final CompetenciaRepository competenciaRepository;
+    
+    private final ExperienciaRepository experienciaRepository;
+    
+    private final FormacaoRepository formacaoRepository;
+    
+    private final IdiomaRepository idiomaRepository;
 
     //BUSCAR PERFIL
     @Override
@@ -162,13 +174,16 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     public void addExperiencia (Long id, Experiencia experiencia){
         
         PerfilCandidato perfil = perfilCandidatoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
+        .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
 
-        // força inicialização dentro da sessão
-        perfil.getExperiencias().size();
+    // garante que a coleção está inicializada
+    perfil.getExperiencias().size();
 
-        experiencia.setPerfilCandidato(perfil); // lado dono da relação
+    if (experiencia.getId() == null) {
+        // 🆕 NOVA EXPERIÊNCIA
+        experiencia.setPerfilCandidato(perfil);
         perfil.getExperiencias().add(experiencia);
+    }
 
         perfilCandidatoRepository.save(perfil);
     }
@@ -179,11 +194,41 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
         return perfilCandidatoRepository.findAllExperiencia(id);
     }
     
+    @Override
+@Transactional
+public Experiencia updateExperiencia(Long perfilId, Experiencia experienciaAtualizada) {
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(perfilId)
+        .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
+
+    perfil.getExperiencias().size(); // 👈 MUITO IMPORTANTE
+
+    Experiencia experienciaExistente = perfil.getExperiencias().stream()
+        .filter(e -> e.getId().equals(experienciaAtualizada.getId()))
+        .findFirst()
+        .orElseThrow(() -> new NoSuchElementException("Experiência não encontrada"));
+
+    experienciaExistente.setCargo(experienciaAtualizada.getCargo());
+    experienciaExistente.setEmpresa(experienciaAtualizada.getEmpresa());
+    experienciaExistente.setDataInicial(experienciaAtualizada.getDataInicial());
+    experienciaExistente.setDataFinal(experienciaAtualizada.getDataFinal());
+
+    return experienciaExistente;
+}
+
+
+    
     @Override 
     @Transactional
     public void deletedByIdExperiencia(Long idExperiencia){
-        perfilCandidatoRepository.deletedByIdExperiencia(idExperiencia);
+        Experiencia experiencia = experienciaRepository.findById(idExperiencia)
+        .orElseThrow(() -> new NoSuchElementException("Experiência não encontrada"));
+    
+    PerfilCandidato perfil = experiencia.getPerfilCandidato();
+    if (perfil != null) {
+        perfil.getExperiencias().remove(experiencia); // Remove da lista em memória [cite: 66]
+        perfilCandidatoRepository.save(perfil); // Sincroniza o Perfil
     }
+    perfilCandidatoRepository.deletedByIdExperiencia(idExperiencia);}
     
     //=============
     //FORMAÇÃO
@@ -228,9 +273,44 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     }
     
     @Override
+@Transactional
+public Formacao updateFormacao(Long perfilId, Formacao formacaoAtualizada) {
+    // 1. Busca o perfil garantindo que ele venha com as formações (Fetch)
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(perfilId)
+        .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
+
+    // 2. Localiza a formação existente dentro da coleção do perfil
+    Formacao formacaoExistente = perfil.getFormacaoAcademica().stream()
+        .filter(f -> f.getId().equals(formacaoAtualizada.getId()))
+        .findFirst()
+        .orElseThrow(() -> new NoSuchElementException("Formação não encontrada no perfil"));
+
+    // 3. Atualiza APENAS os campos necessários da instância que já está anexada ao Hibernate
+    formacaoExistente.setNomeDocurso(formacaoAtualizada.getNomeDocurso());
+    formacaoExistente.setInstituicao(formacaoAtualizada.getInstituicao());
+    formacaoExistente.setDataInicial(formacaoAtualizada.getDataInicial());
+    formacaoExistente.setDataFinal(formacaoAtualizada.getDataFinal());
+    formacaoExistente.setTipo(formacaoAtualizada.getTipo());
+
+    // 4. Salva o perfil (o Cascade cuidará da formação)
+    perfilCandidatoRepository.save(perfil);
+
+    return formacaoExistente;
+}
+    
+    
+    @Override
     @Transactional
     public void deletedByIdFormacao(Long idFormacao){
-        perfilCandidatoRepository.deletedByIdFormacao(idFormacao);
+        Formacao formacao = formacaoRepository.findById(idFormacao)
+        .orElseThrow(() -> new NoSuchElementException("Formação não encontrada"));
+    
+    PerfilCandidato perfil = formacao.getPerfilCandidato();
+    if (perfil != null) {
+        perfil.getFormacaoAcademica().remove(formacao); // Remove da lista em memória [cite: 75]
+        perfilCandidatoRepository.save(perfil);
+    }
+    perfilCandidatoRepository.deletedByIdFormacao(idFormacao);
     }
 
     //=============
@@ -264,8 +344,36 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
     
     @Override
     @Transactional
+public Competencia updateCompetencia(Long perfilId, Competencia competenciaAtualizada) {
+    // Busca o perfil com a coleção de competências
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(perfilId)
+        .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
+
+    // Localiza a competência que já existe dentro da lista do perfil
+    Competencia competenciaExistente = perfil.getCompetencias().stream()
+        .filter(c -> c.getId().equals(competenciaAtualizada.getId()))
+        .findFirst()
+        .orElseThrow(() -> new NoSuchElementException("Competência não encontrada no perfil"));
+
+    // Atualiza apenas os atributos necessários na instância "viva" do Hibernate
+    competenciaExistente.setTitulo(competenciaAtualizada.getTitulo());
+
+    perfilCandidatoRepository.save(perfil);
+    
+    return competenciaExistente;
+}
+    @Override
+    @Transactional
     public void deleteByIdCompetencia (Long idCompetencia){
-        perfilCandidatoRepository.deleteByIdCompetencia(idCompetencia);
+        Competencia competencia = competenciaRepository.findById(idCompetencia)
+        .orElseThrow(() -> new NoSuchElementException("Competência não encontrada"));
+    
+    PerfilCandidato perfil = competencia.getPerfilCandidato();
+    if (perfil != null) {
+        perfil.getCompetencias().remove(competencia); // Remove da lista em memória [cite: 82]
+        perfilCandidatoRepository.save(perfil);
+    }
+    perfilCandidatoRepository.deleteByIdCompetencia(idCompetencia);
     }
     
     
@@ -302,10 +410,46 @@ public class PerfilCandidatoService implements PerfilCandidatoIService {
         return perfilCandidatoRepository.findAllIdioma(id);
     }
     
+    @Override 
+    @Transactional
+public Idioma updateIdioma(Long perfilId, Idioma idiomaAtualizada) {
+    // 1. Busca o perfil e garante que a coleção seja carregada [cite: 88]
+    PerfilCandidato perfil = perfilCandidatoRepository.findById(perfilId)
+        .orElseThrow(() -> new NoSuchElementException("Perfil não encontrado"));
+
+    // Força a inicialização da coleção Lazy para evitar LazyInitializationException [cite: 88]
+    perfil.getIdiomas().size(); 
+
+    // 2. Localiza o idioma que já pertence ao perfil
+    Idioma idiomaExistente = perfil.getIdiomas().stream()
+        .filter(e -> e.getId().equals(idiomaAtualizada.getId()))
+        .findFirst()
+        // Corrigido: a mensagem de erro deve ser "Idioma não encontrado" [cite: 89]
+        .orElseThrow(() -> new NoSuchElementException("Idioma não encontrado"));
+
+    // 3. Atualiza os campos na instância gerenciada pelo Hibernate [cite: 89]
+    idiomaExistente.setIdioma(idiomaAtualizada.getIdioma());
+    idiomaExistente.setNivel(idiomaAtualizada.getNivel());
+    
+    // 4. ESSENCIAL: Salva o perfil para persistir a alteração no banco de dados [cite: 62]
+    // Isso garante que o Dirty Checking do Hibernate dispare o SQL de UPDATE
+    perfilCandidatoRepository.save(perfil);
+    
+    return idiomaExistente;
+}
+    
     @Override
     @Transactional
     public void deleteByIdIdioma (Long idIdioma){
-        perfilCandidatoRepository.deleteByIdIdioma(idIdioma);
+        Idioma idioma = idiomaRepository.findById(idIdioma)
+        .orElseThrow(() -> new NoSuchElementException("Idioma não encontrado"));
+    
+    PerfilCandidato perfil = idioma.getPerfilCandidato();
+    if (perfil != null) {
+        perfil.getIdiomas().remove(idioma); // Remove da lista em memória [cite: 90]
+        perfilCandidatoRepository.save(perfil);
+    }
+    perfilCandidatoRepository.deleteByIdIdioma(idIdioma);
     }
     
     

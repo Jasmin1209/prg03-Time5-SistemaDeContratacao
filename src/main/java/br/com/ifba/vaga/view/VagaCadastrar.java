@@ -5,6 +5,8 @@
 package br.com.ifba.vaga.view;
 
 import br.com.ifba.endereco.Endereco;
+import br.com.ifba.infrastructure.spring.SpringContext;
+import br.com.ifba.perfil.empresa.view.TelaApresentacaoEmpresa;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.sessao.SessaoUsuario;
 import br.com.ifba.vaga.entity.Vaga;
@@ -402,6 +404,9 @@ public class VagaCadastrar extends javax.swing.JFrame {
         
             // 6. Fecha tela atual e volta para a listagem
             new VagaListar(sessaoUsuario, vagaController).setVisible(true);
+            TelaApresentacaoEmpresa telaApres = SpringContext.getBean(TelaApresentacaoEmpresa.class);
+            // Se você tiver o perfil salvo na sessão, pode recarregar aqui
+             telaApres.atualizarTela();
             this.dispose();
 
         } catch (NumberFormatException e) {

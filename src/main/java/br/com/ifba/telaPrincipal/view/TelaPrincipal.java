@@ -299,19 +299,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 } else if (usuario instanceof UsuarioEmpresa) {
                     
                     PerfilEmpresa perfil = perfilEmpresaController.buscarPerfilCompleto(usuario.getId());
-                    
+    
+                    // Independente de existir ou não, pegamos a instância gerenciada pelo Spring
+                    TelaApresentacaoEmpresa telaApres = SpringContext.getBean(TelaApresentacaoEmpresa.class);
+
                     if(perfil != null){
-                    TelaApresentacaoEmpresa tela = 
-                            SpringContext.getBean(TelaApresentacaoEmpresa.class);
-                    tela.setPerfil(perfil);
-                    tela.setVisible(true);
+                        telaApres.setPerfil(perfil);
+                        telaApres.setVisible(true);
                     } else {
-                        TelaEditarPerfilEmpresa tela = SpringContext.getBean(TelaEditarPerfilEmpresa.class);
-                        
-                        tela.setDados(usuario.getId());
-                        tela.setVisible(true);
-                        setVisible(false);
+                        TelaEditarPerfilEmpresa telaEdit = SpringContext.getBean(TelaEditarPerfilEmpresa.class);
+                        telaEdit.setDados(usuario.getId());
+                        telaEdit.setTelaApresentacao(telaApres); // Passa a referência para o botão Salvar usar depois
+                        telaEdit.setVisible(true);
                     }
+                
+                    setVisible(false);
                 }
                 
             } catch (Exception e) {

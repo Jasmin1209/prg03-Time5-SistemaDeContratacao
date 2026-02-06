@@ -5,7 +5,6 @@
 package br.com.ifba.perfil.entity;
 
 //classe Persistence
-import br.com.ifba.infrastructure.entity.PersistenceEntity;
 
 //Anotações JPA
 import jakarta.persistence.Column;
@@ -20,12 +19,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 //Tipos Java
-import java.io.Serializable;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 //Lombok
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -36,10 +33,10 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "experiencias")
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class Experiencia extends PersistenceEntity implements Serializable{
+public class Experiencia extends br.com.ifba.infrastructure.entity.PersistenceEntity{
     
     @NotBlank
     @Column(name = "cargo", nullable = false)
@@ -60,6 +57,18 @@ public class Experiencia extends PersistenceEntity implements Serializable{
     @JoinColumn(name = "perfil_candidato_id", nullable = false) //define a chave estrangeira
     private PerfilCandidato perfilCandidato;
 
-    
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Experiencia)) return false;
+        Experiencia other = (Experiencia) o;
+        return getId() != null && getId().equals(other.getId());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }

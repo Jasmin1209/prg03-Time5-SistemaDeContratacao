@@ -20,7 +20,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 //Lombok
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,7 +33,6 @@ import lombok.Setter;
 @Table(name = "competencias")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Competencia extends PersistenceEntity implements Serializable{
     
@@ -50,4 +48,17 @@ public class Competencia extends PersistenceEntity implements Serializable{
     @JoinColumn(name = "perfil_candidato_id", nullable = false) //define a chave estrangeira no banco de dados
     private PerfilCandidato perfilCandidato;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Competencia)) return false;
+        Competencia other = (Competencia) o;
+        return getId() != null && getId().equals(other.getId());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

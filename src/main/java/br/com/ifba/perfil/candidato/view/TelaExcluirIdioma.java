@@ -8,8 +8,10 @@ import br.com.ifba.perfil.candidato.controller.PerfilCandidatoIController;
 import br.com.ifba.perfil.entity.Idioma;
 import java.awt.FlowLayout;
 import java.util.Set;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -39,44 +41,52 @@ public class TelaExcluirIdioma extends javax.swing.JFrame {
      */
     public TelaExcluirIdioma() {
         initComponents();
-    }
-    private void carregarIdiomas() {
-
-        pnlListar.removeAll();
-
-        Set<Idioma> experiencias =
-                perfilCandidatoController.findAllIdioma(id);
-
-        for (Idioma exp : experiencias) {
-            pnlListar.add(criarLinha(exp));
-        }
-
-        pnlListar.revalidate();
-        pnlListar.repaint();
+        
+        setSize(500, 600);      // largura x altura
+        setLocationRelativeTo(null); // centraliza na tela
+        setResizable(false);   // impede redimensionamento
     }
     
-    private JPanel criarLinha(Idioma idio) {
-        JPanel linha = new JPanel();
-        linha.setLayout(new FlowLayout(FlowLayout.LEFT));
-        
-        JLabel lbl = new JLabel(
-                idio.getIdioma()+ " " +
-                        idio.getNivel() + " " 
-                
-        );
-        
-        JButton btnExcluir = new JButton("Excluir");
-        
-        btnExcluir.addActionListener(e -> {
-            perfilCandidatoController.deleteByIdIdioma(idio.getId());
-            carregarIdiomas();
-        });
-        
-        linha.add(lbl);
-        linha.add(btnExcluir);
-        
-        return linha;
+    private TelaApresentacaoCandidato telaApresentacao;
+
+    public void setTelaApresentacaoCandidato(TelaApresentacaoCandidato tela) {
+        this.telaApresentacao = tela;
     }
+    
+    private void carregarIdiomas() {
+    pnlListar.removeAll();
+    // Define layout vertical para que cada item fique em uma linha
+    pnlListar.setLayout(new javax.swing.BoxLayout(pnlListar, javax.swing.BoxLayout.Y_AXIS));
+
+    Set<Idioma> idiomas = perfilCandidatoController.findAllIdioma(id);
+
+    if (idiomas != null) {
+        for (Idioma idi : idiomas) { 
+            pnlListar.add(criarLinha(idi)); 
+        }
+    }
+
+    // FORÇA A ATUALIZAÇÃO VISUAL (Essencial para as informações aparecerem)
+    pnlListar.revalidate(); 
+    pnlListar.repaint();
+    }
+    
+    private JPanel criarLinha(Idioma idioma) {
+    JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JLabel lbl = new JLabel(idioma.getIdioma() + " - Nível: " + idioma.getNivel());
+    JButton btnExcluir = new JButton("Excluir");
+
+    btnExcluir.addActionListener(e -> {
+        if (JOptionPane.showConfirmDialog(this, "Excluir idioma?") == JOptionPane.YES_OPTION) {
+            perfilCandidatoController.deleteByIdIdioma(idioma.getId()); // Método correto
+            if (this.telaApresentacao != null) this.telaApresentacao.recarregarPerfil();
+            carregarIdiomas(); // Método de recarga da sua tela
+        }
+    });
+    linha.add(lbl); 
+    linha.add(btnExcluir);
+    return linha;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -89,6 +99,7 @@ public class TelaExcluirIdioma extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         pnlListar = new javax.swing.JPanel();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,58 +116,58 @@ public class TelaExcluirIdioma extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        btnVoltar.setText("VOLTAR");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(174, 174, 174)
-                .addComponent(jLabel1)
-                .addContainerGap(184, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnVoltar)
+                        .addGap(93, 93, 93)
+                        .addComponent(jLabel1)
+                        .addGap(0, 180, Short.MAX_VALUE))
+                    .addComponent(pnlListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnVoltar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        if (this.telaApresentacao != null) {
+            // Recarrega o perfil para que as exclusões/edições apareçam na tela principal
+            this.telaApresentacao.recarregarPerfil();
+            this.telaApresentacao.setVisible(true);
         }
-        //</editor-fold>
+        
+        this.dispose(); // Fecha a tela de exclusão/edição
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaExcluirIdioma().setVisible(true));
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel pnlListar;
     // End of variables declaration//GEN-END:variables

@@ -49,6 +49,5 @@ public class PerfilEmpresa extends Perfil{
     @Column(name = "setor_da_empresa", nullable = false)
     private String setor;
     
-    @Column(name = "site", nullable = true) //o site pode ser nulo
-    private String site;
+    
 }

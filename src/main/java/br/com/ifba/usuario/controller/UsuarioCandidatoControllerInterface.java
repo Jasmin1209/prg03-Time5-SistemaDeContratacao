@@ -19,4 +19,6 @@ public interface UsuarioCandidatoControllerInterface {
     void cadastrar(UsuarioCandidato candidato);
     
     UsuarioCandidato findById(Long idCandidato);
+    
+    void verificarEmail(String email);
 }

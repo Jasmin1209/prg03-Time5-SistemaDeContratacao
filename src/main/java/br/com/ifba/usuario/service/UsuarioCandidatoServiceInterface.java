@@ -19,5 +19,7 @@ public interface UsuarioCandidatoServiceInterface {
      UsuarioCandidato login(String email, String senha);
      
      UsuarioCandidato findById(Long idCandidato);
+     
+     void verificarEmail(String email);
 }
 

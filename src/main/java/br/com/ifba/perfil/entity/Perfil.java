@@ -45,4 +45,7 @@ public abstract class Perfil extends PersistenceEntity implements Serializable{
     )
     @JoinColumn(name = "endereco_id") //define a chave estrangeira que ficará nos perfis
     private Endereco endereco;
+    
+    @Column(name = "site", nullable = true) //o site pode ser nulo
+    private String site;
 }

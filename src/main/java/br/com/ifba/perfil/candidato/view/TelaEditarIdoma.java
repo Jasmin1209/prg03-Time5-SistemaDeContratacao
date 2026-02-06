@@ -6,8 +6,7 @@ package br.com.ifba.perfil.candidato.view;
 
 import br.com.ifba.infrastructure.spring.SpringContext;
 import br.com.ifba.perfil.candidato.controller.PerfilCandidatoController;
-import br.com.ifba.perfil.entity.Competencia;
-import br.com.ifba.perfil.entity.Formacao;
+import br.com.ifba.perfil.entity.Idioma;
 import java.awt.FlowLayout;
 import java.util.Set;
 import javax.swing.BorderFactory;
@@ -22,9 +21,10 @@ import org.springframework.stereotype.Component;
  *
  * @author USER
  */
+
 @Component
 @Scope("prototype")
-public class TelaEditarCompetencia extends javax.swing.JFrame {
+public class TelaEditarIdoma extends javax.swing.JFrame {
     
     @Autowired
     private PerfilCandidatoController perfilcandidatocontroller;
@@ -32,12 +32,12 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
     private Long id;
     private TelaApresentacaoCandidato telaApresentacao;
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarCompetencia.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaEditarIdoma.class.getName());
 
     /**
-     * Creates new form TelaEditarCompetencia
+     * Creates new form TelaEditarIdoma
      */
-    public TelaEditarCompetencia() {
+    public TelaEditarIdoma() {
         initComponents();
         this.setLocationRelativeTo(null);
         // Define layout vertical para o painel de listagem
@@ -47,17 +47,17 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
     
     public void setDados(Long id){
         this.id = id;
-        carregarFormacao();
+        carregarIdioma();
     }
     
-    private void carregarFormacao(){
+    private void carregarIdioma(){
         pnlListar.removeAll();
         
-        Set<Competencia> competencia = perfilcandidatocontroller.findAllCompetencia(id);
+        Set<Idioma> idioma = perfilcandidatocontroller.findAllIdioma(id);
         
-        if(competencia != null){
-            for (Competencia comp : competencia){
-                pnlListar.add(criarLinha(comp));
+        if(idioma != null){
+            for (Idioma idi : idioma){
+                pnlListar.add(criarLinha(idi));
             }
         }
         
@@ -65,22 +65,22 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
         pnlListar.repaint();
     }
     
-    private JPanel criarLinha(Competencia comp) {
+    private JPanel criarLinha(Idioma idi) {
         JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
         linha.setBorder(BorderFactory.createEtchedBorder());
 
-        JLabel lbl = new JLabel(comp.getTitulo());
+        JLabel lbl = new JLabel(idi.getIdioma() + "Nível " + idi.getNivel());
         JButton btnEditar = new JButton("Editar");
         
         // Ação do Botão Editar
         btnEditar.addActionListener(e -> {
-            TelaAdicionarCompetencia telaForm = SpringContext.getBean(TelaAdicionarCompetencia.class);
+            TelaAdicionarIdioma telaForm = SpringContext.getBean(TelaAdicionarIdioma.class);
     
             // Passamos o ID do perfil para que o service saiba onde procurar
             telaForm.setDados(this.id); 
     
             // IMPORTANTE: Passe o objeto 'comp' que veio da lista, sem modificá-lo
-            telaForm.preencherDados(comp); 
+            telaForm.preencherDados(idi); 
     
             telaForm.setTelaApresentacaoCandidato(this.telaApresentacao);
             telaForm.setVisible(true);
@@ -105,11 +105,14 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblIdioma = new javax.swing.JLabel();
         btnVoltar = new javax.swing.JButton();
-        lblCompetencias = new javax.swing.JLabel();
         pnlListar = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblIdioma.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        lblIdioma.setText("IDIOMA");
 
         btnVoltar.setText("VOLTAR");
         btnVoltar.addActionListener(new java.awt.event.ActionListener() {
@@ -118,14 +121,11 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
             }
         });
 
-        lblCompetencias.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
-        lblCompetencias.setText("COMPETÊNCIAS");
-
         javax.swing.GroupLayout pnlListarLayout = new javax.swing.GroupLayout(pnlListar);
         pnlListar.setLayout(pnlListarLayout);
         pnlListarLayout.setHorizontalGroup(
             pnlListarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 377, Short.MAX_VALUE)
         );
         pnlListarLayout.setVerticalGroup(
             pnlListarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,26 +137,27 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
                         .addComponent(btnVoltar)
-                        .addGap(59, 59, 59)
-                        .addComponent(lblCompetencias)
-                        .addGap(0, 151, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(70, 70, 70)
+                        .addComponent(lblIdioma))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVoltar)
-                    .addComponent(lblCompetencias))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblIdioma)
+                    .addComponent(btnVoltar))
+                .addGap(18, 18, 18)
                 .addComponent(pnlListar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
         pack();
@@ -174,7 +175,7 @@ public class TelaEditarCompetencia extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVoltar;
-    private javax.swing.JLabel lblCompetencias;
+    private javax.swing.JLabel lblIdioma;
     private javax.swing.JPanel pnlListar;
     // End of variables declaration//GEN-END:variables
 }

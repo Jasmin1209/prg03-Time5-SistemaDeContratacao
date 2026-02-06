@@ -10,10 +10,15 @@ import br.com.ifba.perfil.entity.Experiencia;
 import br.com.ifba.perfil.entity.Formacao;
 import br.com.ifba.perfil.entity.Idioma;
 import br.com.ifba.perfil.entity.PerfilCandidato;
+import br.com.ifba.perfil.repository.CompetenciaRepository;
+import br.com.ifba.perfil.repository.ExperienciaRepository;
+import br.com.ifba.perfil.repository.FormacaoRepository;
+import br.com.ifba.perfil.repository.IdiomaRepository;
 import br.com.ifba.usuario.entity.Usuario;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -24,7 +29,11 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class PerfilCandidatoController implements PerfilCandidatoIController{
     private final PerfilCandidatoIService perfilcandidatoservice;
-
+    private final ExperienciaRepository experienciaRepository;
+    private final FormacaoRepository formacaoRepository;
+    private final CompetenciaRepository competenciaRepository;
+    private final IdiomaRepository idiomaRepository;
+    
     @Override
     public PerfilCandidato buscarPerfilCompleto(Long usuarioId) {
         return perfilcandidatoservice.buscarPerfilCompleto(usuarioId);
@@ -123,4 +132,53 @@ public class PerfilCandidatoController implements PerfilCandidatoIController{
     public void deleteByIdIdioma (Long idIdioma){
         perfilcandidatoservice.deleteByIdIdioma(idIdioma);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Experiencia buscarExperienciaPorId(Long id) {
+        return experienciaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Experiência não encontrada"));
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Formacao buscarFormacaoPorId(Long id) {
+        return formacaoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Experiência não encontrada"));
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Competencia buscarCompetenciaPorId(Long id) {
+        return competenciaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Experiência não encontrada"));
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Idioma buscarIdiomaPorId(Long id) {
+        return idiomaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Experiência não encontrada"));
+    }
+    
+    @Override
+    public Experiencia updateExperiencia(Long perfilId, Experiencia experienciaAtualizada){
+        return perfilcandidatoservice.updateExperiencia(perfilId, experienciaAtualizada);
+    }
+    
+    @Override
+    public Competencia updateCompetencia(Long perfilId, Competencia competenciaAtualizada){
+        return perfilcandidatoservice.updateCompetencia(perfilId, competenciaAtualizada);
+    }
+    
+    @Override
+    public Formacao updateFormacao(Long perfilId, Formacao formacaoAtualizada){
+        return perfilcandidatoservice.updateFormacao(perfilId, formacaoAtualizada);
+    }
+    
+    @Override
+    public Idioma updateIdioma(Long perfilId, Idioma idiomaAtualizada){
+        return perfilcandidatoservice.updateIdioma(perfilId, idiomaAtualizada);
+    }
+
 }

@@ -71,4 +71,5 @@ public interface PerfilCandidatoRepository extends JpaRepository<PerfilCandidato
         WHERE u.id = :usuarioId
     """)
     PerfilCandidato buscarPerfilCompleto(@Param("usuarioId") Long usuarioId);
-}
+    
+   }

@@ -30,9 +30,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"competencias", "experiencias", "formacaoAcademica", "idiomas"})
 @NoArgsConstructor
 @AllArgsConstructor
+@lombok.ToString(exclude = {"competencias", "experiencias", "formacaoAcademica", "idiomas"})
 public class PerfilCandidato extends Perfil{
     
     /*

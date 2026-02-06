@@ -52,4 +52,18 @@ public class Idioma extends PersistenceEntity implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY) //MUITOS PARA UM 
     @JoinColumn(name = "perfil_candidato_id", nullable = false)
     private PerfilCandidato perfilCandidato;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Idioma)) return false;
+        Idioma other = (Idioma) o;
+        return getId() != null && getId().equals(other.getId());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

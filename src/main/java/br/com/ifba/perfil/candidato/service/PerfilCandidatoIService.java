@@ -57,4 +57,12 @@ public interface PerfilCandidatoIService {
     void deleteByIdIdioma (Long idIdioma);
     
     PerfilCandidato findByUsuarioPerfilId(Long usuarioId);
+    
+    public Experiencia updateExperiencia(Long perfilId, Experiencia experienciaAtualizada);
+    
+    Competencia updateCompetencia(Long perfilId, Competencia competenciaAtualizada);
+    
+    Formacao updateFormacao(Long perfilId, Formacao formacaoAtualizada);
+    
+    Idioma updateIdioma(Long perfilId, Idioma idiomaAtualizada);
 }
